@@ -1,5 +1,7 @@
-#footer-id p{
-    font-size:1em;
+#main-footer p{
+    font-size:0.7em;
     color:#86868b;
     -webkit-font-smoothing: antialiased;
+    line-height:1.4em;
+    padding:5px 0;
 }
