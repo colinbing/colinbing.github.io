@@ -36,15 +36,7 @@
     
 }
 
-@media screen and (min-width:650px) {
-    .split-section {
-        margin-top:12px;
-        margin-right:22px;
-    }
-    .column {
-        margin: 0 10px;
-    }
-}
+
 
 .column {
     text-align:center;
@@ -268,4 +260,14 @@ body a {
     #main-section img{
         bottom:100px; 
       }
+}
+
+@media screen and (min-width:650px) {
+    .split-section {
+        margin-top:12px;
+        margin-right:22px;
+    }
+    .column {
+        margin: 0 10px;
+    }
 }
