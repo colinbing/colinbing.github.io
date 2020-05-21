@@ -36,7 +36,7 @@
     
 }
 
-@media (min-width:650px) {
+@media screen and (min-width:650px) {
     .split-section {
         margin-top:12px;
         margin-right:22px;
@@ -160,7 +160,7 @@ body a {
     text-decoration: underline;
 }
 
-@media (min-width:662px){
+@media screen and (min-width:662px){
     #main-section, #secondary-section, #third-section {
         height:620px;
     }
@@ -211,7 +211,7 @@ body a {
     }
 }
 
-@media (min-width:962px){
+@media screen and (min-width:962px){
     #main-section, #secondary-section, #third-section, .apple-watch, .macbook-pro {
         height:700px;
     }
