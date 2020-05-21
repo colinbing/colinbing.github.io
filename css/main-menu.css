@@ -88,6 +88,15 @@ body {
     }
 }
 
+@media screen and (min-resolution:200) and (max-width:1242px) {
+    #navbar-full {
+        display:none;
+    }
+    #navbar-mobile {
+        display:flex;
+    }
+}
+
 #navbar a:hover {
     color:#fff;
 }
