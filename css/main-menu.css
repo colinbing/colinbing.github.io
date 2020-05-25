@@ -117,11 +117,31 @@ body {
     margin-top:42px;
     text-align:center;
     width:100%;
+    font-size: 12px;
+    line-height:1.4em;
+}
+
+#notification-bar div {
+    padding:12px;
+    width:100%;
+}
+
+#covid-bar {
+    background-color:#0071E3;
+    color:#fff;
+}
+
+#covid-bar a{
+    color:#fff;
+}
+
+#support-bar {
     background-color:#fff;
     color:#666666;
-    font-size: 12px;
-    padding:5px;
-    line-height:1.4em;
+}
+
+#support-bar a{
+    color:#06c;
 }
 
 #notification-bar a {
