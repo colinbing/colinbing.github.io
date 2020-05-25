@@ -68,6 +68,10 @@
     text-decoration: none;
 }
 
+.footer-left {
+    overflow:auto;
+}
+
 #copyright div {
     display:inline-block;
     margin-top: 5px;
@@ -100,7 +104,10 @@
 }
 
 #location {
-    float:right;
+    float: right;
+}
+
+#location img {
     vertical-align: middle;
 }
 
@@ -112,5 +119,3 @@
     height:15px;
     width:auto;
 }
-
-/* @media screen and (max-width */
