@@ -15,9 +15,15 @@
     text-decoration: none;
 }
 
+#main-footer div {
+    font-size:12px;
+    color:#86868b;
+    line-height:1.33337;
+}
+
 .column-section-title{
     font-size:12px;
-    color:#1d1d1f;
+    color:#333333;
     -webkit-font-smoothing: antialiased;
     line-height:1.4em;
     padding:5px 0;
@@ -59,7 +65,8 @@
 .footer-columns {
     display: flex;
     justify-content: space-between;
-    padding:5px;
+    padding-top:10px;
+    padding-bottom:10px;
     width:100%;
 }
 
