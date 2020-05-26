@@ -97,11 +97,11 @@ body {
     background:#e2e2e2;
 }
 
-.hamburger:after {
+.hamburger:before {
     content:'';
     position:absolute;
     width:15px;
-    transform:translate(-50%, -50%);
+    transform:translate(0%, -50%);
     height:1px;
     background:#e2e2e2;
     transition:0.3s;
@@ -114,7 +114,7 @@ body {
     transform:rotate(45deg);
 }
 
-.icon.menu-active .hamburger:after {
+.icon.menu-active .hamburger:before {
     top:0px;
     left:0px;
     transform:rotate(-90deg);
