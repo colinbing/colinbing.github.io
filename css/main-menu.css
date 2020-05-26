@@ -79,6 +79,47 @@ body {
     transition:0.3s;
 }
 
+.icon {
+    position:relative;
+    width:30px;
+    height:30px;
+    cursor:pointer;
+}
+
+.hamburger {
+    width:15px;
+    height:1px;
+    position:absolute;
+    top:40%;
+    left:50%;
+    transform:translate(-50%, -50%);
+    transition:0.3s;
+    background:#e2e2e2;
+}
+
+.hamburger:after {
+    content:'';
+    position:absolute;
+    width:15px;
+    transform:translate(-50%, -50%);
+    height:1px;
+    background:#e2e2e2;
+    transition:0.3s;
+    top:6px;
+}
+
+.icon.menu-active .hamburger {
+    top:15px;
+    left:5px;
+    transform:rotate(45deg);
+}
+
+.icon.menu-active .hamburger:after {
+    top:0px;
+    left:0px;
+    transform:rotate(-90deg);
+}
+
 @media screen and (max-width:795px){
     #navbar-full {
         display:none;
@@ -151,3 +192,4 @@ body {
 #notification-bar a:hover {
     text-decoration: underline;
 }
+
