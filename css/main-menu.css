@@ -197,3 +197,16 @@ body {
     overflow-y:scroll;
     position:fixed;
 }
+
+.menu-clicked {
+    background-color:black;
+    height:100vh;
+    width:100%;
+    position:absolute;
+    top:0;
+    display:none;
+}
+
+.menu-visible{
+    display:block;
+}

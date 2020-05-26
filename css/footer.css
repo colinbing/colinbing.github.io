@@ -115,10 +115,12 @@
     display: inline;
     white-space: nowrap;
     color: #333333;
+    overflow:hidden;
+    white-space: nowrap;
 }
 
 .no-border {
-    border-right: none;
+    border-right: none !important;
 }
 
 #bottom-footer hr {
