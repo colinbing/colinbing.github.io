@@ -193,3 +193,7 @@ body {
     text-decoration: underline;
 }
 
+.lock-scroll {
+    overflow-y:scroll;
+    position:fixed;
+}
