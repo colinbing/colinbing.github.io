@@ -29,7 +29,6 @@
 
 .split-section {
     columns:2 305px;
-    margin-top: 10px;
     margin-top: 0;
     margin-right:0;
     margin-left:0;
@@ -267,5 +266,11 @@ body a {
     }
     .column {
         margin: 0 10px;
+    }
+}
+
+@media screen and (max-width:767px){
+    .split-section {
+        margin-right:0px;
     }
 }

@@ -15,14 +15,18 @@
     text-decoration: none;
 }
 
-#main-footer h6{
+.column-section-title{
     font-size:12px;
     color:#1d1d1f;
     -webkit-font-smoothing: antialiased;
     line-height:1.4em;
     padding:5px 0;
+    font-weight: 600;
 }
 
+.column-section {
+    padding-top:15px;
+}
 
 #main-footer hr{
     background-color: #d2d2d7;
@@ -42,7 +46,7 @@
 
 #main-footer a {
     font-size:12px;
-    color:#515154;
+    color:#86868b;
     -webkit-font-smoothing: antialiased;
     line-height:1.4em;
     text-decoration: none;
@@ -56,6 +60,11 @@
     display: flex;
     justify-content: space-between;
     padding:5px;
+    width:100%;
+}
+
+.footer-column div:first-child {
+    padding-top:0;
 }
 
 .footer-columns div {
@@ -76,6 +85,7 @@
     display:inline-block;
     margin-top: 5px;
     margin-right: 30px;
+    margin:5px 0;
 }
 
 #copyright .footer-legal-link {
@@ -84,7 +94,8 @@
     padding-right: 10px;
     display: inline;
     white-space: nowrap;
-    color: #1d1d1f;
+    color: #333333;
+    
 }
 
 #bottom-footer hr {
@@ -105,6 +116,7 @@
 
 #location {
     float: right;
+    margin:5px 0;
 }
 
 #location img {
@@ -112,10 +124,62 @@
 }
 
 #location a {
-    color:#1d1d1f;
+    color:#333333;
 }
 
 .location-icon {
     height:15px;
     width:auto;
+}
+
+@media screen and (max-width:767px) {
+    #bottom-footer div {
+        display:block;
+        width:100%;
+    }
+    #location {
+        margin:15px 0;
+    }
+    #bottom-footer hr {
+        display:none;
+    }
+    .footer-columns {
+        display:block;
+    }
+    .column-section-list {
+        display:none;
+    }
+
+    .column-section {
+        position: relative;
+        border-bottom: 1px solid #d2d2d7;
+        overflow: hidden;
+        padding-top:0;
+        pointer-events: auto;
+    }
+
+    .column-section-title {
+        padding-top:10px;
+        padding-bottom:10px;
+        font-weight:400;
+        color:#333;
+        width:100%;
+    }
+
+    .column-section-title:hover{
+        cursor: pointer;
+    }
+
+    .column-section-title:after {
+        content: '+';
+        float: right;
+        font-size: 14px;
+        font-weight: normal;
+        margin-top: -2px;
+        margin-right: 8px;
+        -webkit-transition: -webkit-transform .3s ease;
+        transition: -webkit-transform .3s ease;
+        transition: transform .3s ease;
+        transition: transform .3s ease, -webkit-transform .3s ease;
+    }
 }
