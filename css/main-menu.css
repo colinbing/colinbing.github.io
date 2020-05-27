@@ -45,6 +45,7 @@ body {
     display:inline-flex;
     justify-content: space-between;
     align-items:center;
+    transition: 0.36s;
 }
 
 #navbar-mobile {
@@ -57,6 +58,12 @@ body {
     z-index: 9999;
     justify-content: space-between;
     align-items:center;
+    transition: 0.36s;
+}
+
+.nav-active {
+    background: #000;
+    transition: background .36s cubic-bezier(0.32, 0.08, 0.24, 1),height .56s cubic-bezier(0.52, 0.16, 0.24, 1);
 }
 
 #navbar li {
@@ -202,14 +209,15 @@ body {
 
 .menu-clicked {
     background-color:black;
-    height:100vh;
     width:100%;
     position:fixed;
-    top:0;
-    display:none;
-    z-index:10;
+    top:42px;
+    z-index:990;
+    transition: background .36s cubic-bezier(0.32, 0.08, 0.24, 1),height .56s cubic-bezier(0.52, 0.16, 0.24, 1);
 }
 
 .menu-visible{
-    display:block;
+    position:fixed;
+    height:100vh;
+    transition: background .36s cubic-bezier(0.32, 0.08, 0.24, 1),height .56s cubic-bezier(0.52, 0.16, 0.24, 1);
 }
