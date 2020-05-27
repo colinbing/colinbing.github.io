@@ -3,7 +3,6 @@ var body = document.querySelector('body');
 
 menuIcon.addEventListener("click", function() {
     menuIcon.classList.toggle('menu-active');
-    console.log(menuIcon);
 });
 
 menuIcon.addEventListener("click", function() {

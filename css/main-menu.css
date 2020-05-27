@@ -79,7 +79,16 @@ body {
     display:inline-block;
 }
 
-#navbar a {
+#navbar-full a {
+    text-decoration:none;
+    color:#e2e2e2;
+    padding:0 10px;
+    font-size:12px;
+    display:inline-block;
+    transition:0.3s;
+}
+
+#navbar-mobile a {
     text-decoration:none;
     color:#e2e2e2;
     padding:0 10px;
@@ -209,8 +218,9 @@ body {
 
 .menu-clicked {
     background-color:black;
+    height:0;
     width:100%;
-    position:fixed;
+    position:absolute;
     top:42px;
     z-index:990;
     transition: background .36s cubic-bezier(0.32, 0.08, 0.24, 1),height .56s cubic-bezier(0.52, 0.16, 0.24, 1);
@@ -220,4 +230,79 @@ body {
     position:fixed;
     height:100vh;
     transition: background .36s cubic-bezier(0.32, 0.08, 0.24, 1),height .56s cubic-bezier(0.52, 0.16, 0.24, 1);
+}
+
+.dropdown-content {
+    display:block;
+    width: 100%;
+    position:fixed;
+    opacity:0;
+}
+
+.dropdown-content a {
+    display:block;
+    text-decoration:none;
+    color:#e2e2e2;
+    padding:0 10px;
+    padding-top:5px;
+    padding-bottom:5px;
+    font-family: 'open sans',arial,sans-serif;
+    font-size:15px;
+    font-weight:300;
+    line-height: 1.4em;
+    display:block;
+    transition:0.3s;
+    border-bottom: 0.5px solid #d2d2d7;
+}
+
+.dropdown-visible {
+    opacity:1;
+    transition:0.3s;
+}
+.dropdown-options{
+    position:fixed;
+    width:90%;
+    left:5%;
+}
+
+.dropdown-content li {
+    text-decoration: none;
+    list-style:none;    
+}
+
+.searchbar {
+    position:relative;
+    padding-bottom:8px;
+    padding-top:8px;
+    width:90%;
+    left:5%;
+    background-color:#333;
+    border-radius:5px;
+    border:none;
+    border-style:solid;
+    margin-bottom:10px;
+}
+
+.search-container ::placeholder {
+    color:#6e6e73;
+    font-size:16px;
+    font-weight:300;
+    padding-left:30px;
+}
+
+.search-placeholder-icon {
+    left: 0;
+    top: 0;
+    position: absolute;
+    width: 29px;
+    height: 2.11765em;
+    background-position: left 8px center;
+    opacity: .8;
+    background-size: 13px 13px;
+    background-repeat: no-repeat;
+    background-image: url(/images/search.png);
+}
+
+.last-menu{
+    border-bottom:none;
 }
