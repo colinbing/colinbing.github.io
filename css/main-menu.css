@@ -253,7 +253,7 @@ body {
     padding-top:5px;
     padding-bottom:5px;
     font-family: 'open sans',arial,sans-serif;
-    font-size:15px;
+    font-size:16px;
     font-weight:300;
     line-height: 1.4em;
     display:block;
@@ -313,6 +313,10 @@ body {
     background-size: 13px 13px;
     background-repeat: no-repeat;
     background-image: url(/images/search.png);
+}
+
+.search-container input {
+    font-size:16px;
 }
 
 input:focus {
