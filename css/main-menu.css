@@ -281,6 +281,7 @@ body {
     position:relative;
     padding-bottom:8px;
     padding-top:8px;
+    height:auto;
     padding-left:30px;
     width:95%;
     max-width:580px;
@@ -293,7 +294,6 @@ body {
     border-color: transparent;
     margin-top:10px;
     margin-bottom:10px;
-    
 }
 
 .search-container ::placeholder {
