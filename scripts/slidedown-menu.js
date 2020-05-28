@@ -2,17 +2,18 @@ var menuIcon = document.querySelector('.icon');
 var menu = document.querySelector('.menu-clicked');
 var menuContents = document.querySelectorAll('.menu-clicked div');
 var navMenu = document.querySelector('#navbar-mobile');
-var dropDown = document.querySelector('.dropdown-content')
+var dropDown = document.querySelectorAll('.dropdown-options li')
+console.log(dropDown);
 
 menuIcon.addEventListener("click", function() {
     if (menuIcon.classList.contains('menu-active')){
         menu.classList.add('menu-visible');
         navMenu.classList.add('nav-active');
-        dropDown.classList.add('dropdown-visible');
+        dropDown.classList.remove('.dropdown-hide');
     }
     else {
         menu.classList.remove('menu-visible');
         navMenu.classList.remove('nav-active');
-        dropDown.classList.remove('dropdown-visible');
+        dropDown.classList.add('.dropdown-hide');
     }
 });
