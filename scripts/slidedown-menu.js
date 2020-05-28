@@ -9,11 +9,17 @@ menuIcon.addEventListener("click", function() {
     if (menuIcon.classList.contains('menu-active')){
         menu.classList.add('menu-visible');
         navMenu.classList.add('nav-active');
-        dropDown.classList.remove('.dropdown-hide');
+        [].forEach.call(dropDown, function(el) {
+            el.classList.remove('dropdown-hide');
+        });
+        
     }
     else {
         menu.classList.remove('menu-visible');
         navMenu.classList.remove('nav-active');
-        dropDown.classList.add('.dropdown-hide');
+        [].forEach.call(dropDown, function(el) {
+            el.classList.add('dropdown-hide');
+        });
+        
     }
 });
