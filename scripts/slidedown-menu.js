@@ -11,6 +11,7 @@ menuIcon.addEventListener("click", function() {
         navMenu.classList.add('nav-active');
         [].forEach.call(dropDown, function(el) {
             el.classList.remove('dropdown-hide');
+            el.classList.add('dropdown-anim');
         });
         
     }
@@ -19,6 +20,7 @@ menuIcon.addEventListener("click", function() {
         navMenu.classList.remove('nav-active');
         [].forEach.call(dropDown, function(el) {
             el.classList.add('dropdown-hide');
+            el.classList.remove('dropdown-anim');
         });
         
     }
