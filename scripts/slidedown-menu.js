@@ -3,7 +3,6 @@ var menu = document.querySelector('.menu-clicked');
 var menuContents = document.querySelectorAll('.menu-clicked div');
 var navMenu = document.querySelector('#navbar-mobile');
 var dropDown = document.querySelectorAll('.dropdown-options li')
-console.log(dropDown);
 
 menuIcon.addEventListener("click", function() {
     if (menuIcon.classList.contains('menu-active')){
