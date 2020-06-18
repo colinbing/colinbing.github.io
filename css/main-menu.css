@@ -259,29 +259,6 @@ body {
      } 
 } 
 
-/* .dropdown-ipad {
-    transition: opacity .32244s cubic-bezier(0.32, 0.08, 0.24, 1) .05s,transform .35825s cubic-bezier(0.32, 0.08, 0.24, 1) .04s,-webkit-transform .35825s cubic-bezier(0.32, 0.08, 0.24, 1) .04s;
-}
-
-.dropdown-iphone {
-    transition: opacity .33467s cubic-bezier(0.32, 0.08, 0.24, 1) .07s,transform .37539s cubic-bezier(0.32, 0.08, 0.24, 1) .06s,-webkit-transform .37539s cubic-bezier(0.32, 0.08, 0.24, 1) .06s;
-}
-
-.dropdown-watch {
-    transition: opacity .34577s cubic-bezier(0.32, 0.08, 0.24, 1) .09s,transform .39692s cubic-bezier(0.32, 0.08, 0.24, 1) .08s,-webkit-transform .39692s cubic-bezier(0.32, 0.08, 0.24, 1) .08s;
-}
-.dropdown-tv {
-    transition: opacity .35577s cubic-bezier(0.32, 0.08, 0.24, 1) .11s,transform .42286s cubic-bezier(0.32, 0.08, 0.24, 1) .1s,-webkit-transform .42286s cubic-bezier(0.32, 0.08, 0.24, 1) .1s;
-}
-
-.dropdown-music {
-    transition: opacity .36464s cubic-bezier(0.32, 0.08, 0.24, 1) .13s,transform .45318s cubic-bezier(0.32, 0.08, 0.24, 1) .12s,-webkit-transform .45318s cubic-bezier(0.32, 0.08, 0.24, 1) .12s;
-}
-
-.dropdown-support {
-    transition: opacity .3724s cubic-bezier(0.32, 0.08, 0.24, 1) .15s,transform .4879s cubic-bezier(0.32, 0.08, 0.24, 1) .14s,-webkit-transform .4879s cubic-bezier(0.32, 0.08, 0.24, 1) .14s;
-}
- */
 .dropdown-options{
     position:fixed;
     width:90%;
