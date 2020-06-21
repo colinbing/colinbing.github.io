@@ -1,0 +1,276 @@
+#main-section {
+    position:relative;
+    background-color: #131313;
+    height:500px;
+    width:100%;
+    text-align:center;
+    cursor:pointer;
+}
+
+#secondary-section {
+    position:relative;
+    background-color: #fafafa;
+    height:500px;
+    width:100%;
+    text-align:center;
+    cursor:pointer;
+    margin-top:10px;
+}
+
+#third-section {
+    position:relative;
+    background-color: #000;
+    height:500px;
+    width:100%;
+    text-align:center;
+    cursor:pointer;
+    margin-top:10px;
+}
+
+.split-section {
+    columns:2 331px;
+    margin-top: 0;
+    margin-right:0;
+    margin-left:0;
+}
+
+.column {
+    text-align:center;
+    cursor:pointer;
+    position:relative;
+    height:500px;
+    width:100%;
+    margin:0;
+}
+
+#main-section img {
+    position:absolute;
+    bottom:30px;
+    max-height:50%;
+    width:auto;
+    left: 50%;
+    -webkit-transform: translateX(-50%);
+    transform: translateX(-50%)
+}
+
+#secondary-section img {
+    position:absolute;
+    bottom:0px;
+    object-fit: cover;
+    object-position: center top;
+    width:100%;
+    height:60%;
+    left: 50%;
+    -webkit-transform: translateX(-50%);
+    transform: translateX(-50%)
+}
+
+#third-section img {
+    position:absolute;
+    bottom:0px;
+    object-fit: cover;
+    object-position: center top;
+    width:100%;
+    height:42%;
+    left: 50%;
+    -webkit-transform: translateX(-50%);
+    transform: translateX(-50%)
+}
+
+.macbook-pro img {
+    position:absolute;
+    object-fit: cover;
+    left: 50%;
+    -webkit-transform: translateX(-50%);
+    transform: translateX(-50%);
+    bottom:10%;
+    max-width:100%;
+    height:auto;  
+}
+
+.apple-watch-text {
+    width:150px;
+    height:auto;
+    padding-bottom:10px;
+}
+
+.apple-watch-img {
+    position:absolute;
+    left: 50%;
+    -webkit-transform: translateX(-50%);
+    transform: translateX(-50%);
+    bottom:5%;
+    width:300px;
+    height:auto;
+}
+
+.main-section-text {
+    display:block;
+    position:relative;
+    padding-top:50px;
+}
+
+#main-section h1, #main-section h2, #third-section h1, #third-section h2, .macbook-pro h1, .macbook-pro h2, .macbook-pro h3 {
+    color:#fff;
+}
+
+.macbook-pro h2 {
+    font-size:38px;
+    margin-bottom:10px;
+    margin-top:20px;
+}
+
+#secondary-section h1, #secondary-section h2, .apple-watch h1, .apple-watch h2, .apple-watch h3 {
+    color:#000;
+}
+
+.main-section-text p {
+    color: #888;
+    font-size:14.5px;
+}
+
+body a {
+    text-decoration:none;
+}
+
+.main-section-links {
+    position:relative;
+    padding-top:10px;
+    font-size:16px;
+    color: #2997ff;
+    z-index:999;
+}
+
+.main-section-links a{
+    color:#2997ff;
+}
+
+.main-section-links a:hover {
+    text-decoration: underline;
+}
+
+@media screen and (min-width:662px){
+    #main-section, #secondary-section, #third-section {
+        height:620px;
+    }
+
+    .column {
+        height:520px;
+    }
+
+    #main-section img {
+        width: 750px;
+        height:auto;
+        bottom:160px;
+    }
+
+    #secondary-section img {
+    width:100%;
+    height:65%;
+    }
+
+    #third-section img {
+        width:100%;
+        height:60%;
+    }
+
+    .macbook-pro img {
+        width:400px;
+        height:auto;
+        bottom:100px;
+    }
+
+    h1 {
+        margin-bottom:15px;
+        padding-top:80px;
+    }
+
+    .main-section-text {
+        padding-top:90px;
+    }
+
+    .main-section-text p {
+        padding-top:0px;
+        font-size:16px;
+    }
+
+    .main-section-links {
+        padding-top:10px;
+        font-size:19px;
+    }
+}
+
+@media screen and (min-width:962px){
+    #main-section, #secondary-section, #third-section, .apple-watch, .macbook-pro {
+        height:700px;
+    }
+    .column {
+        height:580px;
+    }
+
+    #main-section img {
+        width:1000px;
+        height:auto;
+    }
+
+    #secondary-section img {
+        width:100%;
+        height:80%;
+    }
+
+    #third-section img {
+        width:100%;
+        height:80%;
+    }
+
+    .macbook-pro img {
+        width:550px;
+        height:auto;
+        bottom:100px;
+    }
+
+    h1 {
+        margin-bottom:15px;
+        font-size:50px;
+    }
+
+    .main-section-text p {
+        padding-top:10px;
+        font-size:16px;
+    }
+
+    br {
+        display: none;
+      }
+
+    .main-section-links {
+        padding-top:20px;
+        font-size:18px;
+    }
+}
+
+@media screen and (min-width:662px) {
+    .split-section {
+        margin-top:12px;
+        margin-right:22px;
+    }
+    .column {
+        margin: 0 10px;
+    }
+}
+
+@media screen and (min-width:662px) and (max-height:780px){
+    #main-section, #secondary-section, #third-section  {
+      height: 600px;  
+    }
+
+    #main-section img{
+        bottom:100px; 
+      }
+}
+
+/* @media screen and (max-width:767px){
+    .split-section {
+        margin-right:0px;
+    }
+} */
