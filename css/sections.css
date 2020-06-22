@@ -3,14 +3,21 @@
 }
 
 @media screen and (min-width:992px) {
-    .container-fluid {
+    section .container-fluid {
     max-width: 80%;
-}
+    position:relative;
+    left:10%;
+    }
 }
 
+.navbar img {
+    height:24px;
+    width:24px;
+}
 
 .intro-section .row {
     height:400px;
+    margin-top:100px;
 }
 
 .selfie {
@@ -37,24 +44,34 @@
 [data-theme="dark"] {
     background-color: #111 !important;
     color: #eee;
-  }
+}
   
-  [data-theme="dark"] .bg-light {
+[data-theme="dark"] .bg-light {
     background-color: #333 !important;
-  }
-  
-  [data-theme="dark"] .bg-white {
+}
+
+[data-theme="dark"] .bg-white {
     background-color: #000 !important;
-  }
-  
-  [data-theme="dark"] .bg-black {
+}
+
+[data-theme="dark"] .bg-black {
     background-color: #eee !important;
-  }
+}
 
-  .custom-switch {
-      padding-left:3rem;
-  }
+.custom-switch {
+    padding-left:3rem;
+}
 
-  .skills-section p {
-      line-height:1.2;
-  }
+.skills-section p {
+    line-height:1.2;
+}
+
+.certification-section {
+    padding-top:40px;
+    padding-bottom:40px;
+    background-color:#ececec;
+}
+section{
+    margin-top:10px;
+    margin-bottom:10px;
+}
