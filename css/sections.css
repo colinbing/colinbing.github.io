@@ -3,17 +3,10 @@
     background-color:#333;
 }
 
-.intro-section.row {
-    height:600px;
+.intro-section .row {
+    height:400px;
 }
 
-.centered {
-    display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.selfie img {
-    padding-top:30px;
-    padding-bottom:30px;
+.intro-section p {
+    color:white;
 }
