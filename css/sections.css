@@ -1,4 +1,19 @@
 .main {
     position:relative;
-    padding-top:var
+    background-color:#333;
+}
+
+.intro-section.row {
+    height:600px;
+}
+
+.centered {
+    display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.selfie img {
+    padding-top:30px;
+    padding-bottom:30px;
 }
