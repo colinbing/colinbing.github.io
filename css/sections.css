@@ -1,6 +1,10 @@
 .main {
     position:relative;
-    background-color:#333;
+    
+}
+
+.container-fluid {
+    max-width: 80%;
 }
 
 .intro-section .row {
@@ -8,5 +12,5 @@
 }
 
 section p {
-    color:white;
+    
 }
