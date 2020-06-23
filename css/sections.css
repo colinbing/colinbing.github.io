@@ -14,11 +14,6 @@ p {
     }
 }
 
-.row {
-    display: flex;
-    align-items: center;
-}
-
 .navbar img {
     height:24px;
     width:24px;
