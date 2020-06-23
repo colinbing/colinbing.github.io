@@ -36,7 +36,7 @@ p {
     padding-bottom:20px;
 }
 
-.skills-section hr {
+.skills-section hr, .project-section hr, .experience-section hr {
     max-width:500px;
 }
 
@@ -62,6 +62,15 @@ p {
     background-color: #eee !important;
 }
 
+[data-theme="dark"] hr {
+    background-color: #eee !important;
+}
+
+[data-theme="dark"] .certification-section {
+    color: #eee !important;
+    background-color: #444 !important;
+}
+
 .custom-switch {
     padding-left:3rem;
 }
@@ -73,17 +82,16 @@ p {
 .certification-section {
     padding-top:40px;
     padding-bottom:40px;
-    background-color:#777;
-    color:white;
+    background-color:#ececec;
 }
 
 .certification-section h2 {
     padding-top:20px;
     padding-bottom:20px;
 }
-section{
-    margin-top:20px;
-    margin-bottom:20px;
+section {
+    margin-top:40px;
+    margin-bottom:40px;
 }
 
 .skills-section div div {
@@ -120,6 +128,6 @@ section{
     }
 }
 
-.project-section li p {
+.project-section li p, .experience-section li p {
     margin-bottom:5px;
 }
