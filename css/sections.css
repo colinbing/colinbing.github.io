@@ -14,13 +14,17 @@ p {
     }
 }
 
+.row {
+    display: flex;
+    align-items: center;
+}
+
 .navbar img {
     height:24px;
     width:24px;
 }
 
 .intro-section .row {
-    min-height:400px;
     margin-top:100px;
 }
 
@@ -138,4 +142,9 @@ section {
 
 .project-section li p, .experience-section li p {
     margin-bottom:5px;
+}
+
+.pt-logo, .tecore-logo, .experience-section>div {
+    margin-top:10px;
+    margin-bottom:20px;
 }
