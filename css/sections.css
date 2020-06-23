@@ -17,6 +17,9 @@ p {
     position:relative;
     left:10%;
     }
+    .custom-switch {
+        padding-left:3rem;
+    }
 }
 
 @media screen and (max-width:600px) {
@@ -95,9 +98,7 @@ p {
     content:url('/images/pt-logo-white.png');
 }
 
-.custom-switch {
-    padding-left:3rem;
-}
+
 
 .skills-section p {
     line-height:1.2;
