@@ -29,7 +29,7 @@
     <title>My Website</title>
 </head>
 
-<body data-spy="scroll" data-target=".navbar" data-offset="150">
+<body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
         <div class="container-fluid">
             <a href="#" class="navbar-brand">Colin Bingham</a>
@@ -39,22 +39,22 @@
             <div class="navbar-collapse collapse" id="navbar9">
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="#">About</a>
+                        <a class="nav-link" href="#intro-section">About</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#skills-section">Skills</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Certifications</a>
+                        <a class="nav-link" href="#certification-section">Certifications</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href=".experience-section">Experience</a>
+                        <a class="nav-link" href="#experience-section">Experience</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Projects</a>
+                        <a class="nav-link" href="#project-section">Projects</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Contact</a>
+                        <a class="nav-link" href="#contact-section">Contact</a>
                     </li>
                     <li class="nav-item">
                         <a target="_blank" class="nav-link" href="https://www.linkedin.com/in/binghamcolin/"><img src="/images/LinkedIn.png"></a>
@@ -77,9 +77,9 @@
                     <!-- <img class="selfie" src="/images/selfie.png"> -->
                 </div>
                 <div class="col-md-8 text-left my-auto">
-                <h1>Hi, I'm Colin!</h1>
+                <!-- <h1>Hi, I'm Colin!</h1> -->
                 <hr>
-                    <p>
+                    <!-- <p>
                         I'm a Marketing graduate from Towson University. I specialize in Digital Marketing, and I am currently working at Tecore Networks, a wireless telecommunications infrastructure provider. At Tecore, I am responsible for our digital marketing efforts.
                     </p>
                     <p>
@@ -87,7 +87,7 @@
                     </p>
                     <p>
                         Below are my skills, and some of the projects I have implemented highlighting those skills.
-                    </p>
+                    </p> -->
                 </div>
             </div>
         </section>
@@ -147,6 +147,10 @@
 
         <section id="experience-section" class="experience-section container-fluid">
             <div class="col-md-12 text-center">
+                <div class="col-md-12 text-center">
+                    <h2>Professional Experience</h2>
+                    <hr>
+                </div>
                 <div class="row">
                     <div class="col-md-4 text-center my-auto">
                         <a target="_blank" href="http://www.tecore.com"><img class="tecore-logo" src="images/tecore-logo-blue.png" alt="Tecore Networks" width="100" height=auto></a>
@@ -241,9 +245,7 @@
                       </a>
                 </div>
             </div>
-        </section>
-
-        <section class="project-section container-fluid">
+       
             <div class="row">
                 <div class="col-md-6 text-left my-auto">
                     <h3>Google Tag Manager</h3>
@@ -296,6 +298,7 @@
     <script src="homescripts/bootstrap.min.js"></script>
     <script src="homescripts/dynamic-height.js"></script>
     <script src="/homescripts/dark-mode-switch.min.js"></script>
+    <script src="/homescripts/smoothscroll.js"></script>
 </body>
 
 </html>
