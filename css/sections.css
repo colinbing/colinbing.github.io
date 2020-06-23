@@ -149,3 +149,19 @@ section {
     margin-top:10px;
     margin-bottom:20px;
 }
+
+/* .carousel-item {
+    transition:0.3s;
+    color:#eee;
+} */
+
+.carousel-item:hover::after {
+    content:"";
+    display:block;
+    position:absolute;
+    top:0;
+    bottom:0;
+    left:0;
+    right:0;
+    background:rgba(0,0,0,0.5);
+}
