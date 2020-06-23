@@ -71,6 +71,14 @@ p {
     background-color: #444 !important;
 }
 
+[data-theme="dark"] .tecore-logo{
+    content:url('/images/tecore-logo-white.png');
+}
+
+[data-theme="dark"] .pt-logo{
+    content:url('/images/pt-logo-white.png');
+}
+
 .custom-switch {
     padding-left:3rem;
 }
