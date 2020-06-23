@@ -69,9 +69,20 @@
 .certification-section {
     padding-top:40px;
     padding-bottom:40px;
-    background-color:#ececec;
+    background-color:#777;
+    color:#eee;
 }
 section{
     margin-top:20px;
     margin-bottom:20px;
+}
+
+.google-cert::before{
+    content: "";
+    background-image:url('/images/google-icon.png');
+    background-size: 20px 20px;
+    display: inline-block;
+    width: 20px; 
+    height: 20px;
+    margin-right:10px;
 }
