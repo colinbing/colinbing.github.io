@@ -7,10 +7,10 @@ p {
 }
 
 @media screen and (min-width:992px) {
-    section .container-fluid {
-    max-width: 80%;
+    .row {
+    width: 90%;
     position:relative;
-    left:10%;
+    left:5%;
     }
     .custom-switch {
         padding-left:3rem;
@@ -18,15 +18,22 @@ p {
 }
 
 @media screen and (max-width:600px) {
-    /* .container-fluid {
-        padding-left:0;
-        padding-right:0;
-    } */
     .certification-section div {
         padding-left:20px;
         padding-right:20px;
     }
 
+}
+
+@media screen and (max-width:845px) {
+    section h3 {
+        text-align:center;
+        padding-top:30px;
+        padding-bottom:10px;
+    }
+    .project-section .col-md-6 hr {
+        display:none;
+    }
 }
 
 .navbar img {
@@ -93,6 +100,12 @@ p {
     content:url('/images/pt-logo-white.png');
 }
 
+[data-theme="dark"] .apple-logo{
+    content:url('/images/logos/logo-white.png');
+    width:100px;
+    height:auto;
+}
+
 
 
 .skills-section p {
@@ -139,6 +152,8 @@ section {
     margin-right:10px;
 }
 
+
+
 @media screen and (max-width:1600px){
     .carousel-caption p{
         font-size:12px;
@@ -158,10 +173,9 @@ section {
     margin-bottom:20px;
 }
 
-/* .carousel-item {
-    transition:0.3s;
-    color:#eee;
-} */
+.carousel-caption {
+    opacity:0;
+}
 
 .carousel-item:hover::after {
     content:"";
@@ -172,4 +186,13 @@ section {
     left:0;
     right:0;
     background:rgba(0,0,0,0.6);
+}
+
+.carousel-item:hover .carousel-caption{
+    opacity:1;
+}
+
+.carousel {
+    padding-top:10px;
+    padding-bottom:10px;
 }
