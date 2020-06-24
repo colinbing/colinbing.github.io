@@ -11,6 +11,7 @@ p {
     width: 90%;
     position:relative;
     left:5%;
+    right:5%;
     }
     .custom-switch {
         padding-left:3rem;
@@ -90,6 +91,10 @@ p {
 [data-theme="dark"] .certification-section {
     color: #eee !important;
     background-color: #444 !important;
+}
+
+[data-theme="dark"] .nav-link {
+    color: #eee !important;
 }
 
 [data-theme="dark"] .tecore-logo{
