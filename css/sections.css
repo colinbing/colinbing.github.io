@@ -201,3 +201,12 @@ section {
     padding-top:10px;
     padding-bottom:10px;
 }
+
+.social-link img {
+    height:40px;
+    widows: auto;
+}
+
+.social-link {
+    padding-top:20px;
+}
