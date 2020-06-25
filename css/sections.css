@@ -1,5 +1,13 @@
+html {
+    scroll-behavior: smooth;
+}
+
 .main {
     position:relative;
+}
+
+#navbar9 > ul > li.nav-item > a {
+    color: rgba(255,255,255,1);
 }
 
 p {
@@ -8,6 +16,16 @@ p {
 
 .cert-row {
     text-align:center !important;
+}
+
+.cert-row a {
+    text-decoration:none;
+    color:#fff;
+}
+
+.cert-row a:hover {
+    text-decoration:underline;
+    color:#eee;
 }
 
 .navbar img {
@@ -23,6 +41,16 @@ p {
     padding-top:30px;
     padding-bottom:30px;
 }
+
+.active a {
+    font-weight:600;
+    color: rgba(255,255,255,1);
+    }
+
+#navbar9 > ul > li.nav-item > a:hover {
+    font-weight:600;
+    color: rgba(255,255,255,1);
+    }
 
 .skill-img {
     max-width:100px;
@@ -89,8 +117,6 @@ p {
 }
 
 .certification-section {
-    padding-top:40px;
-    padding-bottom:40px;
     background-color:#ececec;
 }
 
@@ -100,7 +126,7 @@ p {
 }
 
 section {
-    padding-top:40px;
+    padding-top: 40px;
     padding-bottom:40px;
 }
 
@@ -167,8 +193,14 @@ section {
 }
 
 .social-link {
-    padding-top:20px;
+    padding-top:40px;
     padding-bottom:20px;
+}
+
+section:before {
+    height: 54px;
+    content: "";
+    display:block;
 }
 
 @media (min-width:845px) {
