@@ -6,35 +6,8 @@ p {
     font-size:0.9rem;
 }
 
-@media screen and (min-width:992px) {
-    .row {
-    width: 90%;
-    position:relative;
-    left:5%;
-    right:5%;
-    }
-    .custom-switch {
-        padding-left:3rem;
-    }
-}
-
-@media screen and (max-width:600px) {
-    .certification-section div {
-        padding-left:20px;
-        padding-right:20px;
-    }
-
-}
-
-@media screen and (max-width:845px) {
-    section h3 {
-        text-align:center;
-        padding-top:30px;
-        padding-bottom:10px;
-    }
-    .project-section .col-md-6 hr {
-        display:none;
-    }
+.cert-row {
+    text-align:center !important;
 }
 
 .navbar img {
@@ -111,8 +84,6 @@ p {
     height:auto;
 }
 
-
-
 .skills-section p {
     line-height:1.2;
 }
@@ -157,18 +128,6 @@ section {
     margin-right:10px;
 }
 
-
-
-@media screen and (max-width:1600px){
-    .carousel-caption p{
-        font-size:12px;
-    }
-
-    .carousel-caption h5{
-        font-size:16px;
-    }
-}
-
 .project-section li p, .experience-section li p {
     margin-bottom:5px;
 }
@@ -210,4 +169,52 @@ section {
 .social-link {
     padding-top:20px;
     padding-bottom:20px;
+}
+
+@media (min-width:845px) {
+    .cert-row {
+        text-align:left !important;
+    }
+}
+
+@media screen and (max-width:845px) {
+    section h3 {
+        text-align:center;
+        padding-top:30px;
+        padding-bottom:10px;
+    }
+    .project-section .col-md-6 hr {
+        display:none;
+    }
+    
+}
+
+@media screen and (max-width:1600px){
+    .carousel-caption p{
+        font-size:12px;
+    }
+
+    .carousel-caption h5{
+        font-size:16px;
+    }
+}
+
+@media screen and (min-width:992px) {
+    .row {
+    width: 90%;
+    position:relative;
+    left:5%;
+    right:5%;
+    }
+    .custom-switch {
+        padding-left:3rem;
+    }
+}
+
+@media screen and (max-width:600px) {
+    .certification-section div {
+        padding-left:20px;
+        padding-right:20px;
+    }
+
 }
