@@ -16,8 +16,6 @@
 
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/sections.css">
-    <link rel="stylesheet" href="/css/owl.carousel.min.css" />
-    <link rel="stylesheet" href="/css/owl.theme.default.min.css" />
 
     <!-- for FF, Chrome, Opera -->
     <link rel="icon" type="image/png" href="/images/logos/logo-16x16.png" sizes="16x16">
@@ -110,27 +108,26 @@
                     <p>HTML5, CSS</p>
                     <p>JavaScript</p>
                     <p>jQuery</p>
-                    <p>Bootstrap</p>
+                    <p>Bootstrap 4</p>
                 </div>
                 <div class="col-sm-4 text-center">
                     <img class="skill-img .img-fluid" src="/images/analytics-icon.png">
                     <h3>Software</h3>
                     <p>Google Analytics</p>
-                    <p>Google Ads</p>
-                    <p>Google Ad Manager</p>
-                    <p>Google Search Console</p>
                     <p>Google Tag Manager</p>
+                    <p>Google Ads, Ad Manager</p>
+                    <p>Google Search Console</p>
                     <p>Google Business</p>
-                    <p>VSCode</p>
-                    <p>Github</p>
                     <p>Email Marketing (MailChimp, SendGrid)</p>
                 </div>
                 <div class="col-sm-4 text-center">
                     <img class="skill-img .img-fluid. max-width: 100%;" src="/images/soccer-icon.png">
-                    <h3>Other</h3>
+                    <h3>Other (& Hobbies)</h3>
                     <p>Adobe Photoshop & Illustrator</p>
                     <p>GIMP</p>
-                    <p>JavaScript</p>
+                    <p>Rock Climbing</p>
+                    <p>Soccer</p>
+                    <p>Literally any sport</p>
                 </div>
             </div>
         </section>
@@ -334,17 +331,46 @@
         
 
         <footer id="footer" class="padding-top">
-            <!-- Owl Carousel -->
-            <div class="owl-carousel">
-              <img src="images/my-images/my-img-1.jpg">
-              <img src="images/my-images/my-img-2.jpg">
-              <img src="images/my-images/my-img-3.jpg">
-              <img src="images/my-images/my-img-4.jpg">
-              <img src="images/my-images/my-img-5.jpg">
-              <img src="images/my-images/my-img-6.jpeg">
-              <img src="images/my-images/my-img-7.jpeg">
-              <img src="images/my-images/my-img-8.jpeg">
-              <img src="images/my-images/my-img-9.jpg">
+            <div class="container-fluid">
+                <div id="carouselExample" class="carousel slide" data-ride="carousel" data-interval="9000">
+                    <div class="carousel-inner row w-100 mx-auto" role="listbox">
+                        <div class="carousel-item col-md-3 active">
+                            <img class="img-fluid mx-auto d-block" src="images/my-images/my-img-1-600x600.jpg" alt="slide 1">
+                        </div>
+                        <div class="carousel-item col-md-3">
+                            <img class="img-fluid mx-auto d-block" src="images/my-images/my-img-2-600x600.jpg" alt="slide 2">
+                        </div>
+                        <div class="carousel-item col-md-3">
+                            <img class="img-fluid mx-auto d-block" src="images/my-images/my-img-3-600x600.jpg" alt="slide 3">
+                        </div>
+                        <div class="carousel-item col-md-3">
+                            <img class="img-fluid mx-auto d-block" src="images/my-images/my-img-4-600x600.jpg" alt="slide 4">
+                        </div>
+                        <div class="carousel-item col-md-3">
+                            <img class="img-fluid mx-auto d-block" src="images/my-images/my-img-5-600x600.jpg" alt="slide 5">
+                        </div>
+                        <div class="carousel-item col-md-3">
+                            <img class="img-fluid mx-auto d-block" src="images/my-images/my-img-6-600x600.jpg" alt="slide 6">
+                        </div>
+                        <div class="carousel-item col-md-3">
+                            <img class="img-fluid mx-auto d-block" src="images/my-images/my-img-7-600x600.jpg" alt="slide 7">
+                        </div>
+                        <div class="carousel-item col-md-3">
+                            <img class="img-fluid mx-auto d-block" src="images/my-images/my-img-8-600x600.jpg" alt="slide 8">
+                        </div>
+                        <div class="carousel-item col-md-3">
+                            <img class="img-fluid mx-auto d-block" src="images/my-images/my-img-9-600x600.jpg" alt="slide 9">
+                        </div>
+                    </div>
+                    <a class="carousel-control-prev" href="#carouselExample" role="button" data-slide="prev">
+                        <i class="fa fa-chevron-left fa-lg text-muted"></i>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next text-faded" href="#carouselExample" role="button" data-slide="next">
+                        <i class="fa fa-chevron-right fa-lg text-muted"></i>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </div>
             </div>
         
             <div class="col-md-12 text-center copyright">
@@ -357,9 +383,8 @@
     <script src="/homescripts/bootstrap.min.js"></script>
     <script src="homescripts/dynamic-height.js"></script>
     <script src="/homescripts/dark-mode-switch.min.js"></script>
-    <script src="/homescripts/smoothscroll.js"></script>
-    <script src="/homescripts/owl.carousel.min.js"></script>
     <script src="/homescripts/highlight-nav.js"></script>
+    <script src="/homescripts/slider.js"></script>
 </body>
 
 </html>
