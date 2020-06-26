@@ -7,8 +7,18 @@ html {
 }
 
 #intro-section {
-    background-image:url("/images/AdobeStock_112630250-Marketing-Automation-Doodle-Concept-Converted.jpg")
+    background-image:url("/images/AdobeStock_112630250-Marketing-Automation-Doodle-Concept-Converted.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
 }
+
+#intro-section .row {
+    background-color:white;
+    border-radius:20px;
+    padding-bottom: 20px;
+    padding-top: 20px;
+}
+
 #navbar9 > ul > li.nav-item > a {
     color: rgba(255,255,255,1);
 }
