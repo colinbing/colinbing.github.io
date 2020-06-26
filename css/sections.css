@@ -2,12 +2,8 @@ html {
     scroll-behavior: smooth;
 }
 
-.main {
-    position:relative;
-}
-
 #intro-section .row {
-    background-color:white;
+/*     background-color:white; */
     border-radius:20px;
     padding-bottom: 20px;
     padding-top: 20px;
@@ -48,13 +44,10 @@ p {
     width:24px;
 }
 
-.intro-section .row {
-    margin-top:100px;
-}
-
 .selfie {
     padding-top:30px;
     padding-bottom:30px;
+    user-select:none;
 }
 
 .active a {
@@ -145,7 +138,7 @@ p {
 }
 
 section {
-    padding-top: 40px;
+    padding-top:40px;
     padding-bottom:40px;
 }
 
@@ -222,11 +215,6 @@ section .carousel-item:hover::after {
     padding-bottom:20px;
 }
 
-section:before {
-    height: 54px;
-    content: "";
-    display:block;
-}
 
 @media (min-width:845px) {
     .cert-row {

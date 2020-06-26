@@ -30,7 +30,7 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <nav id="navbar" class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
         <div class="container-fluid">
             <a href="#" class="navbar-brand">Colin Bingham</a>
             <button class="navbar-toggler float-right" type="button" data-toggle="collapse" data-target="#navbar9" >
@@ -39,7 +39,7 @@
             <div class="navbar-collapse collapse" id="navbar9">
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item active">
-                        <a class="nav-link" href="#intro-section"  >About</a>
+                        <a class="nav-link" href="#"  >About</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#skills-section"  >Skills</a>
@@ -94,7 +94,7 @@
         </section>
 
         <section id="skills-section" class="skills-section container-fluid">
-            <div class="row">
+            <div class="row"  style="padding-top:40px;">
                 <div class="col-md-12 text-center">
                     <h2>Skills</h2>
                     <hr>
@@ -130,9 +130,10 @@
                     <p>Literally any sport</p>
                 </div>
             </div>
+            <div id="certification-section" class="col-md-12 text-center" style="padding-top:40px;margin-top:-40px;"></div>
         </section>
 
-        <section id="certification-section" class="certification-section container-fluid">
+        <section class="certification-section container-fluid">
             <div class="row">
                 <div class="col-md-6 text-center my-auto">
                     <h2>Certifications</h2>
@@ -148,7 +149,7 @@
         </section>
 
         <section id="experience-section" class="experience-section">
-            <div class="col-md-12 text-center">
+            <div class="col-md-12 text-center"  style="padding-top:40px;">
                 <div class="col-md-12 text-center">
                     <h2>Professional Experience</h2>
                     <hr>
@@ -197,7 +198,7 @@
         </section>
 
         <section id="project-section" class="project-section container-fluid">
-            <div class="col-md-12 text-center">
+            <div class="col-md-12 text-center" style="padding-top:40px;">
                 <h2>Projects</h2>
                 <hr>
             </div>
@@ -294,18 +295,18 @@
                       </a>
                     </div>
                 </div>
-                <section class="apple-demo">
+                <div class="apple-demo">
                     <div class="col-md-12 text-center">
                         <h3>Bonus:</h3>
                     </div>
                     <div class="col-md-12 text-center">
                         <a target="_blank" href="/apple-demo"><img class="apple-logo" src="/images/logos/apple-logo-gray.png" width=100px height=auto></a>
                     </div>
-                </section>
+                </div>
         </section>
 
         <section id="contact-section" class="header-padding">
-            <div class="container-fluid  text-center">
+            <div class="container-fluid  text-center" style="padding-top:40px;">
                 <div class="row">
                     <div class="col-12">
                         <hr>
@@ -378,6 +379,7 @@
     <script src="/homescripts/dark-mode-switch.min.js"></script>
     <script src="/homescripts/highlight-nav.js"></script>
     <script src="/homescripts/slider.js"></script>
+    <script src="/homescripts/scroll-offset.js"></script>
 </body>
 
 </html>
