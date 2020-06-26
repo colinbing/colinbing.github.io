@@ -6,12 +6,6 @@ html {
     position:relative;
 }
 
-#intro-section {
-    background-image:url("/images/AdobeStock_112630250-Marketing-Automation-Doodle-Concept-Converted.jpg");
-    background-repeat: no-repeat;
-    background-size: cover;
-}
-
 #intro-section .row {
     background-color:white;
     border-radius:20px;
