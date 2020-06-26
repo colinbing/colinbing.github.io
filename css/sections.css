@@ -1,3 +1,7 @@
+* {
+    box-sizing:border-box;
+}
+
 html {
     scroll-behavior: smooth;
 }
@@ -139,6 +143,15 @@ p {
 
 section {
     padding-top:40px;
+}
+
+.skill-card {
+    box-sizing:border-box;
+    background-color:red;
+    /* margin-left:20px;
+    margin-right:20px; */
+    border-radius:20px;
+    padding:10px;
 }
 
 .skills-section div div {
