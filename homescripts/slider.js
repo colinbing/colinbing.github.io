@@ -1,4 +1,4 @@
-var $carousel = jQuery('.carousel-onebyone .carousel');
+var $carousel = jQuery('footer .carousel-onebyone .carousel');
 if($carousel.length){
 	jQuery('.carousel-onebyone').on('slide.bs.carousel', carousel_onebyone);
 	carousel_set($carousel);
@@ -15,12 +15,12 @@ function carousel_set($carousel){
 	$carousel.each((i, el)=>{
 		var $el = jQuery(el);
 		var itemsPerSlide = carousel_itemsPerSlide($el);
-		var totalItems = $el.find('.carousel-item').length;
+		var totalItems = $el.find('#footer .carousel-item').length;
 
 		if(itemsPerSlide < totalItems){
-			$el.find('.carousel-control').removeClass('hidden');
+			$el.find('#footer .carousel-control').removeClass('hidden');
 		}else{
-			$el.find('.carousel-control').addClass('hidden');
+			$el.find('#footer .carousel-control').addClass('hidden');
 		}
 	});
 }
