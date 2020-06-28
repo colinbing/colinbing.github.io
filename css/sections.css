@@ -12,6 +12,11 @@ html {
     padding-right:0;
 }
 
+.row {
+    padding-left:15px;
+    padding-right:15px;
+}
+
 #intro-section .row {
     border-radius:20px;
     padding-bottom: 20px;
@@ -137,8 +142,13 @@ p {
     line-height:1.2;
 }
 
+.skills-section {
+    padding-bottom:20px;
+}
+
 .certification-section {
     background-color:#ececec;
+    padding-bottom:20px;
 }
 
 .certification-section h2 {
