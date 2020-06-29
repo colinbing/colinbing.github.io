@@ -7,6 +7,10 @@ html {
     scroll-behavior: smooth;
 }
 
+h2 {
+    font-size:42px;
+}
+
 .container-fluid {
     padding-left:0;
     padding-right:0;
