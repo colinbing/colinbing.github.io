@@ -167,6 +167,8 @@ section {
 .skill-card {
     box-sizing:border-box;
     padding:20px;
+    margin-top:20px;
+    margin-bottom:20px;
     border-radius:10px;
     color:#fff;
     max-width:90vw;
@@ -250,6 +252,11 @@ section .carousel-item:hover::after {
     opacity:1;
 }
 
+.tecore-logo, .pt-logo {
+    padding-top:20px;
+    padding-bottom:10px;
+}
+
 .carousel {
     padding-top:10px;
     padding-bottom:10px;
@@ -297,12 +304,6 @@ section .carousel-item:hover::after {
 }
 
 @media screen and (min-width:992px) {
-    .row {
-    width: 90%;
-    position:relative;
-    left:5%;
-    right:5%;
-    }
     .custom-switch {
         padding-left:3rem;
     }
