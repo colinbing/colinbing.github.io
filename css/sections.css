@@ -7,6 +7,14 @@ html {
     scroll-behavior: smooth;
 }
 
+html, body {
+    overflow-x: hidden;
+}
+
+body {
+    position:relative;
+}
+
 h2 {
     font-size:42px;
 }
@@ -38,6 +46,10 @@ h2 {
 p {
     font-size:0.9rem;
     color:#333;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color:#111;
 }
 
 .skill-card p {
