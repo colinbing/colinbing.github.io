@@ -27,12 +27,21 @@ h2 {
     padding-top: 20px;
 }
 
+.experience-section hr {
+    max-width:80%;
+}
+
 #navbar9 > ul > li.nav-item > a {
     color: rgba(255,255,255,1);
 }
 
 p {
     font-size:0.9rem;
+    color:#333;
+}
+
+.skill-card p {
+    color:#fff;
 }
 
 #footer .copyright {
@@ -85,9 +94,7 @@ p {
     padding-bottom:20px;
 }
 
-.skills-section hr, .project-section hr, .experience-section hr {
-    max-width:500px;
-}
+
 
 .skills-section h3 {
     margin-bottom:20px;
@@ -155,9 +162,9 @@ p {
     padding-bottom:20px;
 }
 
-.certification-section h2 {
+h2 {
     padding-top:20px;
-    padding-bottom:20px;
+    padding-bottom:30px;
 }
 
 section {
@@ -219,7 +226,6 @@ background-color:#ff9296;
 }
 
 .pt-logo, .tecore-logo, .experience-section>div {
-    margin-top:10px;
     margin-bottom:20px;
 }
 
@@ -232,9 +238,10 @@ background-color:#ff9296;
     padding-bottom:20px;
 }
 
-.project-2 {
-    background-color:#212529;
-    color:white;
+.project-section {
+    background-color:#e3e3e3;
+    color:black;
+    padding-bottom:40px;
 }
 
 section .carousel-item:hover::after {
@@ -253,7 +260,6 @@ section .carousel-item:hover::after {
 }
 
 .tecore-logo, .pt-logo {
-    padding-top:20px;
     padding-bottom:10px;
 }
 
@@ -274,6 +280,9 @@ section .carousel-item:hover::after {
     padding-bottom:20px;
 }
 
+.project-2 hr {
+    border-top: 1px solid white;
+}
 
 @media (min-width:845px) {
     .cert-row {
@@ -289,6 +298,10 @@ section .carousel-item:hover::after {
     }
     .project-section .col-md-6 hr {
         display:none;
+    }
+
+    .skills-section hr, .project-section hr, .experience-section hr {
+        max-width:500px;
     }
     
 }
@@ -306,6 +319,17 @@ section .carousel-item:hover::after {
 @media screen and (min-width:992px) {
     .custom-switch {
         padding-left:3rem;
+    }
+    .row {
+        padding-left:5%;
+        padding-right:5%;
+    }
+}
+
+@media screen and (min-width:1400px) {
+    .row {
+        padding-left:10%;
+        padding-right:10%;
     }
 }
 
