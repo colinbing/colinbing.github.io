@@ -149,6 +149,14 @@ p {
     color: #eee;
 }
 
+[data-theme="dark"] p, h1, h2, h3, h4, h5, h6 {
+    color:#fff;
+}
+
+[data-theme="dark"] .project-section {
+    background-color:#444;
+}
+
 .skills-section p {
     line-height:1.2;
 }
