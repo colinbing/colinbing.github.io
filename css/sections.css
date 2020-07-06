@@ -125,11 +125,11 @@ p {
 }
 
 [data-theme="dark"] .tecore-logo{
-    content:url('/images/tecore-logo-white.png');
+    content:url('/images/icons/tecore-logo-white.png');
 }
 
 [data-theme="dark"] .pt-logo{
-    content:url('/images/pt-logo-white.png');
+    content:url('/images/icons/pt-logo-white.png');
 }
 
 [data-theme="dark"] .apple-logo{
@@ -192,7 +192,7 @@ background-color:#ff9296;
 
 .google-cert::before{
     content: "";
-    background-image:url('/images/google-icon.png');
+    background-image:url('/images/icons/google-icon.png');
     background-size: 20px 20px;
     display: inline-block;
     width: 20px; 
@@ -206,7 +206,7 @@ background-color:#ff9296;
 
 .hubspot-cert::before{
     content: "";
-    background-image:url('/images/hubspot-icon.png');
+    background-image:url('/images/icons/hubspot-icon.png');
     background-size: 20px 20px;
     display: inline-block; 
     width: 20px; 
