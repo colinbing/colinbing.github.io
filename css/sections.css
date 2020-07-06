@@ -29,6 +29,10 @@ h2 {
     padding-right:15px;
 }
 
+section {
+    padding-bottom:20px;
+}
+
 #intro-section .row {
     border-radius:20px;
     padding-bottom: 20px;
@@ -48,9 +52,7 @@ p {
     color:#333;
 }
 
-h1, h2, h3, h4, h5, h6 {
-    color:#111;
-}
+
 
 .skill-card p {
     color:#fff;
@@ -161,8 +163,32 @@ h1, h2, h3, h4, h5, h6 {
     color: #eee;
 }
 
-[data-theme="dark"] p, h1, h2, h3, h4, h5, h6 {
+[data-theme="dark"] p {
     color:#fff;
+}
+
+[data-theme="dark"] h1 {
+    color:#fff;
+}
+
+[data-theme="dark"] h2 {
+    color:#fff;
+}
+[data-theme="dark"] h3 {
+    color:#fff;
+}
+[data-theme="dark"] h4 {
+    color:#fff;
+}
+[data-theme="dark"] h5 {
+    color:#fff;
+}
+[data-theme="dark"] h6 {
+    color:#fff;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color:#111;
 }
 
 [data-theme="dark"] .project-section {
@@ -197,8 +223,12 @@ section {
     margin-top:20px;
     margin-bottom:20px;
     border-radius:10px;
-    color:#fff;
+    color:#fff !important;
     max-width:90vw;
+}
+
+.skill-card h3 {
+    color:#fff;
 }
 
 .skill-card-1 {
