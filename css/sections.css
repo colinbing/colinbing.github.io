@@ -378,10 +378,18 @@ section .carousel-item:hover::after {
         padding-left:5%;
         padding-right:5%;
     }
+    #navbar .container-fluid {
+        padding-left:5%;
+        padding-right:5%;
+    }
 }
 
 @media screen and (min-width:1400px) {
     .row {
+        padding-left:10%;
+        padding-right:10%;
+    }
+    #navbar .container-fluid {
         padding-left:10%;
         padding-right:10%;
     }
