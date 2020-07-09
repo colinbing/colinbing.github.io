@@ -488,3 +488,7 @@ footer .row {
     left:0;
     right:0;
 }
+
+.carousel p, .carousel h5 {
+    color:white !important;
+}
