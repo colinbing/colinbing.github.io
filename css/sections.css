@@ -47,7 +47,7 @@ section {
     color: rgba(255,255,255,1);
 }
 
-p {
+p, li {
     font-size:0.9rem;
     color:#202020;
 }
