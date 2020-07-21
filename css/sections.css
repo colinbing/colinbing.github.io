@@ -340,6 +340,8 @@ section .carousel-item:hover::after {
     border-top: 1px solid white;
 }
 
+
+
 @media (min-width:845px) {
     .cert-row {
         text-align:left !important;
