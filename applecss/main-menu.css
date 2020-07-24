@@ -221,7 +221,8 @@ body {
     position:fixed;
     visibility:hidden;
     opacity:0;
-    transition: opacity 200ms ease-in;
+    transform: translateY(-20%);
+    transition: all 300ms ease-in;
 }
 
 .dropdown-content hr {
@@ -247,7 +248,7 @@ body {
 .dropdown-anim {
     visibility:visible;
     opacity: 1;
-    transform: translateX(0%);
+    transform: translateY(0%);
 } 
 
 .dropdown-options{
@@ -259,7 +260,7 @@ body {
 .dropdown-content li {
     text-decoration: none;
     opacity:0.5;
-    transform:translateY(-20%);
+    transform: translateY(-20%);
     transition: transform 2s;
 }
 
