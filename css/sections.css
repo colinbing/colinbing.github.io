@@ -29,10 +29,6 @@ h2 {
     padding-right:15px;
 }
 
-section {
-    padding-bottom:20px;
-}
-
 #intro-section .row {
     border-radius:20px;
     padding-bottom: 20px;
@@ -67,6 +63,12 @@ p, li {
 
 .cert-row {
     text-align:center !important;
+}
+
+.towson-row {
+    text-align:center;
+    padding-top:10px;
+    padding-bottom:20px !important;
 }
 
 .cert-row a {
@@ -105,8 +107,6 @@ p, li {
     padding-top:10px;
     padding-bottom:20px;
 }
-
-
 
 .skills-section h3 {
     margin-bottom:20px;
@@ -345,6 +345,10 @@ section .carousel-item:hover::after {
 @media (min-width:845px) {
     .cert-row {
         text-align:left !important;
+    }
+
+    .towson-row {
+        text-align:right !important;
     }
 }
 
