@@ -1,7 +1,5 @@
 const links = document.querySelectorAll('.nav-item');
-console.log(links)
 const sections = document.querySelectorAll('section');
-console.log(sections)
 
 function changeLinkState() {
   let index = sections.length;

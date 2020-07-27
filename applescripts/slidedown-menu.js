@@ -5,7 +5,6 @@ var navMenu = document.querySelector('#navbar-mobile');
 var dropDownList = Array.from (document.querySelectorAll('.dropdown-options li'));
 var index=0;
 var dropDownSearch = document.querySelector('.search-container');
-console.log(dropDownSearch);
 
 menuIcon.addEventListener("click", function() {
     if (menuIcon.classList.contains('menu-active')){
