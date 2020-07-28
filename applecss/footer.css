@@ -219,3 +219,20 @@
         transition: 0.3s ease;
     }
 }
+
+.copyright-colin {
+    background-color:#212529;
+    padding-top:10px;
+    padding-bottom:10px;
+    text-align:center;
+    width:100%;
+    font-size:0.8rem;
+}
+
+.copyright-colin a {
+    color:white;
+}
+
+.copyright-colin a:hover {
+    color:white;
+}
