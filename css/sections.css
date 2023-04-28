@@ -65,6 +65,17 @@ p, li {
     text-align:center !important;
 }
 
+.name {
+    margin: 0;
+}
+.title {
+    color: #fff;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin: 0;
+    size: 1rem;
+}
+
 .towson-row {
     text-align:center;
     padding-top:10px;
@@ -243,7 +254,7 @@ section {
 .skill-card {
     box-sizing:border-box;
     padding:20px;
-    margin-top:20px;
+    margin-top:0px;
     margin-bottom:20px;
     border-radius:10px;
     color:#fff !important;
