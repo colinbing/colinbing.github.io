@@ -152,7 +152,7 @@ p, li {
 }
 
 [data-theme="dark"] .ncontext-logo{
-    content:url('/images/icons/ncontext-white.png');
+    content:url('/images/icons/nContext-white.png');
 }
 
 [data-theme="dark"] .tecore-logo{
