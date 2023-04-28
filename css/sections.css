@@ -147,6 +147,14 @@ p, li {
     color: #eee !important;
 }
 
+[data-theme="dark"] .wapo-logo{
+    content:url('/images/icons/wapo-logo-white.png');
+}
+
+[data-theme="dark"] .ncontext-logo{
+    content:url('/images/icons/ncontext-white.png');
+}
+
 [data-theme="dark"] .tecore-logo{
     content:url('/images/icons/tecore-logo-white.png');
 }
