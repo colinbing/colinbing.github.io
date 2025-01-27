@@ -1,0 +1,120 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Image Border App</title>
+  <style>
+    #download-button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    #image-container {
+      font-family: Arial, sans-serif;
+    }
+    #image-container p {
+      font-weight: bold;
+    }
+    #image-container img {
+      margin-bottom: 20px;
+    }
+    #download-button {
+      background-color: royalblue;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .file-size {
+      font-weight: normal;
+      font-style: italic;
+    }
+    .warning {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <input id="image-input" type="file" multiple>
+  <button id="download-button" disabled>Download</button>
+  <div id="image-container"></div>
+
+  <script>
+    let updatedImages = [];
+    let originalFileNames = [];
+
+    document.getElementById('image-input').addEventListener('change', () => {
+      const images = document.getElementById('image-input').files;
+      const imageContainer = document.getElementById('image-container');
+      imageContainer.innerHTML = '';
+      updatedImages = [];
+      originalFileNames = [];
+
+      for (let i = 0; i < images.length; i++) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const imageData = new Uint8Array(reader.result);
+          const img = new Image();
+          img.onload = () => {
+            const width = img.width;
+            const height = img.height;
+            const fileName = images[i].name;
+            const fileSize = formatFileSize(images[i].size);
+            const fileSizeElement = document.createElement('span');
+            fileSizeElement.className = 'file-size';
+            fileSizeElement.textContent = fileSize;
+
+            originalFileNames.push(fileName);
+            const paragraph = document.createElement('p');
+            paragraph.innerHTML = `${width}x${height} - ${fileName}<br>`;
+            paragraph.appendChild(fileSizeElement);
+            imageContainer.appendChild(paragraph);
+
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0);
+            ctx.strokeStyle = 'black';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(0, 0, width, height);
+
+            const imageElement = document.createElement('img');
+            imageElement.src = canvas.toDataURL();
+            imageContainer.appendChild(imageElement);
+
+            updatedImages.push(canvas.toDataURL());
+          };
+          img.src = URL.createObjectURL(new Blob([imageData], { type: images[i].type }));
+        };
+        reader.readAsArrayBuffer(images[i]);
+      }
+
+      document.getElementById('download-button').disabled = false;
+    });
+
+    document.getElementById('download-button').addEventListener('click', () => {
+      for (let i = 0; i < updatedImages.length; i++) {
+        const link = document.createElement('a');
+        const newFileName = originalFileNames[i].replace(/\.[^/.]+$/, '_border$&');
+        link.href = updatedImages[i];
+        link.download = newFileName;
+        link.click();
+      }
+    });
+
+    function formatFileSize(size) {
+      if (size < 1024) {
+        return `${size} bytes`;
+      } else if (size < 1024 * 1024) {
+        return `${(size / 1024).toFixed(2)} KB`;
+      } else if (size < 1024 * 1024 * 1024) {
+        return `${(size / (1024 * 1024)).toFixed(2)} MB`;
+      } else {
+        return `${(size / (1024 * 1024 * 1024)).toFixed(2)} GB`;
+      }
+    }
+  </script>
+</body>
+</html>
+
