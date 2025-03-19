@@ -40,7 +40,10 @@ h2 {
 }
 
 #navbar9 > ul > li.nav-item > a {
+    font-variation-settings: 'wght' 400;
+    transition: font-variation-settings 0.3s ease;
     color: rgba(255,255,255,1);
+    
 }
 
 p, li {
@@ -107,12 +110,12 @@ p, li {
 }
 
 .active a {
-    font-weight:600;
+    font-variation-settings: 'wght' 700;
     color: rgba(255,255,255,1);
     }
 
 #navbar9 > ul > li.nav-item > a:hover {
-    font-weight:600;
+    font-variation-settings: 'wght' 700;
     color: rgba(255,255,255,1);
     }
 
