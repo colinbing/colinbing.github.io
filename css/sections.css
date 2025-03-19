@@ -532,3 +532,7 @@ footer .row {
 .carousel p, .carousel h5 {
     color:white !important;
 }
+
+.stars {
+    padding:2px 2px 8px 2px;
+}
