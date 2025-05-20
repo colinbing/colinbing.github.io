@@ -4,117 +4,302 @@
 <head>
   <title>Image Border App</title>
   <style>
-    #download-button:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-    #image-container {
+    /* Base Layout */
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
       font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
     }
-    #image-container p {
-      font-weight: bold;
+
+    /* Fixed Header */
+    header {
+      position: sticky;
+      top: 0;
+      background-color: white;
+      z-index: 10;
+      padding-bottom: 1em;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
-    #image-container img {
-      margin-bottom: 20px;
+
+    h1 {
+      text-align: center;
+      margin: 1rem 0 0.5rem 0;
     }
-    #download-button {
-      background-color: royalblue;
-      color: white;
+
+    .dropzone {
+      width: 90%;
+      margin: 0 auto;
+      padding: 2vh 0;
+      border: 2px dashed gray;
+      transition: background-color 0.2s, border-color 0.2s;
+    }
+
+    .dropzone:hover,
+    .dropzone.dragging {
+      border-color: #666;
+      background-color: #f0f0f0;
+    }
+
+    .button-container {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center; /* 👈 This centers the group */
+      gap: 1rem;
+      padding: 1em;
+    }
+
+    /* Ensure inputs and labels align nicely */
+    .button-container label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* Optional: Style the buttons consistently */
+    #download-button,
+    #clear-button {
       padding: 10px 20px;
       border: none;
       border-radius: 5px;
       cursor: pointer;
+      height: 40px;
+      line-height: 1;
     }
+
+    /* Carousel Container */
+    #image-container.carousel {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      overflow-x: auto;
+      overflow-y: hidden;
+      gap: 20px;
+      padding: 20px;
+      scroll-behavior: smooth;
+    }
+
+
+    /* Individual Images */
+    #image-container img {
+      max-height: 50vh;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      flex-shrink: 0;
+    }
+
+
+    #image-container p {
+      display: none; /* Optional: hide individual image metadata */
+    }
+
+    #image-container {
+      padding-bottom: 40px; /* or match your footer's height */
+    }
+
     .file-size {
       font-weight: normal;
       font-style: italic;
     }
-    .warning {
-      color: red;
+
+
+    #download-button {
+      background-color: royalblue;
+      color: white;
     }
+
+    #clear-button {
+      background-color: crimson;
+      color: white;
+    }
+
+    #download-button:disabled,
+    #clear-button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    #page-footer {
+      position: fixed;
+      bottom: 15px; /* Lift it 30px above the viewport bottom */
+      left: 0;
+      width: 100%;
+      padding: 10px 0;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #555;
+      border-top: 1px solid #ddd;
+      border-bottom: 1px solid #ddd;
+      background: #f9f9f9;
+      z-index: 100;
+    }
+
+
   </style>
 </head>
 <body>
-  <input id="image-input" type="file" multiple>
-  <button id="download-button" disabled>Download</button>
-  <div id="image-container"></div>
+  <body>
+    <header>
+      <h1>Add Borders to Images</h1>
+      <div class="dropzone">
+        <div class="button-container">
+          <label>
+            <input id="image-input" type="file" multiple>
+          </label>
+        
+          <label>
+            Border Color:
+            <input type="color" id="border-color" value="#000000">
+          </label>
+        
+          <label>
+            Border Width:
+            <input type="number" id="border-width" value="1" min="1" max="20">
+          </label>
+        
+          <button id="download-button" disabled>Download</button>
+          <button id="clear-button" disabled>Clear</button>
+        </div>
+        
+        </div>
+      </div>
+    </header>
+  
+    <div id="image-container" class="carousel"></div>
 
-  <script>
-    let updatedImages = [];
-    let originalFileNames = [];
+    <script>
+      let updatedImages = [];
+      let originalFileNames = [];
+    
+      const dropzone = document.querySelector('.dropzone');
+      const fileInput = document.getElementById('image-input');
+    
+      dropzone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropzone.classList.add('dragging');
+      });
+    
+      dropzone.addEventListener('dragleave', (e) => {
+        e.preventDefault();
+        dropzone.classList.remove('dragging');
+      });
+    
+      dropzone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropzone.classList.remove('dragging');
+    
+        if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+          processFiles(e.dataTransfer.files);
+          e.dataTransfer.clearData();
+        }
+      });
+    
+      fileInput.addEventListener('change', () => {
+        processFiles(fileInput.files);
+      });
+    
+      function processFiles(files) {
+        const images = files;
+        const imageContainer = document.getElementById('image-container');
+        imageContainer.innerHTML = '';
+        updatedImages = [];
+        originalFileNames = [];
+    
+        for (let i = 0; i < images.length; i++) {
+          ((index) => {
+            const reader = new FileReader();
+            reader.onload = () => {
+              const imageData = new Uint8Array(reader.result);
+              const img = new Image();
+              img.onload = () => {
+                const width = img.width;
+                const height = img.height;
+                const fileName = images[index].name;
+                const fileSize = formatFileSize(images[index].size);
+                const fileSizeElement = document.createElement('span');
+                fileSizeElement.className = 'file-size';
+                fileSizeElement.textContent = fileSize;
+    
+                originalFileNames.push(fileName);
+                const paragraph = document.createElement('p');
+                paragraph.innerHTML = `${width}x${height} - ${fileName}<br>`;
+                paragraph.appendChild(fileSizeElement);
+                imageContainer.appendChild(paragraph);
+    
+                const canvas = document.createElement('canvas');
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0);
+    
+                const borderColor = document.getElementById('border-color').value;
+                const borderWidth = parseInt(document.getElementById('border-width').value);
+                ctx.strokeStyle = borderColor;
+                ctx.lineWidth = borderWidth;
+                ctx.strokeRect(0, 0, width, height);
+    
+                const imageElement = document.createElement('img');
+                imageElement.src = canvas.toDataURL();
+                imageContainer.appendChild(imageElement);
+    
+                updatedImages.push(canvas.toDataURL());
+              };
+              img.src = URL.createObjectURL(new Blob([imageData], { type: images[index].type }));
+            };
+            reader.readAsArrayBuffer(images[index]);
+          })(i);
+        }
+    
+        document.getElementById('download-button').disabled = false;
+        document.getElementById('clear-button').disabled = false;
+      }
+    
+      document.getElementById('download-button').addEventListener('click', () => {
+        for (let i = 0; i < updatedImages.length; i++) {
+          const link = document.createElement('a');
+          const newFileName = originalFileNames[i].replace(/\.[^/.]+$/, '_border$&');
+          link.href = updatedImages[i];
+          link.download = newFileName;
+          link.click();
+        }
+      });
+    
+      function formatFileSize(size) {
+        if (size < 1024) {
+          return `${size} bytes`;
+        } else if (size < 1024 * 1024) {
+          return `${(size / 1024).toFixed(2)} KB`;
+        } else if (size < 1024 * 1024 * 1024) {
+          return `${(size / (1024 * 1024)).toFixed(2)} MB`;
+        } else {
+          return `${(size / (1024 * 1024 * 1024)).toFixed(2)} GB`;
+        }
+      }
 
-    document.getElementById('image-input').addEventListener('change', () => {
-      const images = document.getElementById('image-input').files;
-      const imageContainer = document.getElementById('image-container');
-      imageContainer.innerHTML = '';
+      document.getElementById('clear-button').addEventListener('click', () => {
+      document.getElementById('image-container').innerHTML = '';
       updatedImages = [];
       originalFileNames = [];
 
-      for (let i = 0; i < images.length; i++) {
-        const reader = new FileReader();
-        reader.onload = () => {
-          const imageData = new Uint8Array(reader.result);
-          const img = new Image();
-          img.onload = () => {
-            const width = img.width;
-            const height = img.height;
-            const fileName = images[i].name;
-            const fileSize = formatFileSize(images[i].size);
-            const fileSizeElement = document.createElement('span');
-            fileSizeElement.className = 'file-size';
-            fileSizeElement.textContent = fileSize;
+      // Reset file input so same files can be re-uploaded
+      document.getElementById('image-input').value = '';
 
-            originalFileNames.push(fileName);
-            const paragraph = document.createElement('p');
-            paragraph.innerHTML = `${width}x${height} - ${fileName}<br>`;
-            paragraph.appendChild(fileSizeElement);
-            imageContainer.appendChild(paragraph);
-
-            const canvas = document.createElement('canvas');
-            canvas.width = width;
-            canvas.height = height;
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(img, 0, 0);
-            ctx.strokeStyle = 'black';
-            ctx.lineWidth = 1;
-            ctx.strokeRect(0, 0, width, height);
-
-            const imageElement = document.createElement('img');
-            imageElement.src = canvas.toDataURL();
-            imageContainer.appendChild(imageElement);
-
-            updatedImages.push(canvas.toDataURL());
-          };
-          img.src = URL.createObjectURL(new Blob([imageData], { type: images[i].type }));
-        };
-        reader.readAsArrayBuffer(images[i]);
-      }
-
-      document.getElementById('download-button').disabled = false;
+      // Disable buttons again
+      document.getElementById('download-button').disabled = true;
+      document.getElementById('clear-button').disabled = true;
     });
+    </script>
+    
 
-    document.getElementById('download-button').addEventListener('click', () => {
-      for (let i = 0; i < updatedImages.length; i++) {
-        const link = document.createElement('a');
-        const newFileName = originalFileNames[i].replace(/\.[^/.]+$/, '_border$&');
-        link.href = updatedImages[i];
-        link.download = newFileName;
-        link.click();
-      }
-    });
-
-    function formatFileSize(size) {
-      if (size < 1024) {
-        return `${size} bytes`;
-      } else if (size < 1024 * 1024) {
-        return `${(size / 1024).toFixed(2)} KB`;
-      } else if (size < 1024 * 1024 * 1024) {
-        return `${(size / (1024 * 1024)).toFixed(2)} MB`;
-      } else {
-        return `${(size / (1024 * 1024 * 1024)).toFixed(2)} GB`;
-      }
-    }
-  </script>
+    <footer id="page-footer">
+      ©Colin Bingham 2025 | Images are edited locally in your browser — nothing is uploaded or shared.
+    </footer>
+    
 </body>
 </html>
 
