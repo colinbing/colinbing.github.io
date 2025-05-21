@@ -39,13 +39,6 @@ h2 {
     max-width:80%;
 }
 
-#navbar9 > ul > li.nav-item > a {
-    font-variation-settings: 'wght' 400;
-    transition: font-variation-settings 0.3s ease;
-    color: rgba(255,255,255,1);
-    
-}
-
 p, li {
     font-size:0.9rem;
     color:#202020;
@@ -114,10 +107,50 @@ p, li {
     color: rgba(255,255,255,1);
     }
 
+#navbar9 > ul > li.nav-item > a {
+    font-weight: 400;
+    transition: color 0.3s ease;
+    color: rgba(255, 255, 255, 1);
+}
+
 #navbar9 > ul > li.nav-item > a:hover {
-    font-variation-settings: 'wght' 700;
-    color: rgba(255,255,255,1);
-    }
+    color: rgba(255, 255, 255, 0.8); /* Or any subtle color change you like */
+}
+
+/* Position the dropdown properly and avoid the gap */
+.nav-item.dropdown {
+    position: relative;
+}
+
+.nav-item.dropdown .dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%; /* Ensure it's directly beneath the parent */
+    left: 0;
+    background-color: #343a40;
+    z-index: 1000;
+    min-width: 220px;
+    padding: 0;
+    border-radius: 0.25rem;
+}
+
+.nav-item.dropdown:hover .dropdown-menu,
+.nav-item.dropdown .dropdown-menu:hover {
+    display: block;
+}
+
+/* Optional: padding to dropdown links */
+.dropdown-item {
+    color: white;
+    padding: 10px 15px;
+    display: block;
+    text-decoration: none;
+}
+
+.dropdown-item:hover {
+    background-color: #495057;
+    color: white;
+}
 
 .skill-img {
     max-width:100px;
