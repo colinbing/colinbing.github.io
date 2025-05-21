@@ -139,10 +139,31 @@
       z-index: 100;
     }
 
+    .spinner {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      width: 30px;
+      height: 30px;
+      border: 4px solid rgba(0,0,0,0.1);
+      border-top: 4px solid royalblue;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      z-index: 1000;
+    }
+    .hidden {
+      display: none;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+
 
   </style>
 </head>
-<body>
+<div id="spinner" class="spinner hidden"></div>
   <body>
     <header>
       <h1>Add Borders to Images</h1>
@@ -173,126 +194,136 @@
     <div id="image-container" class="carousel"></div>
 
     <script>
-      let updatedImages = [];
-      let originalFileNames = [];
-    
-      const dropzone = document.querySelector('.dropzone');
-      const fileInput = document.getElementById('image-input');
-    
-      dropzone.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        dropzone.classList.add('dragging');
-      });
-    
-      dropzone.addEventListener('dragleave', (e) => {
-        e.preventDefault();
-        dropzone.classList.remove('dragging');
-      });
-    
-      dropzone.addEventListener('drop', (e) => {
-        e.preventDefault();
-        dropzone.classList.remove('dragging');
-    
-        if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-          processFiles(e.dataTransfer.files);
-          e.dataTransfer.clearData();
-        }
-      });
-    
-      fileInput.addEventListener('change', () => {
-        processFiles(fileInput.files);
-      });
-    
-      function processFiles(files) {
-        const images = files;
-        const imageContainer = document.getElementById('image-container');
-        imageContainer.innerHTML = '';
-        updatedImages = [];
-        originalFileNames = [];
-    
-        for (let i = 0; i < images.length; i++) {
-          ((index) => {
-            const reader = new FileReader();
-            reader.onload = () => {
-              const imageData = new Uint8Array(reader.result);
-              const img = new Image();
-              img.onload = () => {
-                const width = img.width;
-                const height = img.height;
-                const fileName = images[index].name;
-                const fileSize = formatFileSize(images[index].size);
-                const fileSizeElement = document.createElement('span');
-                fileSizeElement.className = 'file-size';
-                fileSizeElement.textContent = fileSize;
-    
-                originalFileNames.push(fileName);
-                const paragraph = document.createElement('p');
-                paragraph.innerHTML = `${width}x${height} - ${fileName}<br>`;
-                paragraph.appendChild(fileSizeElement);
-                imageContainer.appendChild(paragraph);
-    
-                const canvas = document.createElement('canvas');
-                canvas.width = width;
-                canvas.height = height;
-                const ctx = canvas.getContext('2d');
-                ctx.drawImage(img, 0, 0);
-    
-                const borderColor = document.getElementById('border-color').value;
-                const borderWidth = parseInt(document.getElementById('border-width').value);
-                ctx.strokeStyle = borderColor;
-                ctx.lineWidth = borderWidth;
-                ctx.strokeRect(0, 0, width, height);
-    
-                const imageElement = document.createElement('img');
-                imageElement.src = canvas.toDataURL();
-                imageContainer.appendChild(imageElement);
-    
-                updatedImages.push(canvas.toDataURL());
-              };
-              img.src = URL.createObjectURL(new Blob([imageData], { type: images[index].type }));
-            };
-            reader.readAsArrayBuffer(images[index]);
-          })(i);
-        }
-    
-        document.getElementById('download-button').disabled = false;
-        document.getElementById('clear-button').disabled = false;
-      }
-    
-      document.getElementById('download-button').addEventListener('click', () => {
-        for (let i = 0; i < updatedImages.length; i++) {
-          const link = document.createElement('a');
-          const newFileName = originalFileNames[i].replace(/\.[^/.]+$/, '_border$&');
-          link.href = updatedImages[i];
-          link.download = newFileName;
-          link.click();
-        }
-      });
-    
-      function formatFileSize(size) {
-        if (size < 1024) {
-          return `${size} bytes`;
-        } else if (size < 1024 * 1024) {
-          return `${(size / 1024).toFixed(2)} KB`;
-        } else if (size < 1024 * 1024 * 1024) {
-          return `${(size / (1024 * 1024)).toFixed(2)} MB`;
-        } else {
-          return `${(size / (1024 * 1024 * 1024)).toFixed(2)} GB`;
-        }
-      }
+    let originalImages = [];
+    let updatedImages = [];
+    let originalFileNames = [];
 
-      document.getElementById('clear-button').addEventListener('click', () => {
-      document.getElementById('image-container').innerHTML = '';
+    const dropzone = document.querySelector('.dropzone');
+    const fileInput = document.getElementById('image-input');
+    const imageContainer = document.getElementById('image-container');
+
+    // Drag & Drop behavior
+    dropzone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropzone.classList.add('dragging');
+    });
+
+    dropzone.addEventListener('dragleave', (e) => {
+      e.preventDefault();
+      dropzone.classList.remove('dragging');
+    });
+
+    dropzone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropzone.classList.remove('dragging');
+      if (e.dataTransfer.files.length > 0) {
+        processFiles(e.dataTransfer.files);
+        e.dataTransfer.clearData();
+      }
+    });
+
+    fileInput.addEventListener('change', () => {
+      processFiles(fileInput.files);
+    });
+
+    // Process uploaded images
+    function processFiles(files) {
+      originalImages = [];
       updatedImages = [];
       originalFileNames = [];
+      imageContainer.innerHTML = '';
 
-      // Reset file input so same files can be re-uploaded
-      document.getElementById('image-input').value = '';
+      Array.from(files).forEach((file, index) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const img = new Image();
+          img.onload = () => {
+            originalImages.push({ img, file });
+            originalFileNames.push(file.name);
+            renderAllImages();
+          };
+          img.src = URL.createObjectURL(file);
+        };
+        reader.readAsDataURL(file);
+      });
 
-      // Disable buttons again
-      document.getElementById('download-button').disabled = true;
-      document.getElementById('clear-button').disabled = true;
+      document.getElementById('download-button').disabled = false;
+      document.getElementById('clear-button').disabled = false;
+    }
+
+  // Re-render all images
+  function renderAllImages() {
+  const spinner = document.getElementById('spinner');
+  spinner.classList.remove('hidden');
+  setTimeout(() => {
+    imageContainer.innerHTML = '';
+    updatedImages = [];
+
+    originalImages.forEach(({ img, file }, index) => {
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext('2d');
+
+      ctx.drawImage(img, 0, 0);
+      const borderColor = document.getElementById('border-color').value;
+      const borderWidth = parseInt(document.getElementById('border-width').value);
+      ctx.strokeStyle = borderColor;
+      ctx.lineWidth = borderWidth;
+      ctx.strokeRect(0, 0, canvas.width, canvas.height);
+
+      const imageElement = document.createElement('img');
+      imageElement.src = canvas.toDataURL();
+      imageElement.style.maxHeight = '50vh';
+
+      const caption = document.createElement('p');
+      caption.innerHTML = `${img.width}x${img.height} - ${file.name}<br><span class="file-size">${formatFileSize(file.size)}</span>`;
+
+      const wrapper = document.createElement('div');
+      wrapper.className = 'image-wrapper';
+      wrapper.appendChild(imageElement);
+      wrapper.appendChild(caption);
+
+      imageContainer.appendChild(wrapper);
+      updatedImages.push(canvas.toDataURL());
     });
+
+    spinner.classList.add('hidden');
+  }, 50); // short timeout to allow spinner to show
+}
+
+
+      // Update when controls change
+      document.getElementById('border-color').addEventListener('input', renderAllImages);
+      document.getElementById('border-width').addEventListener('input', renderAllImages);
+
+      // Download
+      document.getElementById('download-button').addEventListener('click', () => {
+        updatedImages.forEach((dataURL, index) => {
+          const link = document.createElement('a');
+          const newFileName = originalFileNames[index].replace(/\.[^/.]+$/, '_border$&');
+          link.href = dataURL;
+          link.download = newFileName;
+          link.click();
+        });
+      });
+
+      // Clear
+      document.getElementById('clear-button').addEventListener('click', () => {
+        imageContainer.innerHTML = '';
+        updatedImages = [];
+        originalImages = [];
+        originalFileNames = [];
+        document.getElementById('image-input').value = '';
+        document.getElementById('download-button').disabled = true;
+        document.getElementById('clear-button').disabled = true;
+      });
+
+      function formatFileSize(size) {
+        if (size < 1024) return `${size} bytes`;
+        if (size < 1024 * 1024) return `${(size / 1024).toFixed(2)} KB`;
+        return `${(size / 1024 / 1024).toFixed(2)} MB`;
+      }
     </script>
     
 
