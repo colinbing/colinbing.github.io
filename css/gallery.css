@@ -1,0 +1,151 @@
+/* Reset and background */
+
+
+/* Container for the carousel */
+.gallery-container {
+  position: relative;
+  width: 100%;
+  height: 320px;
+  overflow: hidden;
+}
+
+/* Main gallery area */
+.gallery {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  perspective: 1000px;
+}
+
+/* Each image wrapper */
+.artwork {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%) scale(0.6);
+  opacity: 0.5;
+  transition: transform 0.6s ease, opacity 0.6s ease;
+  pointer-events: none;
+}
+
+/* Image styling */
+.artwork img {
+  width: auto;
+  height: 300px;
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  user-select: none;
+  -webkit-user-drag: none;
+  user-drag: none;
+  pointer-events: none;
+}
+
+
+/* Offsets for each visual position */
+:root {
+  --spacing: 200px;   /* was 250px */
+  --spacing2: 400px;  /* was 500px */
+}
+
+/* Center image */
+.artwork[data-offset="0"] {
+  transform: translateX(-50%) translateY(-50%) scale(1);
+  opacity: 1;
+  z-index: 5;
+  pointer-events: auto;
+}
+
+
+/* Side images */
+.artwork[data-offset="1"] {
+  transform: translateX(calc(-50% + var(--spacing))) translateY(-50%) scale(0.8);
+  opacity: 1;
+  z-index: 4;
+  filter: brightness(80%) blur(0.5px);
+}
+.artwork[data-offset="-1"] {
+  transform: translateX(calc(-50% - var(--spacing))) translateY(-50%) scale(0.8);
+  opacity: 1;
+  z-index: 4;
+  filter: brightness(80%) blur(0.5px);
+}
+
+/* Far side images */
+.artwork[data-offset="2"] {
+  transform: translateX(calc(-50% + var(--spacing2))) translateY(-50%) scale(0.6);
+  opacity: 1;
+  z-index: 3;
+  filter: brightness(60%) blur(1px);
+}
+.artwork[data-offset="-2"] {
+  transform: translateX(calc(-50% - var(--spacing2))) translateY(-50%) scale(0.6);
+  opacity: 1;
+  z-index: 3;
+  filter: brightness(60%) blur(1px);
+}
+
+:root {
+  --spacing: 200px;
+  --spacing2: 400px;
+  --spacing3: 200px; /* NEW: Used for exit transition */
+}
+
+/* Far-left exit image (-3) */
+.artwork[data-offset="-3"] {
+  transform: translateX(calc(-50% - var(--spacing3))) translateY(-50%) scale(0.4);
+  opacity: 0;
+  z-index: 1;
+  filter: brightness(30%);
+  transition: transform 0.6s ease, opacity 0.6s ease;
+}
+
+/* Far-right exit image (+3) */
+.artwork[data-offset="3"] {
+  transform: translateX(calc(-50% + var(--spacing3))) translateY(-50%) scale(0.4);
+  opacity: 0;
+  z-index: 1;
+  filter: brightness(30%);
+  transition: transform 0.6s ease, opacity 0.6s ease;
+}
+
+
+/* Navigation buttons */
+.nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 2rem;
+  background: rgba(0, 0, 0, 0.5);
+  border: none;
+  color: white;
+  cursor: pointer;
+  z-index: 10;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  user-select: none;
+}
+
+.nav.left {
+  left: 10px;
+}
+
+.nav.right {
+  right: 10px;
+}
+
+/* Prevent image selection and dragging */
+.artwork img {
+  user-select: none;
+  -webkit-user-drag: none;
+  user-drag: none;
+  pointer-events: none;
+}
+
+/* Optional: make whole gallery unselectable while dragging */
+.gallery {
+  user-select: none;
+  cursor: grab;
+}
+.gallery:active {
+  cursor: grabbing;
+}
