@@ -572,3 +572,7 @@ footer .row {
 .stars {
     padding:2px 2px 8px 2px;
 }
+
+.project-section:has(.graphic-design) {
+    background-color: #F9F1F0; /* or whatever color you'd like */
+  }
