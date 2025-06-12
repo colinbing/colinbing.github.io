@@ -96,6 +96,8 @@ p, li {
     padding-top:30px;
     padding-bottom:30px;
     user-select:none;
+    max-height:300px;
+    border-radius: 50%;
 }
 
 .resume-button {
