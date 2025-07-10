@@ -578,3 +578,14 @@ footer .row {
 .project-section:has(.graphic-design) {
     background-color: #F9F1F0; /* or whatever color you'd like */
   }
+
+.ti-cursor {
+    font-size: 1.5rem;
+    margin-left: 0.2em;
+    vertical-align: 0.05em;
+    animation: blink 1s step-start infinite;
+  }
+
+  #myTyper {
+    font-size: 1.5rem;
+  }
