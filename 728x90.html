@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>728x90 Creative</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #f0f0f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .ad-container {
+      width: 728px;
+      height: 90px;
+      display: flex;
+      background: white;
+      font-family: sans-serif;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+
+    .left-column {
+      display: flex;
+      align-items: center;
+      padding: 0 10px;
+    }
+
+    .left-column img.logo {
+      max-height: 60%;
+      max-width: 100px;
+      object-fit: contain;
+    }
+
+    .middle-column {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 0 10px;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .middle-column .headline {
+      font-size: 14px;
+      font-weight: bold;
+      margin: 0 0 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .middle-column .description {
+      font-size: 12px;
+      margin: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .right-column {
+      height: 100%;
+      max-width: 40%;
+    }
+
+    .right-column img.media {
+      height: 100%;
+      width: auto;
+      object-fit: cover;
+      display: block;
+    }
+
+    a.cta-button {
+      display: none; /* Optional: hide for space in 728x90 */
+    }
+  </style>
+</head>
+<body>
+  <div class="ad-container">
+    <div class="left-column">
+      <img class="logo" src="images/demo-images/washington-gas-logo.png" alt="Logo" />
+    </div>
+    <div class="middle-column">
+      <h1 class="headline">ENERGY-SAVING UPGRADES ARE GOOD FOR ANY BUSINESS.</h1>
+      <p class="description">Get incentives for boiler systems, gas heating & more.</p>
+    </div>
+    <div class="right-column">
+      <img class="media" src="images/demo-images/washington-gas.png" alt="Ad Image" />
+    </div>
+  </div>
+</body>
+</html>

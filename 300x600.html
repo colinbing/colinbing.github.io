@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>300x600 Creative</title>
+  <style>
+    body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #eee;
+    height: 100vh;
+    }
+
+    .ad-300x600 {
+    width: 300px;
+    height: 600px;
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    font-family: sans-serif;
+    overflow: hidden;
+    border: 1px solid #ccc;
+    }
+
+    .logo-row {
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    }
+
+    .logo-row img.logo {
+    max-height: 60px;
+    max-width: 100%;
+    object-fit: contain;
+    }
+
+    .media {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    }
+
+    .media img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    display: block;
+    }
+
+
+
+    .text-block {
+    flex: 1; /* take up remaining vertical space */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* vertical centering */
+    align-items: center;     /* horizontal centering */
+    gap: 12px; /* spacing between headline, desc, and CTA */
+    padding: 20px 15px;
+    text-align: center;
+    box-sizing: border-box;
+    }
+
+    .text-block .headline {
+    font-size: 24px;
+    font-weight: bold;
+    line-height: 28px;
+    margin: 0;
+    }
+
+    .text-block .description {
+    font-size: 16px;
+    line-height: 22px;
+    margin: 0;
+    }
+
+    .text-block .cta {
+    padding: 10px 20px;
+    font-size: 14px;
+    background-color: #0072ce;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    }
+
+    .text-block .cta:hover {
+    background-color: #005fa3;
+    }
+
+
+  </style>
+</head>
+<body>
+  <div class="ad-300x600">
+    <div class="logo-row">
+      <img class="logo" src="images/demo-images/washington-gas-logo.png" alt="Logo" />
+    </div>
+    
+    <div class="media">
+      <img src="images/demo-images/washington-gas.png" alt="Main Visual" />
+    </div>
+    
+    <div class="text-block">
+      <h1 class="headline">ENERGY-SAVING UPGRADES ARE GOOD FOR ANY BUSINESS.</h1>
+      <p class="description">Get generous incentives for high-efficiency equipment.</p>
+      <button class="cta">Learn More</button>
+    </div>
+  </div>
+</body>
+</html>
+
