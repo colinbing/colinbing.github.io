@@ -1,0 +1,130 @@
+:root {
+  --rx: 0deg;
+  --ry: 0deg;
+  --grad-x: 50%;
+  --grad-y: 50%;
+  --spark-x: 50%;
+  --spark-y: 50%;
+  --spark-opacity: 0.25;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #1a1a1a;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 100vh;
+  padding: 40px 20px;
+  perspective: 1000px;
+}
+
+header {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+select {
+  margin-bottom: 20px;
+  padding: 8px 12px;
+  font-size: 1rem;
+}
+
+.card {
+  width: 300px;
+  height: 420px;
+  position: relative;
+  transform: rotateX(var(--rx)) rotateY(var(--ry));
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+  overflow: hidden;
+  border-radius: 16px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+}
+
+.card__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Holographic layer (under front light) */
+.card__shine {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 5;
+  mix-blend-mode: screen;
+  opacity: 0.4;
+  transition: opacity 0.3s ease;
+  background: radial-gradient(
+    circle at center,
+    rgba(255, 0, 255, 0.15),
+    rgba(0, 255, 255, 0.15),
+    transparent 60%
+  );
+  background-size: 200%;
+  background-position: center;
+}
+
+/* Rainbow example */
+.card[data-rarity="rare rainbow"] .card__shine {
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(255, 0, 255, 0.2) 0px,
+    rgba(0, 255, 255, 0.2) 10px,
+    rgba(255, 255, 255, 0.2) 20px
+  );
+  background-size: 300%;
+}
+
+@keyframes holoShift {
+  0% {
+    background-position: 0% 0%;
+  }
+  100% {
+    background-position: 100% 100%;
+  }
+}
+
+/* ✨ Front light gloss */
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    circle at var(--grad-x) var(--grad-y),
+    rgba(255, 255, 255, 0.15),
+    transparent 60%
+  );
+  z-index: 9;
+  transition: background-position 0.2s ease;
+}
+
+/* ✨ Sparkle overlay */
+.card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: url("/images/card-bgs/sparkle.gif");
+  background-size: cover;
+  background-position: var(--spark-x) var(--spark-y);
+  mix-blend-mode: color-dodge;
+  opacity: var(--spark-opacity);
+  z-index: 10;
+  transition: background-position 0.2s ease, opacity 0.3s ease;
+}
+
+/* Toggle light reflection */
+.card.light-off::before,
+.card.light-off::after {
+  display: none;
+}

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Holo Card Toggle Demo</title>
+  <link rel="stylesheet" href="/css/tradingcards.css" />
+</head>
+<body>
+  <header>Pokémon Holo Card Demo</header>
+
+  <label for="raritySelect">Choose a rarity:</label>
+  <select id="raritySelect">
+    <option value="rare holo">Rare Holo</option>
+    <option value="rare holo v">Rare Holo V</option>
+    <option value="rare holo vmax">Rare Holo VMAX</option>
+    <option value="rare rainbow">Rare Rainbow</option>
+    <option value="rare holo galaxy">Rare Holo Galaxy</option>
+  </select>
+
+  <label style="margin-top: 10px;">
+    <input type="checkbox" id="toggleLight" checked />
+    Toggle Light Reflection
+  </label>
+
+  <div
+    class="card"
+    data-rarity="rare holo"
+    data-supertype="pokémon"
+    data-subtypes="stage1"
+  >
+    <div class="card__shine"></div>
+    <img
+      class="card__image"
+      src="images/demo-images/dialga-diamond-pearl-dp-1.jpg"
+      alt="Pokemon Card"
+    />
+  </div>
+
+  <script src="/homescripts/tradingcards.js"></script>
+</body>
+</html>
