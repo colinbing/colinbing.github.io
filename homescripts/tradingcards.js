@@ -1,6 +1,7 @@
 const card = document.querySelector(".card");
 const raritySelect = document.getElementById("raritySelect");
 const toggleLight = document.getElementById("toggleLight");
+const toggleTexture = document.getElementById("toggleTexture");
 
 card.addEventListener("mousemove", (e) => {
   const rect = card.getBoundingClientRect();
@@ -19,7 +20,7 @@ card.addEventListener("mousemove", (e) => {
   card.style.setProperty("--grad-y", `${py * 100}%`);
   card.style.setProperty("--spark-x", `${px * 100}%`);
   card.style.setProperty("--spark-y", `${py * 100}%`);
-  card.style.setProperty("--spark-opacity", `0.3`);
+  card.style.setProperty("--spark-opacity", `0.5`);
 });
 
 card.addEventListener("mouseleave", () => {
@@ -29,7 +30,7 @@ card.addEventListener("mouseleave", () => {
   card.style.setProperty("--grad-y", `50%`);
   card.style.setProperty("--spark-x", `50%`);
   card.style.setProperty("--spark-y", `50%`);
-  card.style.setProperty("--spark-opacity", `0.15`);
+  card.style.setProperty("--spark-opacity", `0.2`);
 });
 
 raritySelect.addEventListener("change", (e) => {
@@ -38,6 +39,9 @@ raritySelect.addEventListener("change", (e) => {
 });
 
 toggleLight.addEventListener("change", (e) => {
-  const isOn = e.target.checked;
-  card.classList.toggle("light-off", !isOn);
+  card.classList.toggle("light-off", !e.target.checked);
+});
+
+toggleTexture.addEventListener("change", (e) => {
+  card.classList.toggle("texture-off", !e.target.checked);
 });
