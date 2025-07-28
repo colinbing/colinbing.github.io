@@ -572,3 +572,56 @@
     cursor: pointer;
   }
   
+  .global-assets-form {
+    max-width: 400px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 20px;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    font-family: Arial, sans-serif;
+  }
+  
+  .global-assets-form h2 {
+    margin-bottom: 16px;
+    font-size: 20px;
+  }
+  
+  .global-assets-form form label {
+    display: block;
+    margin-bottom: 16px;
+    font-size: 14px;
+    color: #333;
+  }
+  
+  .global-assets-form input[type="text"],
+  .global-assets-form input[type="url"],
+  .global-assets-form input[type="file"] {
+    width: 100%;
+    max-width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-top: 6px;
+    box-sizing: border-box;
+  }
+  
+  .global-assets-form button[type="submit"] {
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: #0072ce;
+    color: white;
+    border: none;
+    font-size: 14px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .global-assets-form button[type="submit"]:hover {
+    background-color: #005fa3;
+  }
+  
+  

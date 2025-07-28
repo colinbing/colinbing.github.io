@@ -125,84 +125,88 @@ const creativeAssets = {
   }
   
   function renderLayout(layoutId) {
-    const preview = document.getElementById("creative-preview");
-  
-    if (layoutId === 'assets') {
-      renderGlobalAssetsForm();
-      return;
-    }
-  
+  const preview = document.getElementById("creative-preview");
+
+  if (layoutId === "assets") {
+    renderGlobalAssetsForm();
+  } else {
     const renderer = layoutRenderers[layoutId];
     if (!renderer) return;
     preview.innerHTML = `<div style="display:flex; align-items:center; justify-content:center; height:100%;">${renderer(creativeAssets)}</div>`;
   }
-  
-  document.querySelectorAll('.side-menu-item').forEach(item => {
-    item.addEventListener('click', () => {
-      document.querySelectorAll('.side-menu-item').forEach(i => i.classList.remove('active'));
-      item.classList.add('active');
-      setHighlight(item);
-      const layoutId = item.getAttribute('data-layout');
-      renderLayout(layoutId);
-    });
+}
+
+// Side menu logic
+document.querySelectorAll('.side-menu-item').forEach(item => {
+  item.addEventListener('click', () => {
+    document.querySelectorAll('.side-menu-item').forEach(i => i.classList.remove('active'));
+    item.classList.add('active');
+    setHighlight(item);
+    const layoutId = item.getAttribute('data-layout') || item.getAttribute('data-size');
+    renderLayout(layoutId);
   });
-  
-  const defaultLayout = document.querySelector('.side-menu-item.active').getAttribute('data-layout');
-  renderLayout(defaultLayout);
-  setHighlight(document.querySelector('.side-menu-item.active'));
-  
-  // Global assets form logic
-  function renderGlobalAssetsForm() {
-    const preview = document.getElementById("creative-preview");
-    preview.innerHTML = `
-      <div class="global-assets-form" style="max-width: 500px; margin: 40px auto; padding: 20px; border: 1px solid #ccc; background: white; border-radius: 6px;">
-        <h2 style="margin-top:0;">Global Creative Assets</h2>
-        <form id="globalAssetsForm">
-          <label>Headline:<br />
-            <input type="text" name="headline" placeholder="Enter headline" style="width:100%;" />
-          </label><br /><br />
-          <label>Description:<br />
-            <input type="text" name="description" placeholder="Enter description" style="width:100%;" />
-          </label><br /><br />
-          <label>CTA Text:<br />
-            <input type="text" name="cta" placeholder="Enter CTA" style="width:100%;" />
-          </label><br /><br />
-          <label>Clickthrough URL:<br />
-            <input type="url" name="clickthrough" placeholder="https://example.com" style="width:100%;" />
-          </label><br /><br />
-          <label>Logo Image:<br />
-            <input type="file" name="logo" accept="image/*" />
-          </label><br /><br />
-          <label>Media Image or Video:<br />
-            <input type="file" name="media" accept="image/*,video/*" />
-          </label><br /><br />
-          <button type="submit">Save Assets</button>
-        </form>
-      </div>
-    `;
-  
-    const form = document.getElementById('globalAssetsForm');
-    form.addEventListener('submit', function (e) {
-      e.preventDefault();
-  
-      const formData = new FormData(form);
-  
-      creativeAssets.headline = formData.get('headline') || '';
-      creativeAssets.description = formData.get('description') || '';
-      creativeAssets.ctaText = formData.get('cta') || '';
-      creativeAssets.clickthrough = formData.get('clickthrough') || '';
-  
-      const logoFile = formData.get('logo');
-      const mediaFile = formData.get('media');
-  
-      if (logoFile && logoFile.name) {
-        creativeAssets.logoUrl = URL.createObjectURL(logoFile);
-      }
-      if (mediaFile && mediaFile.name) {
-        creativeAssets.imageUrl = URL.createObjectURL(mediaFile);
-      }
-  
-      alert('Global assets saved!');
-    });
-  }
-  
+});
+
+// Initial render
+const defaultLayout = document.querySelector('.side-menu-item.active').getAttribute('data-layout') || 
+                      document.querySelector('.side-menu-item.active').getAttribute('data-size');
+renderLayout(defaultLayout);
+setHighlight(document.querySelector('.side-menu-item.active'));
+
+// Global Asset Form Rendering
+function renderGlobalAssetsForm() {
+  const container = document.getElementById('creative-preview');
+  container.innerHTML = `
+    <div class="global-assets-form" style="padding: 20px; max-width: 400px; width: 100%;">
+      <h2>Global Creative Assets</h2>
+      <form id="globalAssetsForm">
+        <label>Headline:<br />
+          <input type="text" name="headline" placeholder="Enter headline" value="${creativeAssets.headline || ''}" />
+        </label><br /><br />
+        <label>Description:<br />
+          <input type="text" name="description" placeholder="Enter description" value="${creativeAssets.description || ''}" />
+        </label><br /><br />
+        <label>CTA Text:<br />
+          <input type="text" name="cta" placeholder="Enter CTA" value="${creativeAssets.ctaText || ''}" />
+        </label><br /><br />
+        <label>Clickthrough URL:<br />
+          <input type="url" name="clickthrough" placeholder="https://example.com" value="${creativeAssets.clickthrough || ''}" />
+        </label><br /><br />
+        <label>Logo Image:<br />
+          <input type="file" name="logo" accept="image/*" />
+        </label><br /><br />
+        <label>Media Image or Video:<br />
+          <input type="file" name="media" accept="image/*,video/*" />
+        </label><br /><br />
+        <button type="submit">Save Assets</button>
+      </form>
+    </div>
+  `;
+
+  globalFormSubmitHandler(); // bind submission behavior
+}
+
+// Form handler
+function globalFormSubmitHandler() {
+  const form = document.getElementById('globalAssetsForm');
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    const formData = new FormData(form);
+
+    // Only overwrite properties if form field has value
+    const headline = formData.get('headline');
+    const description = formData.get('description');
+    const ctaText = formData.get('cta');
+    const clickthrough = formData.get('clickthrough');
+    const logoFile = formData.get('logo');
+    const mediaFile = formData.get('media');
+
+    if (headline) creativeAssets.headline = headline;
+    if (description) creativeAssets.description = description;
+    if (ctaText) creativeAssets.ctaText = ctaText;
+    if (clickthrough) creativeAssets.clickthrough = clickthrough;
+    if (logoFile && logoFile.name) creativeAssets.logoUrl = URL.createObjectURL(logoFile);
+    if (mediaFile && mediaFile.name) creativeAssets.imageUrl = URL.createObjectURL(mediaFile);
+
+  });
+}
