@@ -297,7 +297,7 @@ body {
     opacity: .8;
     background-size: 13px 13px;
     background-repeat: no-repeat;
-    background-image: url(/images/apple/search.png);
+    background-image: url(/images/search.png);
 }
 
 .search-container {
