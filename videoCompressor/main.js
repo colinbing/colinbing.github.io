@@ -1,73 +1,56 @@
-const { createFFmpeg, fetchFile } = window.FFmpeg;
+const toBlobURL = async (url, mimeType) => {
+  const resp = await fetch(url);
+  const buf = await resp.arrayBuffer();
+  const blob = new Blob([buf], { type: mimeType });
+  return URL.createObjectURL(blob);
+};
 
-const ffmpeg = createFFmpeg({
-  log: true,
-  corePath: 'ffmpeg-core/ffmpeg-core.js'
+const fetchFile = async (file) => {
+  const arr = await file.arrayBuffer();
+  return new Uint8Array(arr);
+};
+
+const ffmpeg = FFmpeg.createFFmpeg({ log: true });
+
+const uploader = document.getElementById('uploader');
+const compressBtn = document.getElementById('compressBtn');
+const status = document.getElementById('status');
+const downloadLink = document.getElementById('downloadLink');
+
+let inputFile;
+
+uploader.addEventListener('change', (e) => {
+  inputFile = e.target.files[0];
+  const preview = document.getElementById('preview');
+  const videoURL = URL.createObjectURL(inputFile);
+  preview.src = videoURL;
+  preview.style.display = 'block';
+
 });
 
-const fileInput = document.getElementById('fileInput');
-const videoPlayer = document.getElementById('videoPlayer');
-const fileInfo = document.getElementById('fileInfo');
+compressBtn.addEventListener('click', async () => {
+  if (!inputFile) return alert('Please select a video file.');
 
-(async () => {
-  fileInfo.innerText = 'Loading FFmpeg...';
-  try {
-    await ffmpeg.load();
-    console.log("🟢 FFmpeg successfully loaded");
-    fileInfo.innerText = '✅ FFmpeg loaded.';
-  } catch (e) {
-    console.error("❌ FFmpeg failed to load:", e);
-    fileInfo.innerText = '❌ FFmpeg failed to load.';
-  }
-})();
+  status.textContent = 'Loading FFmpeg…';
+  await ffmpeg.load({
+    coreURL: await toBlobURL('./ffmpeg/ffmpeg-core.js','text/javascript'),
+    wasmURL: await toBlobURL('./ffmpeg/ffmpeg-core.wasm','application/wasm'),
+    workerURL: await toBlobURL('./ffmpeg/ffmpeg-core.worker.js','text/javascript'),
+  });
 
-fileInput.addEventListener('change', async (event) => {
-  console.log("🎬 File input triggered");
+  status.textContent = 'Compressing video…';
+  const inName = 'input.mp4', outName = 'output.mp4';
 
-  const file = event.target.files[0];
-  if (!file) {
-    console.warn("⚠️ No file selected.");
-    return;
-  }
+  await ffmpeg.writeFile(inName, await fetchFile(inputFile));
+  await ffmpeg.exec(['-i', inName, '-vcodec', 'libx264', '-crf', '28', outName]);
 
-  console.log("📁 File selected:", file.name);
+  const data = await ffmpeg.readFile(outName);
+  const blob = new Blob([data.buffer], { type: 'video/mp4' });
+  const url = URL.createObjectURL(blob);
 
-  const url = URL.createObjectURL(file);
-  videoPlayer.src = url;
+  downloadLink.href = url;
+  downloadLink.style.display = 'inline';
+  downloadLink.textContent = 'Download Compressed Video';
 
-  const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
-  fileInfo.innerText = `Original file size: ${sizeMB} MB\nCompressing...`;
-
-  try {
-    console.log("🧠 Writing file to FS...");
-    await ffmpeg.FS('writeFile', 'input.mp4', await fetchFile(file));
-
-    console.log("⚙️ Running FFmpeg compression...");
-    await ffmpeg.run(
-      '-i', 'input.mp4',
-      '-vf', 'scale=640:-2',
-      '-b:v', '600k',
-      '-preset', 'veryfast',
-      '-movflags', '+faststart',
-      'output.mp4'
-    );
-
-    console.log("✅ FFmpeg run complete. Reading output...");
-    const data = ffmpeg.FS('readFile', 'output.mp4');
-    const compressedBlob = new Blob([data.buffer], { type: 'video/mp4' });
-    const compressedUrl = URL.createObjectURL(compressedBlob);
-
-    const downloadLink = document.createElement('a');
-    downloadLink.href = compressedUrl;
-    downloadLink.download = 'compressed.mp4';
-    downloadLink.innerText = '⬇️ Download Compressed Video';
-    downloadLink.style.display = 'block';
-    downloadLink.style.marginTop = '1rem';
-
-    fileInfo.innerText += '\n✅ Compression complete.';
-    fileInfo.appendChild(downloadLink);
-  } catch (err) {
-    console.error("❌ FFmpeg compression failed:", err);
-    fileInfo.innerText += '\n❌ Compression failed. Check console.';
-  }
+  status.textContent = 'Compression complete.';
 });
