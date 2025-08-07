@@ -1,0 +1,21 @@
+body {
+  font-family: sans-serif;
+  padding: 2rem;
+  background: #121212;
+  color: white;
+}
+
+#videoPlayer {
+  display: block;
+  margin-top: 1rem;
+  max-width: 100%;
+  max-height: 70vh;
+  border: 1px solid #555;
+}
+
+#fileInfo {
+  margin-top: 1rem;
+  white-space: pre-line;
+  font-size: 14px;
+  color: #ccc;
+}
