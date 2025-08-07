@@ -1,176 +1,171 @@
-async function analyzeTags() {
-    const input = document.getElementById("tagInput").value.trim();
-    const tags = input.split(/\n{2,}/);
-  
-    const promises = tags.map(async (tag, index) => {
-      const tagType = getTagType(tag);
-      const httpsSafe = isSecure(tag);
-      const dimensions = getDimensions(tag);
-      const isValid = isWellFormed(tag);
-      const { sizeKB, loadMS } = await getFileInfo(tag);
-  
-      return {
-        index: index + 1,
-        tag,
-        tagType,
-        httpsSafe,
-        dimensions,
-        isValid,
-        sizeKB,
-        loadMS,
-      };
-    });
-  
-    const results = await Promise.all(promises);
-    renderTable(results);
-  }
-  
-  
-  function getTagType(tag) {
-    if (/<\?xml/i.test(tag) && /<VAST/i.test(tag)) return "VAST";
-    if (/iframe/i.test(tag)) return "Iframe";
-    if (/script/i.test(tag)) return "Script";
-    if (/img/i.test(tag)) return "Image";
-    if (/pixel/i.test(tag)) return "Pixel";
-    if (/video/i.test(tag)) return "Video";
-    return "Unknown";
-  }
-  
-  function isSecure(tag) {
-    const urls = tag.match(/src=["']?(http[s]?:\/\/[^"'>\s]+)/gi) || [];
-    return urls.every(url => url.startsWith('src="https://') || url.startsWith("src='https://"));
-  }
-  
-  function getDimensions(tag) {
-    let width = tag.match(/width=["']?(\d+)/i);
-    let height = tag.match(/height=["']?(\d+)/i);
-  
-    // Check inline style as fallback
-    if (!width || !height) {
-      const style = tag.match(/style=["'][^"']*["']/i);
-      if (style) {
-        const w = style[0].match(/width:\s*(\d+)/i);
-        const h = style[0].match(/height:\s*(\d+)/i);
-        if (w) width = [null, w[1]];
-        if (h) height = [null, h[1]];
-      }
-    }
-  
-    return width && height ? `${width[1]}x${height[1]}` : "❓";
-  }
-  
-  
-  function isWellFormed(tag) {
-    try {
-      new DOMParser().parseFromString(tag, "text/html");
-      return true;
-    } catch {
-      return false;
-    }
-  }
-  
-  function renderTable(data) {
-  const container = document.getElementById("results");
-  container.innerHTML = `
-    <table>
-      <tr>
-        <th>#</th>
-        <th>Type</th>
-        <th>Dimensions</th>
-        <th>HTTPS</th>
-        <th>Valid</th>
-        <th>Size (KB)<br/><small>Max: 500</small></th>
-        <th>Load (ms)<br/><small>Max: 2000</small></th>
-        <th>Preview</th>
-      </tr>
-      ${data
-        .map((d) => {
-          // Flags for over-spec
-          const sizeWarn =
-            typeof d.sizeKB === "number" && d.sizeKB > 500 ? "🔥" : "";
-          const loadWarn =
-            typeof d.loadMS === "number" && d.loadMS > 2000 ? "🔥" : "";
+let creatives = [];
 
-          return `
+function analyzeSingleTag() {
+  const input = document.getElementById("tagInput").value.trim();
+  if (!input) return;
+
+  creatives = [buildCreativeFromTag("Pasted Tag", input)];
+  renderCreativeTable(creatives);
+}
+
+function clearTagInput() {
+  document.getElementById("tagInput").value = "";
+  creatives = [];
+  document.getElementById("creativeTable").innerHTML = "";
+}
+
+function buildCreativeFromTag(name, tag) {
+  return {
+    creativeName: name,
+    tag: tag,
+    type: detectType(tag),
+    dimensions: getDimensions(tag),
+    httpsSafe: isHTTPS(tag),
+    isValid: isWellFormed(tag),
+    vendor: detectVendor(tag)
+  };
+}
+
+function getDimensions(tag) {
+  const widthMatch = tag.match(/width=["']?(\d{2,4})["']/i);
+  const heightMatch = tag.match(/height=["']?(\d{2,4})["']/i);
+  if (widthMatch && heightMatch) {
+    return `${widthMatch[1]}x${heightMatch[1]}`;
+  }
+
+  const szMatch = tag.match(/sz=(\d+x\d+)/i);
+  if (szMatch) return szMatch[1];
+
+  return "Unknown";
+}
+
+function calculatePreviewHeight(dimensions) {
+  if (!dimensions || !dimensions.includes("x")) return 150;
+  const parts = dimensions.split("x").map(Number);
+  const height = parts[1];
+  return isNaN(height) ? 150 : Math.min(Math.max(height, 60), 600);
+}
+
+function detectType(tag) {
+  if (/<script/i.test(tag)) return "JavaScript Tag";
+  if (/<iframe/i.test(tag)) return "iFrame Tag";
+  if (/<img/i.test(tag) || /1x1/.test(tag)) return "Tracker Tag";
+  return "Unknown";
+}
+
+function detectVendor(tag) {
+  const vendors = {
+    flashtalking: /flashtalking/i,
+    sizmek: /sizmek/i,
+    doubleclick: /doubleclick|dcmads|googletagservices|googlesyndication/i,
+    amazon: /amazon-adsystem|aax\.amazon/i,
+    adform: /adform/i,
+    dv360: /displayvideo\.google/i,
+    mediamath: /mathtag/i
+  };
+
+  for (let [name, pattern] of Object.entries(vendors)) {
+    if (pattern.test(tag)) return name;
+  }
+
+  return "Unknown";
+}
+
+function isHTTPS(tag) {
+  return tag.toLowerCase().includes("https://");
+}
+
+function isWellFormed(tag) {
+  try {
+    const el = document.createElement("div");
+    el.innerHTML = tag;
+    return el.children.length > 0;
+  } catch (e) {
+    return false;
+  }
+}
+
+function countIssues(c) {
+  let count = 0;
+  if (!c.httpsSafe) count++;
+  if (!c.isValid) count++;
+  if (!/\d+x\d+/.test(c.dimensions)) count++;
+  return count;
+}
+
+function renderCreativeTable(data) {
+  const container = document.getElementById("creativeTable");
+
+  const rows = data.map((c, i) => {
+    const issueCount = countIssues(c);
+    const statusText = issueCount === 0 ? "Passed" : `${issueCount} issue${issueCount > 1 ? "s" : ""}`;
+    const statusClass = issueCount === 0 ? "status-pass" : "status-fail";
+
+    const previewHeight = calculatePreviewHeight(c.dimensions);
+    const iframeStyle = `width:100%; height:${previewHeight}px; border:1px solid #ccc; margin-top:10px;`;
+
+    return `
+      <tr class="main-row">
+        <td>${c.creativeName}</td>
+        <td>${c.type}</td>
+        <td>${c.vendor}</td>
+        <td class="${statusClass}">${statusText}</td>
+        <td><button onclick="togglePreview(${i}, this)">Preview</button></td>
+      </tr>
+      <tr id="preview-row-${i}" class="preview-row" style="display:none;">
+        <td colspan="5" id="preview-cell-${i}">
+          <iframe id="preview-frame-${i}" style="${iframeStyle}" sandbox="allow-scripts allow-same-origin"></iframe>
+          <div style="margin-top:10px">
+            <strong>Tag Test Results:</strong><br/>
+            ✅ HTTPS: ${c.httpsSafe ? "Yes" : "No"}<br/>
+            ✅ Valid Syntax: ${c.isValid ? "Yes" : "No"}<br/>
+            ✅ Dimensions: ${c.dimensions}<br/>
+            ✅ Vendor: ${c.vendor}<br/>
+            <br/>
+            <button onclick="toggleRawTag(${i}, this)">Show Raw Tag</button>
+            <pre id="raw-tag-${i}" style="display:none;">${escapeHTML(c.tag)}</pre>
+          </div>
+        </td>
+      </tr>
+    `;
+  }).join("");
+
+  container.innerHTML = `
+    <table class="tag-table">
+      <thead>
         <tr>
-          <td>${d.index}</td>
-          <td>${d.tagType}</td>
-          <td>${d.dimensions}</td>
-          <td class="${d.httpsSafe ? "valid" : "invalid"}">${d.httpsSafe ? "✅" : "❌"}</td>
-          <td class="${d.isValid ? "valid" : "invalid"}">${d.isValid ? "✅" : "❌"}</td>
-          <td class="${sizeWarn ? "invalid" : "valid"}">${d.sizeKB} ${sizeWarn}</td>
-          <td class="${loadWarn ? "invalid" : "valid"}">${d.loadMS} ${loadWarn}</td>
-          <td><button onclick="showTag(${d.index - 1}, '${d.tagType}')">View</button></td>
+          <th>Creative Name</th>
+          <th>Type</th>
+          <th>Vendor</th>
+          <th>Status</th>
+          <th>Action</th>
         </tr>
-      `;
-        })
-        .join("")}
+      </thead>
+      <tbody>
+        ${rows}
+      </tbody>
     </table>
   `;
 }
 
-  
-  
-  function showTag(index, type) {
-    const input = document.getElementById("tagInput").value.trim();
-    const tags = input.split(/\n{2,}/); // Re-parse tags
-    const tag = tags[index];
-    const previewBox = document.getElementById("preview");
-    const liveFrame = document.getElementById("livePreviewFrame");
-  
-    // Show raw code
-    previewBox.innerHTML = `
-      <h3>Tag #${index + 1} - ${type}</h3>
-      <pre>${escapeHTML(tag)}</pre>
-    `;
-  
-    // Render tag in iframe if it's not VAST
-    if (type === "VAST") {
-      liveFrame.style.display = "none";
-      previewBox.innerHTML += `
-        <p><strong>Note:</strong> This appears to be a VAST XML tag. It cannot be rendered directly in a browser.</p>
-        <p>Recommended: test in a VAST video player or validation tool.</p>
-      `;
-    } else {
-      const doc = liveFrame.contentWindow.document;
-      doc.open();
-      doc.write(tag);
-      doc.close();
-      liveFrame.style.display = "block";
-    }
-  }
-  
-  function escapeHTML(str) {
-    return str.replace(/[&<>"']/g, (match) => {
-      const escape = {
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        '"': "&quot;",
-        "'": "&#039;",
-      };
-      return escape[match];
-    });
-  }
-  
+function togglePreview(index, btn) {
+  const row = document.getElementById(`preview-row-${index}`);
+  const frame = document.getElementById(`preview-frame-${index}`);
+  const visible = row.style.display === "table-row";
+  row.style.display = visible ? "none" : "table-row";
+  btn.textContent = visible ? "Preview" : "Hide Preview";
+  if (frame && !visible) frame.srcdoc = creatives[index].tag;
+}
 
-  async function getFileInfo(tag) {
-    const urlMatch = tag.match(/src=["']?(https?:\/\/[^"'>\s]+)/i);
-    if (!urlMatch) return { sizeKB: "—", loadMS: "—" }; // No URL found
-  
-    const url = urlMatch[1];
-    const start = performance.now();
-  
-    try {
-      const res = await fetch(url, { method: "GET" });
-      const end = performance.now();
-      const buffer = await res.arrayBuffer();
-      const sizeKB = Math.round(buffer.byteLength / 1024);
-      const loadMS = Math.round(end - start);
-      return { sizeKB, loadMS };
-    } catch (e) {
-      return { sizeKB: "Error (CORS)", loadMS: "Error (CORS)" };
-    }
-  }
-  
-  
+function toggleRawTag(index, btn) {
+  const pre = document.getElementById(`raw-tag-${index}`);
+  const isVisible = pre.style.display === "block";
+  pre.style.display = isVisible ? "none" : "block";
+  btn.textContent = isVisible ? "Show Raw Tag" : "Hide Raw Tag";
+}
+
+function escapeHTML(str) {
+  return str.replace(/[&<>"']/g, function (m) {
+    return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[m];
+  });
+}

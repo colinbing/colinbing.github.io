@@ -1,0 +1,50 @@
+body {
+    font-family: sans-serif;
+    margin: 30px;
+  }
+  
+  h1 {
+    margin-bottom: 10px;
+  }
+  
+  textarea {
+    width: 100%;
+    height: 150px;
+    font-family: monospace;
+    padding: 10px;
+    font-size: 14px;
+  }
+  
+  .input-area {
+    margin-bottom: 20px;
+  }
+  
+  .buttons button {
+    margin-top: 10px;
+    margin-right: 10px;
+  }
+  
+  .tag-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  .tag-table th,
+  .tag-table td {
+    padding: 10px;
+    border: 1px solid #ccc;
+  }
+  
+  .preview-row td {
+    background: #f9f9f9;
+  }
+  
+  .status-pass {
+    color: green;
+  }
+  
+  .status-fail {
+    color: red;
+  }
+  

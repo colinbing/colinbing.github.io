@@ -3,29 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>3rd-Party Tag Inspector</title>
-  <style>
-    body { font-family: sans-serif; padding: 20px; max-width: 900px; margin: auto; }
-    textarea { width: 100%; height: 150px; margin-bottom: 10px; font-family: monospace; }
-    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-    th, td { border: 1px solid #ccc; padding: 6px; font-size: 14px; }
-    th { background: #f2f2f2; }
-    .valid { color: green; }
-    .invalid { color: red; }
-    pre { background: #f5f5f5; padding: 10px; overflow-x: auto; }
-  </style>
+  <title>TagSafe</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <h1>🔍 3rd-Party Tag Inspector</h1>
-    <p>Paste one or more ad tags below:</p>
-    <textarea id="tagInput" placeholder="<script src='https://...'></script>..."></textarea>
-    <button onclick="analyzeTags()">Analyze</button>
-  
-    <div id="results"></div>
-    <div id="preview"></div>
-  
-    <iframe id="livePreviewFrame" sandbox="allow-scripts allow-same-origin" style="width:100%; height:200px; border:1px solid #ccc; margin-top:20px;"></iframe>
-  
-    <script src="main.js"></script>
+  <h1>TagSafe</h1>
+
+  <div class="input-area">
+    <textarea id="tagInput" placeholder="Paste single tag here..."></textarea>
+    <div class="buttons">
+      <button onclick="analyzeSingleTag()">Analyze Tag</button>
+      <button onclick="clearTagInput()">Clear</button>
+    </div>
+  </div>
+
+  <div id="creativeTable"></div>
+
+  <script src="main.js"></script>
 </body>
 </html>
