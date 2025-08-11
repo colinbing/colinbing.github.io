@@ -115,6 +115,8 @@ p, li {
     color: rgba(255, 255, 255, 1);
 }
 
+#navbar9 > ul > li.nav-item > a.nav-link { display:block; }
+
 #navbar9 > ul > li.nav-item > a:hover {
     color: rgba(255, 255, 255, 0.8); /* Or any subtle color change you like */
 }
@@ -125,34 +127,40 @@ p, li {
 }
 
 .nav-item.dropdown .dropdown-menu {
-    display: none;
-    position: absolute;
-    top: 100%; /* Ensure it's directly beneath the parent */
-    left: 0;
-    background-color: #343a40;
-    z-index: 1000;
-    min-width: 220px;
-    padding: 0;
-    border-radius: 0.25rem;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 220px;
+  margin: 0;                /* kill Bootstrap's top margin gap */
+  padding: 0;
+  border-radius: 0.25rem;
+  background-color: #343a40;
+  z-index: 1100;
+
+  /* visibility model instead of display:none */
+  display: block;           /* important: never none */
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .12s ease;
 }
 
-.nav-item.dropdown:hover .dropdown-menu,
-.nav-item.dropdown .dropdown-menu:hover {
-    display: block;
+.nav-item.dropdown:hover .dropdown-menu {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
 }
 
 /* Optional: padding to dropdown links */
 .dropdown-item {
-    color: white;
-    padding: 10px 15px;
-    display: block;
-    text-decoration: none;
+  color: #fff;
+  padding: 10px 15px;
+  display: block;
+  text-decoration: none;
 }
 
-.dropdown-item:hover {
-    background-color: #495057;
-    color: white;
-}
+.dropdown-item:hover { background-color: #495057; color:#fff; }
+
 
 .skill-img {
     max-width:100px;
