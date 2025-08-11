@@ -1,6 +1,6 @@
 const creativeAssets = {
-    logoUrl: "/tool-adbuilder/images/washington-gas-logo.png",
-    imageUrl: "/tool-adbuilder/images/washington-gas.png",
+    logoUrl: "/adbuilder/images/washington-gas-logo.png",
+    imageUrl: "/adbuilder/images/washington-gas.png",
     headline: "Energy-saving upgrades are good for any business.",
     description: "Get generous incentives for boiler systems, gas heating equipment and more.",
     ctaText: "Learn More",
