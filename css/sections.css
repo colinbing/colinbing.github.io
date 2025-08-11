@@ -35,6 +35,10 @@ h2 {
     padding-top: 20px;
 }
 
+.intro-section {
+    padding-bottom:40px;
+}
+
 .experience-section hr {
     max-width:80%;
 }
@@ -201,6 +205,10 @@ p, li {
 }
 
 [data-theme="dark"] .project-section:has(.graphic-design){
+    background-color: #007acc !important;
+}
+
+[data-theme="dark"] .skills-section{
     background-color: #007acc !important;
 }
 
