@@ -93,3 +93,8 @@ textarea {
   margin-bottom: 1rem;
 }
 
+.tagsafe-logo {
+  display: inline-block;
+  max-width: 160px;
+  padding-bottom:10px;
+}
