@@ -230,7 +230,7 @@ p, li {
 }
 
 [data-theme="dark"] .towson-logo{
-    content:url('/images/logos/towson-white.PNG');
+    content:url('/images/logos/towson-white.png');
     height:auto;
 }
 
