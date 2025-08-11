@@ -104,10 +104,10 @@ p, li {
     margin-top:20px;
 }
 
-.active a {
-    font-variation-settings: 'wght' 700;
-    color: rgba(255,255,255,1);
-    }
+.nav-item.active > a.nav-link {
+  font-variation-settings: 'wght' 700;
+  color: rgba(255,255,255,1);
+}
 
 #navbar9 > ul > li.nav-item > a {
     font-weight: 400;
