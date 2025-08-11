@@ -167,7 +167,7 @@ p, li {
 }
 
 [data-theme="dark"] {
-    background-color: #111 !important;
+    background-color: #222 !important;
     color: #eee;
 }
   
@@ -176,7 +176,7 @@ p, li {
 }
 
 [data-theme="dark"] .bg-white {
-    background-color: #000 !important;
+    background-color: #222 !important;
 }
 
 [data-theme="dark"] .bg-black {
@@ -190,6 +190,10 @@ p, li {
 [data-theme="dark"] .certification-section {
     color: #eee !important;
     background-color: #444 !important;
+}
+
+[data-theme="dark"] .project-section:has(.graphic-design){
+    background-color: #007acc !important;
 }
 
 [data-theme="dark"] .nav-link {
@@ -213,8 +217,22 @@ p, li {
 }
 
 [data-theme="dark"] .apple-logo{
-    content:url('/images/logos/logo-white.png');
-    width:100px;
+    content:url('/appledemo/images/logo-white.png');
+    height:auto;
+}
+
+[data-theme="dark"] .towson-logo{
+    content:url('/images/logos/towson-white.PNG');
+    height:auto;
+}
+
+[data-theme="dark"] .tagsafe-logo{
+    content:url('/images/logos/tagsafe-logo-white.PNG');
+    height:auto;
+}
+
+[data-theme="dark"] .outline-logo{
+    content:url('/images/logos/outline-white.PNG');
     height:auto;
 }
 
@@ -298,6 +316,8 @@ section {
     color:#fff !important;
     max-width:90vw;
 }
+
+
 
 .skill-card h3 {
     color:#fff;
@@ -589,3 +609,15 @@ footer .row {
   #myTyper {
     font-size: 26px;
   }
+
+.logo-box {
+    height: 140px; /* adjust to tallest logo’s final height */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.logo-box img {
+    max-width: 220px; /* cap width */
+    max-height:100px;
+    height: auto;
+}
