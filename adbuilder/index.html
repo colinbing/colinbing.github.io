@@ -8,100 +8,119 @@
 </head>
 <body>
   <!-- Top Menu -->
-<nav class="menu-bar">
-  <div class="menu-left">Adbuilder 0.1 (beta)</div>
-  <div class="menu-right">
-    <a href="#">Placeholder_Campaign</a>
-    <a href="#">Placeholder_Creative</a>
-    <button id="exportBtn" class="export-btn" type="button">Export</button>
-  </div>
-</nav>
 
-  <!-- Side Menu -->
-  <div class="side-menu">
-    <div class="smi-highlight"></div>
-    <div class="side-menu-content">
-        <div class="side-menu-item active" data-layout="assets">Assets</div>
-      <div class="side-menu-item" data-layout="970x250">970x250</div>
-      <div class="side-menu-item" data-layout="728x90">728x90</div>
-      <div class="side-menu-item" data-layout="620x250">620x250</div>
-      <div class="side-menu-item" data-layout="300x250">300x250</div>
-      <div class="side-menu-item" data-layout="300x600">300x600</div>
-      <div class="side-menu-item" data-layout="320x50">320x50</div>
+<div class="app"></div>
+  <nav class="menu-bar">
+    <div class="menu-left">Adbuilder 0.1 (beta)</div>
+    <div class="menu-right">
+      <a href="#">Placeholder_Campaign</a>
+      <a href="#">Placeholder_Creative</a>
+      <button id="exportBtn" class="export-btn" type="button">Export</button>
     </div>
-  </div>
+  </nav>
 
-  <!-- Main Content Area -->
-  <div class="main-content" id="creative-preview">
-    <!-- Rendered layout will go here -->
-    <div class="asset-form" data-panel="assets" style="display: none;">
-        <h2>Global Creative Assets</h2>
-        <form id="globalAssetsForm">
-          <label>
-            Headline:
-            <input type="text" name="headline" placeholder="Enter headline" />
-          </label>
-      
-          <label>
-            Description:
-            <textarea name="description" placeholder="Enter description"></textarea>
-          </label>
-      
-          <label>
-            CTA Text:
-            <input type="text" name="ctaText" placeholder="e.g., Learn More" />
-          </label>
-      
-          <label>
-            Clickthrough URL:
-            <input type="url" name="clickthrough" placeholder="https://example.com" />
-          </label>
-      
-          <label>
-            Logo Upload:
-            <input type="file" name="logo" accept="image/*" />
-          </label>
-      
-          <label>
-            Media Upload:
-            <input type="file" name="media" accept="image/*,video/*" />
-          </label>
-      
-          <button type="submit">Save Assets</button>
-        </form>
+    <!-- Side Menu -->
+    <div class="side-menu">
+      <div class="smi-highlight"></div>
+      <div class="side-menu-content">
+          <div class="side-menu-item active" data-layout="assets">Assets</div>
+        <div class="side-menu-item" data-layout="970x250">970x250</div>
+        <div class="side-menu-item" data-layout="728x90">728x90</div>
+        <div class="side-menu-item" data-layout="620x250">620x250</div>
+        <div class="side-menu-item" data-layout="300x250">300x250</div>
+        <div class="side-menu-item" data-layout="300x600">300x600</div>
+        <div class="side-menu-item" data-layout="320x50">320x50</div>
       </div>
-  </div>
-
-  <div id="sizePanel" class="size-panel" aria-hidden="true">
-    <div class="size-panel-tab" id="sizePanelTab">Customize assets</div>
-    <div class="size-panel-header">
-      <div class="size-panel-title" id="sizePanelTitle">Assets</div>
-      <button class="size-panel-close" id="sizePanelClose" aria-label="Close">×</button>
-    </div>
-    <div class="size-panel-content" id="sizePanelContent"></div>
-  </div>
-
-  <div id="exportModal" class="export-modal" hidden>
-  <div class="export-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="exportModalTitle">
-    <div class="export-modal__head">
-      <h3 id="exportModalTitle">Export 3P Tags</h3>
-      <button type="button" id="exportModalClose" aria-label="Close">×</button>
     </div>
 
-    <div class="export-modal__controls">
-      <label>
-        Format:
-        <select id="exportFormat">
-          <option value="js">JS tag (image + click + pixels)</option>
-          <option value="iframe">iFrame tag (image + click + pixels)</option>
-          <option value="html">Standalone HTML (image + click + pixels)</option>
-        </select>
-      </label>
+    <!-- Main Content Area -->
+    <div class="main-content" id="creative-preview">
+      <!-- Rendered layout will go here -->
+      <div class="asset-form" data-panel="assets" style="display: none;">
+          <h2>Global Creative Assets</h2>
+          <form id="globalAssetsForm">
+            <label>
+              Headline:
+              <input type="text" name="headline" placeholder="Enter headline" />
+            </label>
+        
+            <label>
+              Description:
+              <textarea name="description" placeholder="Enter description"></textarea>
+            </label>
+        
+            <label>
+              CTA Text:
+              <input type="text" name="ctaText" placeholder="e.g., Learn More" />
+            </label>
+        
+            <label>
+              Clickthrough URL:
+              <input type="url" name="clickthrough" placeholder="https://example.com" />
+            </label>
+        
+            <label>
+              Logo Upload:
+              <input type="file" name="logo" accept="image/*" />
+            </label>
+        
+            <label>
+              Media Upload:
+              <input type="file" name="media" accept="image/*,video/*" />
+            </label>
+        
+            <button type="submit">Save Assets</button>
+          </form>
+        </div>
     </div>
 
-    <div id="exportList" class="export-modal__list"></div>
+    <div id="sizePanel" class="size-panel" aria-hidden="true">
+      <div class="size-panel-tab" id="sizePanelTab">Customize assets</div>
+      <div class="size-panel-header">
+        <div class="size-panel-title" id="sizePanelTitle">Assets</div>
+        <button class="size-panel-close" id="sizePanelClose" aria-label="Close">×</button>
+      </div>
+      <div class="size-panel-content" id="sizePanelContent"></div>
+    </div>
+
+    <div id="exportModal" class="export-modal" hidden>
+    <div class="export-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="exportModalTitle">
+      <div class="export-modal__head">
+        <h3 id="exportModalTitle">Export 3P Tags</h3>
+        <button type="button" id="exportModalClose" aria-label="Close">×</button>
+      </div>
+
+      <div class="export-modal__controls">
+        <label>
+          Format:
+          <select id="exportFormat">
+            <option value="js">JS tag (image + click + pixels)</option>
+            <option value="iframe">iFrame tag (image + click + pixels)</option>
+            <option value="html">Standalone HTML (image + click + pixels)</option>
+          </select>
+        </label>
+      </div>
+
+      <div id="exportList" class="export-modal__list"></div>
+    </div>
   </div>
 </div>
+
+  <div id="viewport-blocker" aria-live="polite" aria-modal="true" role="dialog">
+    <div class="panel">
+      <h1>Please use a larger browser window</h1>
+      <p>This tool is not available on small screens. Open it on a desktop browser or expand your window to at least 1024×700.</p>
+    </div>
+  </div>
+
+  <noscript>
+    <div style="position:fixed;inset:0;z-index:2147483647;background:#0f0f14;color:#fff;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px">
+      <div style="max-width:680px">
+        <h1 style="margin:0 0 8px 0;font-size:20px">JavaScript required</h1>
+        <p style="margin:0;font-size:14px;opacity:.9">Enable JavaScript and view on a desktop browser at ≥1024×700.</p>
+      </div>
+    </div>
+  </noscript>
 
 
   <script src="/adbuilder/adbuilder.js"></script>

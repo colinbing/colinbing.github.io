@@ -122,12 +122,31 @@
     align-items: center;    /* vertical centering */
     justify-content: center; /* horizontal centering ✅ */
   }
+
+  .ad-preview { 
+    flex: 0 0 auto;      /* opt out of flex shrink/grow */
+    flex-shrink: 0;
+    box-sizing: border-box;
+  }
+
+  .ad-preview img, 
+  .ad-preview video {
+    max-width: none; 
+    max-height: none; 
+  }
+
+  #creative-preview,
+  .main-content {
+    overflow: visible;   /* or auto if you prefer scrollbars */
+  }
   
   /* === Ad Styles for 970x250 === */
   .ad-970x250 {
     display: flex;
     width: 970px;
     height: 250px;
+    min-width: 970px; min-height: 250px;
+    max-width: 970px; max-height: 250px;
     border: 1px solid #ccc;
     overflow: hidden;
     font-family: sans-serif;
@@ -323,6 +342,8 @@
   .ad-300x600 {
     width: 300px;
     height: 600px;
+    min-width: 300px; min-height: 600px;
+    max-width: 300px; max-height: 600px;
     background-color: #fff;
     display: flex;
     flex-direction: column;
@@ -404,6 +425,8 @@
   .ad-728x90 {
     width: 728px;
     height: 90px;
+    min-width: 728px; min-height: 90px;
+    max-width: 728px; max-height: 90px;
     display: flex;
     background: white;
     font-family: sans-serif;
@@ -595,6 +618,13 @@
     font-size: 14px;
     color: #333;
   }
+
+  .trackers-grid label {
+    display: block;
+    margin-bottom: 0px !important;
+    margin-top:16px;
+    color: #333;
+  }
   
   .global-assets-form input[type="text"],
   .global-assets-form input[type="url"],
@@ -710,3 +740,49 @@ button[id^="clearOverrides-"] {
   .export-row:last-child{border-bottom:none}
   .export-row pre{margin:0;max-height:120px;overflow:auto;background:#0b0b0b;padding:8px;border-radius:6px}
   .export-actions button{margin-left:8px}
+
+  #viewport-blocker {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 2147483647;
+    background: rgba(15, 15, 20, 0.94);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    color: #fff;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 24px;
+  }
+  #viewport-blocker .panel {
+    max-width: 680px;
+    width: 92%;
+    border: 1px solid rgba(255,255,255,.18);
+    border-radius: 16px;
+    padding: 28px 24px;
+    background: rgba(40, 40, 48, 0.6);
+  }
+  #viewport-blocker h1 {
+    margin: 0 0 8px 0;
+    font-size: 20px;
+    letter-spacing: .2px;
+  }
+  #viewport-blocker p {
+    margin: 0;
+    font-size: 14px;
+    opacity: .9;
+  }
+  /* When viewport is too small, show blocker and disable app */
+  @media (max-width: 1023px), (max-height: 699px) {
+    #viewport-blocker { display: flex; }
+    .app {
+      pointer-events: none;
+      user-select: none;
+      filter: blur(2px) saturate(.9);
+    }
+    html, body {
+      overflow: hidden;
+      height: 100%;
+    }
+  }
