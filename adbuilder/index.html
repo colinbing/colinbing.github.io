@@ -8,13 +8,14 @@
 </head>
 <body>
   <!-- Top Menu -->
-  <nav class="menu-bar">
-    <div class="menu-left">Adbuilder 2.0</div>
-    <div class="menu-right">
-      <a href="#">Placeholder_Campaign</a>
-      <a href="#">Placeholder_Creative</a>
-    </div>
-  </nav>
+<nav class="menu-bar">
+  <div class="menu-left">Adbuilder 2.0</div>
+  <div class="menu-right">
+    <a href="#">Placeholder_Campaign</a>
+    <a href="#">Placeholder_Creative</a>
+    <button id="exportBtn" class="export-btn" type="button">Export</button>
+  </div>
+</nav>
 
   <!-- Side Menu -->
   <div class="side-menu">
@@ -70,6 +71,16 @@
         </form>
       </div>
   </div>
+
+  <div id="sizePanel" class="size-panel" aria-hidden="true">
+    <div class="size-panel-tab" id="sizePanelTab">Customize assets</div>
+    <div class="size-panel-header">
+      <div class="size-panel-title" id="sizePanelTitle">Assets</div>
+      <button class="size-panel-close" id="sizePanelClose" aria-label="Close">×</button>
+    </div>
+    <div class="size-panel-content" id="sizePanelContent"></div>
+  </div>
+
 
   <script src="/adbuilder/adbuilder.js"></script>
 </body>
