@@ -15,7 +15,17 @@
     <div class="menu-right">
       <a href="#">Placeholder_Campaign</a>
       <a href="#">Placeholder_Creative</a>
-      <button id="exportBtn" class="export-btn" type="button">Export</button>
+
+      <!-- Updated export dropdown -->
+      <div class="export" id="exportRoot">
+        <button id="exportBtn" class="export-btn" type="button" aria-haspopup="true" aria-expanded="false">
+          Export ▾
+        </button>
+        <div id="exportMenu" class="export-menu" hidden role="menu" aria-label="Export options">
+          <button type="button" data-action="png" role="menuitem">Download PNG (.zip)</button>
+          <button type="button" data-action="tag" role="menuitem">JavaScript Tag…</button>
+        </div>
+      </div>
     </div>
   </nav>
 

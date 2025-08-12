@@ -656,3 +656,91 @@ window.setTrackers = function(size,{click='',imps=[]}={}){
   slot.trackers.click = click;
   slot.trackers.imps = Array.isArray(imps)? imps : [];
 };
+
+(function(){
+  // ===== hook existing modal =====
+  const modal     = document.querySelector(".export-modal");
+  const dialog    = document.querySelector(".export-modal__dialog");
+  const closeBtns = modal ? modal.querySelectorAll("[data-export-close], .export-modal__close") : [];
+
+  function trapFocus(e){
+    if (!modal || modal.hasAttribute("hidden")) return;
+    if (e.key !== "Tab") return;
+    const focusables = modal.querySelectorAll('a,button,input,select,textarea,[tabindex]:not([tabindex="-1"])');
+    if (!focusables.length) return;
+    const first = focusables[0], last = focusables[focusables.length-1];
+    if (e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+  }
+
+  function onEsc(e){ if (e.key === "Escape") closeExportModal(); }
+
+  function openExportModal(){
+    if (!modal){ console.warn("export-modal not found"); return; }
+    modal.removeAttribute("hidden");
+    document.body.style.overflow = "hidden";
+    document.addEventListener("keydown", trapFocus);
+    document.addEventListener("keydown", onEsc);
+    // focus first control
+    const first = modal.querySelector('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+    if (first) first.focus();
+  }
+
+  function closeExportModal(){
+    if (!modal) return;
+    modal.setAttribute("hidden", "");
+    document.body.style.overflow = "";
+    document.removeEventListener("keydown", trapFocus);
+    document.removeEventListener("keydown", onEsc);
+  }
+
+  // backdrop click
+  if (modal){
+    modal.addEventListener("click", (e)=>{ if (e.target === modal) closeExportModal(); });
+    closeBtns.forEach(btn=>btn.addEventListener("click", closeExportModal));
+  }
+
+  // expose for dropdown
+  window.openExportModal  = openExportModal;
+  window.closeExportModal = closeExportModal;
+
+  // ===== PNG zip export: hide modal if open during capture =====
+  async function downloadPngZip(){
+    const wasOpen = modal && !modal.hasAttribute("hidden");
+    if (wasOpen) modal.setAttribute("hidden","");
+
+    // ensure deps (same as prior snippet)
+    async function load(url){ if ([...document.scripts].some(s=>s.src===url)) return; await new Promise((res,rej)=>{const s=document.createElement("script");s.src=url;s.onload=res;s.onerror=()=>rej(new Error("load fail "+url));document.head.appendChild(s);});}
+    if (!window.html2canvas) await load("https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js");
+    if (!window.JSZip)       await load("https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js");
+
+    const nodes = Array.from(document.querySelectorAll(".ad-container"));
+    if (!nodes.length){ alert("No creatives found."); if (wasOpen) modal.removeAttribute("hidden"); return; }
+
+    const zip = new JSZip();
+    for (let i=0;i<nodes.length;i++){
+      const el = nodes[i];
+      const nameBase = el.getAttribute("data-name") || el.id || `creative_${el.clientWidth}x${el.clientHeight}_${i+1}`;
+      const canvas = await html2canvas(el, { backgroundColor:"#ffffff", useCORS:true, scale:2 });
+      const blob = await new Promise(r=>canvas.toBlob(r,"image/png"));
+      zip.file(`${nameBase}.png`, blob);
+    }
+    const out = await zip.generateAsync({type:"blob"});
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(out);
+    a.download = `creatives_${new Date().toISOString().replace(/[-:TZ]/g,"").slice(0,14)}.zip`;
+    document.body.appendChild(a); a.click(); URL.revokeObjectURL(a.href); a.remove();
+
+    if (wasOpen) modal.removeAttribute("hidden");
+  }
+
+  // wire dropdown items if present
+  const menu = document.getElementById("exportMenu");
+  if (menu){
+    menu.addEventListener("click", async (e)=>{
+      const act = e.target?.dataset?.action;
+      if (act === "png"){ try{ await downloadPngZip(); }catch(err){ console.error(err); alert("PNG export failed."); } }
+      if (act === "tag"){ openExportModal(); }
+    });
+  }
+})();

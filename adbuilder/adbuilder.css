@@ -839,3 +839,27 @@ button[id^="clearOverrides-"] {
       height: 100%;
     }
   }
+
+  .export { position: relative; display: inline-block; }
+.export-btn {
+  background:#1f2937; color:#fff; border:1px solid #374151; border-radius:6px; padding:6px 10px; cursor:pointer;
+}
+.export-btn:focus { outline:2px solid #60a5fa; outline-offset:2px; }
+
+.export-menu {
+  position:absolute; right:0; top:34px;
+  min-width:220px; background:#111; color:#eee; border:1px solid #333; border-radius:8px;
+  box-shadow:0 10px 30px rgba(0,0,0,.5); padding:6px; z-index:10000;
+  display:none; /* default hidden via CSS */
+}
+.export-menu button {
+  width:100%; text-align:left; background:transparent; border:0; color:#eee;
+  padding:10px; border-radius:6px; cursor:pointer;
+}
+.export-menu button:hover { background:#1f2937; }
+
+/* Hover open */
+#exportRoot:hover > .export-menu { display:block; }
+
+/* Click/touch open */
+#exportRoot.is-open > .export-menu { display:block; }
