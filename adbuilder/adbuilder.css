@@ -610,8 +610,6 @@
   }
   
   .global-assets-form button[type="submit"] {
-    margin-top: 10px;
-    padding: 10px 20px;
     background-color: #0072ce;
     color: white;
     border: none;
@@ -629,22 +627,23 @@
 
 /* RIGHT SLIDE-OUT PANEL */
 .size-panel{
-  position:fixed; top:75px; right:-500px; width:500px; height:calc(100vh - 75px);
+  position:fixed; top:75px; right:-420px; width:420px; height:calc(100vh - 75px);
   background:#fff; border-left:1px solid #ccc; box-shadow:-6px 0 18px rgba(0,0,0,.08);
   transition:right .25s ease-in-out; z-index:1001; display:flex; flex-direction:column;
+  
 }
 .size-panel.open{ right:0; }
 .size-panel-header{ display:flex; align-items:center; justify-content:space-between; padding:10px 12px; border-bottom:1px solid #eee; }
 .size-panel-title{ font-size:14px; font-weight:600; }
 .size-panel-close{ background:transparent; border:0; font-size:18px; line-height:1; cursor:pointer; padding:4px 8px; }
-.size-panel-content{ padding:12px; overflow:auto; flex:1; }
+.size-panel-content{ padding: 8px;px; overflow:auto; flex:1; }
 
 .size-panel-tab{
   position:absolute;
   top:50%;                      /* center vertically */
   transform: translateY(-50%);  /* adjust for centering */
-  left:-36px;
-  width:36px;
+  left:-32px;
+  width:32px;
   height:140px;
   background:#333333;
   color:#fff;
@@ -664,3 +663,32 @@
 /* hide tab in global assets mode */
 #sizePanel.hide-tab .size-panel-tab{ display:none; }
 
+button[id^="clearOverrides-"],
+#sizePanel button[type="submit"] {
+  padding: 10px 16px;
+  font-size: 14px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Keep the different colors */
+#sizePanel button[type="submit"] {
+  background-color: #0072ce;
+  color: #fff;
+}
+button[id^="clearOverrides-"] {
+  background-color: #888;
+  color: #fff;
+}
+
+#sizePanel .global-assets-form label {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
+
+#sizePanel .global-assets-form {
+  border:0;
+  box-shadow:none;
+}
