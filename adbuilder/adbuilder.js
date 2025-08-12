@@ -399,3 +399,170 @@ document.getElementById('exportBtn')?.addEventListener('click', () => {
   console.log('Export payload', payload);
 });
 
+/* Wire Export button */
+document.getElementById('exportBtn')?.addEventListener('click', openExportModal);
+document.getElementById('exportModalClose')?.addEventListener('click', closeExportModal);
+document.getElementById('exportModal')?.addEventListener('click', (e)=>{ if(e.target.id==='exportModal') closeExportModal(); });
+document.getElementById('exportFormat')?.addEventListener('change', renderExportRows);
+
+function openExportModal(){
+  renderExportRows();
+  document.getElementById('exportModal').hidden = false;
+}
+function closeExportModal(){
+  document.getElementById('exportModal').hidden = true;
+}
+
+/* Utilities */
+function sizeDims(size){ const [w,h]=size.split('x').map(n=>parseInt(n,10)); return {w,h}; }
+function sanitizeUrl(u){ try{ return new URL(u, location.origin).toString(); }catch{ return ''; } }
+function substituteDest(urlTemplate, dest){
+  if(!urlTemplate) return dest;
+  const enc = encodeURIComponent(dest);
+  return urlTemplate
+    .replace(/\{\{DEST\}\}/g, enc)
+    .replace(/\{DEST\}/g, enc)
+    .replace(/%%DEST_URL%%/g, enc)
+    .replace(/%%CLICK_URL_ESC%%/g, enc);
+}
+async function copyToClipboard(text){
+  try{ await navigator.clipboard.writeText(text); }catch(e){ /* noop */ }
+}
+function downloadText(filename, text){
+  const blob = new Blob([text], {type:'text/plain'});
+  const url = URL.createObjectURL(blob);
+  const a = Object.assign(document.createElement('a'), {href:url, download:filename});
+  document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+}
+
+/* Build export rows for every creative size present */
+function renderExportRows(){
+  const list = document.getElementById('exportList');
+  list.innerHTML = '';
+  const fmt = document.getElementById('exportFormat').value;
+
+  Object.keys(appState.creatives).forEach(size=>{
+    const tag = buildThirdPartyTag(size, fmt);
+    const row = document.createElement('div');
+    row.className = 'export-row';
+
+    const label = document.createElement('div');
+    label.textContent = size;
+
+    const pre = document.createElement('pre');
+    pre.textContent = tag;
+
+    const actions = document.createElement('div');
+    actions.className = 'export-actions';
+    const copyBtn = document.createElement('button');
+    copyBtn.type = 'button';
+    copyBtn.textContent = 'Copy';
+    copyBtn.addEventListener('click', ()=>copyToClipboard(tag));
+
+    const dlBtn = document.createElement('button');
+    dlBtn.type = 'button';
+    dlBtn.textContent = 'Download';
+    dlBtn.addEventListener('click', ()=>{
+      const ext = fmt === 'html' ? 'html' : 'txt';
+      downloadText(`ad_${size}.${ext}`, tag);
+    });
+
+    actions.appendChild(copyBtn);
+    actions.appendChild(dlBtn);
+
+    row.appendChild(label);
+    row.appendChild(pre);
+    row.appendChild(actions);
+    list.appendChild(row);
+  });
+}
+
+/* Tag generation (MVP: image + click + impression pixels) */
+function buildThirdPartyTag(size, format){
+  const { w, h } = sizeDims(size);
+  const a = resolved(size);
+  const t = appState.creatives[size]?.trackers || { click:'', imps:[] };
+
+  const dest = sanitizeUrl(a.clickthrough || '');
+  const clickUrl = substituteDest((t.click||'').trim(), dest) || dest;
+
+  // make everything absolute for offsite usage
+  const media = abs(a.mediaUrl || '');
+  const pixels = (t.imps||[])
+    .filter(Boolean)
+    .map(u=>abs(u.trim()));
+
+  if(format === 'html'){
+    return standaloneHTML({w,h, media, clickUrl, pixels});
+  }
+  if(format === 'iframe'){
+    return iframeTag({w,h, media, clickUrl, pixels});
+  }
+  return jsTag({w,h, media, clickUrl, pixels});
+}
+
+function abs(u){
+  try { return new URL(u, window.location.origin).href; }
+  catch { return u; }
+}
+
+/* Formats */
+function jsTag({w,h,media,clickUrl,pixels}){
+  return [
+`<script>(function(){`,
+`var W=${w}, H=${h};`,
+`var media=${JSON.stringify(media||'')};`,
+`var clickUrl=${JSON.stringify(clickUrl||'')};`,
+`var pixels=${JSON.stringify((pixels||[]))};`,
+`var d=document;`,
+`function currentScript(){`,
+`  return d.currentScript || (function(a){ a=d.getElementsByTagName('script'); return a[a.length-1]; })();`,
+`}`,
+`function inject(){`,
+`  var s=currentScript();`,
+`  var box=d.createElement('div');`,
+`  box.style.cssText='width:'+W+'px;height:'+H+'px;display:block;overflow:hidden;border:0;';`,
+`  var a=d.createElement('a');`,
+`  a.href=clickUrl; a.target='_blank'; a.rel='noopener';`,
+`  a.style.cssText='display:block;width:100%;height:100%;position:relative;';`,
+`  var img=d.createElement('img');`,
+`  img.src=media; img.alt=''; img.width=W; img.height=H;`,
+`  img.style.cssText='width:100%;height:100%;object-fit:cover;display:block;border:0;';`,
+`  a.appendChild(img); box.appendChild(a);`,
+`  s.parentNode.insertBefore(box, s.nextSibling);`,
+`  try{ if(Array.isArray(pixels)) pixels.forEach(function(u){ if(u){ var p=new Image(); p.src=String(u); } }); }catch(e){}`,
+`}`,
+`if(d.readyState==='loading'){ d.addEventListener('DOMContentLoaded', inject); } else { inject(); }`,
+`})();</script>`
+  ].join('\n');
+}
+
+
+function iframeTag({w,h,media,clickUrl,pixels}){
+  const srcdoc = standaloneHTML({w,h,media,clickUrl,pixels})
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  return `<iframe srcdoc="${srcdoc}" width="${w}" height="${h}" frameborder="0" scrolling="no" style="border:0;display:block;"></iframe>`;
+}
+
+function standaloneHTML({w,h,media,clickUrl,pixels}){
+  const pxImgs = pixels.map(u=>`<img src="${u}" width="1" height="1" style="position:absolute;left:-9999px;top:-9999px;border:0;" alt="">`).join('');
+  return [
+`<!DOCTYPE html>`,
+`<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">`,
+`<title>Ad ${w}x${h}</title></head>`,
+`<body style="margin:0;padding:0;">`,
+`<a href="${clickUrl}" target="_blank" rel="noopener">`,
+`  <img src="${media}" width="${w}" height="${h}" style="display:block;border:0;object-fit:cover;" alt="">`,
+`</a>`,
+`${pxImgs}`,
+`</body></html>`
+  ].join('\n');
+}
+
+/* Optional: expose a tiny helper so you can set trackers from UI later */
+window.setTrackers = function(size,{click='',imps=[]}={}){
+  const slot = appState.creatives[size];
+  if(!slot) return;
+  slot.trackers.click = click;
+  slot.trackers.imps = Array.isArray(imps)? imps : [];
+};

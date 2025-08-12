@@ -636,7 +636,7 @@
 .size-panel-header{ display:flex; align-items:center; justify-content:space-between; padding:10px 12px; border-bottom:1px solid #eee; }
 .size-panel-title{ font-size:14px; font-weight:600; }
 .size-panel-close{ background:transparent; border:0; font-size:18px; line-height:1; cursor:pointer; padding:4px 8px; }
-.size-panel-content{ padding: 8px;px; overflow:auto; flex:1; }
+.size-panel-content{ padding: 8px; overflow:auto; flex:1; }
 
 .size-panel-tab{
   position:absolute;
@@ -698,3 +698,15 @@ button[id^="clearOverrides-"] {
  padding:10px;
  margin-top:10px;
 }
+
+  /* minimal modal CSS */
+  .export-modal{position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:9999}
+  .export-modal[hidden]{display:none}
+  .export-modal__dialog{background:#111;color:#eee;min-width:640px;max-width:80vw;border-radius:8px;box-shadow:0 10px 30px rgba(0,0,0,.6)}
+  .export-modal__head{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid #333}
+  .export-modal__controls{padding:12px 16px;border-bottom:1px solid #333}
+  .export-modal__list{padding:8px 16px 16px}
+  .export-row{display:grid;grid-template-columns:140px 1fr auto auto;gap:8px;align-items:center;padding:8px 0;border-bottom:1px dashed #333}
+  .export-row:last-child{border-bottom:none}
+  .export-row pre{margin:0;max-height:120px;overflow:auto;background:#0b0b0b;padding:8px;border-radius:6px}
+  .export-actions button{margin-left:8px}
