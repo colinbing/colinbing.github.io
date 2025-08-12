@@ -399,19 +399,109 @@ document.getElementById('exportBtn')?.addEventListener('click', () => {
   console.log('Export payload', payload);
 });
 
-/* Wire Export button */
-document.getElementById('exportBtn')?.addEventListener('click', openExportModal);
-document.getElementById('exportModalClose')?.addEventListener('click', closeExportModal);
-document.getElementById('exportModal')?.addEventListener('click', (e)=>{ if(e.target.id==='exportModal') closeExportModal(); });
-document.getElementById('exportFormat')?.addEventListener('change', renderExportRows);
+// === Export Modal: full replacement JS ===
 
-function openExportModal(){
-  renderExportRows();
-  document.getElementById('exportModal').hidden = false;
+// Elements
+const exportModal      = document.getElementById('exportModal');
+const exportOpenBtn    = document.getElementById('exportBtn');
+const exportCloseBtn   = document.getElementById('exportModalClose');
+const exportList       = document.getElementById('exportList');
+
+// Always JS format
+const EXPORT_FORMAT = 'js';
+
+// Open/Close
+function openExport(){
+  // Build rows before showing
+  renderExportRows(EXPORT_FORMAT);
+  exportModal.classList.add('is-open');
+  exportModal.setAttribute('aria-hidden','false');
+  document.body.style.overflow = 'hidden';
 }
-function closeExportModal(){
-  document.getElementById('exportModal').hidden = true;
+function closeExport(){
+  exportModal.classList.remove('is-open');
+  exportModal.setAttribute('aria-hidden','true');
+  document.body.style.overflow = '';
 }
+
+// Wire events
+exportOpenBtn?.addEventListener('click', openExport);
+exportCloseBtn?.addEventListener('click', closeExport);
+// Click backdrop to close
+exportModal?.addEventListener('click', (e)=>{ if(e.target === exportModal) closeExport(); });
+// Escape to close
+document.addEventListener('keydown', (e)=>{
+  if(e.key === 'Escape' && exportModal.classList.contains('is-open')) closeExport();
+});
+
+// Remove any legacy listeners that referenced #exportFormat
+// (Ensure your HTML no longer includes the format <select>)
+
+/**
+ * renderExportRows(format)
+ * Expects your existing row builder to append into #exportList.
+ * Call with fixed 'js' format.
+ */
+function renderExportRows(format = EXPORT_FORMAT){
+  // Example stub. Replace with your actual logic.
+  // Clears and repopulates rows for each creative.
+  exportList.innerHTML = '';
+  const creatives = getCreativesForExport(); // implement or reuse your function
+
+  creatives.forEach((creative, i) => {
+    const code = buildJsTagForCreative(creative); // implement or reuse
+    const row  = document.createElement('div');
+    row.className = 'export-row';
+    row.innerHTML = `
+      <div class="export-name">${creative.name ?? `Creative ${i+1}`}</div>
+      <pre><code>${escapeHtml(code)}</code></pre>
+      <div class="export-actions">
+        <button type="button" data-act="copy">Copy</button>
+        <button type="button" data-act="download">Download .js</button>
+      </div>
+    `;
+    // Copy
+    row.querySelector('[data-act="copy"]').addEventListener('click', async ()=>{
+      await navigator.clipboard.writeText(code);
+    });
+    // Download
+    row.querySelector('[data-act="download"]').addEventListener('click', ()=>{
+      const blob = new Blob([code], {type:'text/javascript;charset=utf-8'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = (creative.slug ?? creative.name ?? `creative-${i+1}`)+'.js';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(a.href);
+    });
+
+    exportList.appendChild(row);
+  });
+}
+
+// Utility: escape code for <pre><code>
+function escapeHtml(s){
+  return String(s)
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;');
+}
+
+// Placeholder: replace with your data source
+function getCreativesForExport(){
+  // return an array of creatives with {name, slug, ...}
+  return window.exportCreatives ?? [];
+}
+
+// Placeholder: replace with your JS tag builder
+function buildJsTagForCreative(creative){
+  // return a string containing the JS tag for this creative
+  return (window.buildJsTagForCreative)
+    ? window.buildJsTagForCreative(creative)
+    : `/* JS tag for ${creative.name || 'creative'} */`;
+}
+
 
 /* Utilities */
 function sizeDims(size){ const [w,h]=size.split('x').map(n=>parseInt(n,10)); return {w,h}; }

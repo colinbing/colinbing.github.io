@@ -83,12 +83,15 @@
       <div class="size-panel-content" id="sizePanelContent"></div>
     </div>
 
-    <div id="exportModal" class="export-modal" hidden>
-    <div class="export-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="exportModalTitle">
-      <div class="export-modal__head">
-        <h3 id="exportModalTitle">Export 3P Tags</h3>
-        <button type="button" id="exportModalClose" aria-label="Close">×</button>
+    <div id="exportModal" class="export-modal" aria-hidden="true">
+      <div class="export-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="exportModalTitle">
+        <div class="export-modal__head">
+          <h3 id="exportModalTitle">Export 3P Tags</h3>
+          <button type="button" id="exportModalClose" class="export-modal__close" aria-label="Close">×</button>
+        </div>
+        <div id="exportList" class="export-modal__list"></div>
       </div>
+    </div>
 
       <div class="export-modal__controls">
         <label>

@@ -729,17 +729,70 @@ button[id^="clearOverrides-"] {
  margin-top:10px;
 }
 
-  /* minimal modal CSS */
-  .export-modal{position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:9999}
-  .export-modal[hidden]{display:none}
-  .export-modal__dialog{background:#111;color:#eee;min-width:640px;max-width:80vw;border-radius:8px;box-shadow:0 10px 30px rgba(0,0,0,.6)}
-  .export-modal__head{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid #333}
-  .export-modal__controls{padding:12px 16px;border-bottom:1px solid #333}
-  .export-modal__list{padding:8px 16px 16px}
-  .export-row{display:grid;grid-template-columns:140px 1fr auto auto;gap:8px;align-items:center;padding:8px 0;border-bottom:1px dashed #333}
-  .export-row:last-child{border-bottom:none}
-  .export-row pre{margin:0;max-height:120px;overflow:auto;background:#0b0b0b;padding:8px;border-radius:6px}
-  .export-actions button{margin-left:8px}
+/* Backdrop */
+.export-modal{
+  position:fixed; inset:0;
+  display:flex; align-items:center; justify-content:center;
+  z-index:2147483600;
+  background:rgba(0,0,0,.5);
+  opacity:0; pointer-events:none;
+  transition:opacity .2s ease-out;
+}
+.export-modal.is-open{ opacity:1; pointer-events:auto; }
+
+/* Dialog */
+.export-modal__dialog{
+  width:960px; max-width:90vw; min-width:640px;
+  background:#fff;
+  border:1px solid rgba(0,0,0,.2);
+  border-radius:.3rem;
+  display:flex; flex-direction:column;
+  box-shadow:0 10px 40px rgba(0,0,0,.35);
+  transform:translateY(-12px); opacity:0;
+  transition:transform .3s ease-out, opacity .2s ease-out;
+}
+.export-modal.is-open .export-modal__dialog{
+  transform:translateY(0); opacity:1;
+}
+
+/* Header: black bar with gray X */
+.export-modal__head{
+  display:flex; align-items:center; justify-content:space-between;
+  background:#0b0c0f; color:#fff;
+  padding:12px 16px;
+  border-top-left-radius:.3rem; border-top-right-radius:.3rem;
+  border-bottom:1px solid #1f232b;
+}
+.export-modal__head h3{ margin:0; font-size:16px; font-weight:600; }
+.export-modal__close{
+  appearance:none; border:0; background:transparent;
+  color:#9aa0a6; font-size:22px; line-height:1; cursor:pointer;
+  padding:2px 6px; border-radius:6px;
+}
+.export-modal__close:hover{ color:#c2c7d0; background:rgba(255,255,255,.06); }
+.export-modal__close:focus{ outline:2px solid #6573ff33; outline-offset:2px; }
+
+/* Body/list */
+.export-modal__list{ padding:16px; max-height:70vh; overflow:auto; }
+
+/* Rows (kept from your styles, adapted to light body) */
+.export-row{
+  display:grid; grid-template-columns:140px 1fr auto auto;
+  gap:8px; align-items:center; padding:8px 0;
+  border-bottom:1px dashed #e5e7eb;
+}
+.export-row:last-child{ border-bottom:none; }
+.export-row pre{
+  margin:0; max-height:120px; overflow:auto;
+  background:#e5e7eb; color:#0b0b0b;
+  padding:8px; border-radius:6px;
+}
+
+/* Buttons area in each row */
+.export-actions button{ margin-left:8px;padding: 5px 11px; }
+
+/* Remove the old controls row entirely (JS-only export) */
+.export-modal__controls{ display:none !important; }
 
   #viewport-blocker {
     display: none;
