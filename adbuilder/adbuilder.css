@@ -666,6 +666,7 @@
 button[id^="clearOverrides-"],
 #sizePanel button[type="submit"] {
   padding: 10px 16px;
+  margin-top:10px;
   font-size: 14px;
   border: none;
   border-radius: 4px;
@@ -691,4 +692,9 @@ button[id^="clearOverrides-"] {
 #sizePanel .global-assets-form {
   border:0;
   box-shadow:none;
+}
+
+.global-assets-form button[type="submit"] {
+ padding:10px;
+ margin-top:10px;
 }
