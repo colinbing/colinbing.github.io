@@ -637,3 +637,7 @@ footer .row {
     max-height:100px;
     height: auto;
 }
+
+#footer .justify-content-center{
+    padding-bottom:40px;
+}
