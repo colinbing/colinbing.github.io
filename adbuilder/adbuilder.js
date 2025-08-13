@@ -534,6 +534,66 @@ if (typeof standaloneHTML === 'undefined'){
 }
 
 /* ---------- Build tag from state (uses your helpers defined earlier) ---------- */
+
+// Helper shims required by buildThirdPartyTag
+if (typeof sizeDims === 'undefined') {
+  function sizeDims(size){ const [w,h]=String(size).split('x').map(n=>parseInt(n,10)); return {w,h}; }
+}
+if (typeof abs === 'undefined') {
+  function abs(u){ try { return new URL(u, window.location.origin).href; } catch { return u; } }
+}
+if (typeof sanitizeUrl === 'undefined') {
+  function sanitizeUrl(u){
+    if (!u) return '';
+    try { return new URL(u, window.location.origin).toString(); }
+    catch { return ''; }
+  }
+}
+if (typeof substituteDest === 'undefined') {
+  function substituteDest(urlTemplate, dest){
+    if (!urlTemplate) return dest || '';
+    const enc = encodeURIComponent(dest || '');
+    return urlTemplate
+      .replace(/\{\{DEST\}\}/g, enc)
+      .replace(/\{DEST\}/g, enc)
+      .replace(/%%DEST_URL%%/g, enc)
+      .replace(/%%CLICK_URL_ESC%%/g, enc);
+  }
+}
+
+// Tag shims
+if (typeof jsTag === 'undefined') {
+  function jsTag({w,h,media,clickUrl,pixels}){
+    return [
+`<script>(function(){`,
+`var W=${w}, H=${h};`,
+`var media=${JSON.stringify(media||'')};`,
+`var clickUrl=${JSON.stringify(clickUrl||'')};`,
+`var pixels=${JSON.stringify((pixels||[]))};`,
+`var d=document;`,
+`function currentScript(){`,
+`  return d.currentScript || (function(a){ a=d.getElementsByTagName('script'); return a[a.length-1]; })();`,
+`}`,
+`function inject(){`,
+`  var s=currentScript();`,
+`  var box=d.createElement('div');`,
+`  box.style.cssText='width:'+W+'px;height:'+H+'px;display:block;overflow:hidden;border:0;';`,
+`  var a=d.createElement('a');`,
+`  a.href=clickUrl; a.target='_blank'; a.rel='noopener';`,
+`  a.style.cssText='display:block;width:100%;height:100%;position:relative;';`,
+`  var img=d.createElement('img');`,
+`  img.src=media; img.alt=''; img.width=W; img.height=H;`,
+`  img.style.cssText='width:100%;height:100%;object-fit:cover;display:block;border:0;';`,
+`  a.appendChild(img); box.appendChild(a);`,
+`  s.parentNode.insertBefore(box, s.nextSibling);`,
+`  try{ if(Array.isArray(pixels)) pixels.forEach(function(u){ if(u){ var p=new Image(); p.src=String(u); } }); }catch(e){}`,
+`}`,
+`if(d.readyState==='loading'){ d.addEventListener('DOMContentLoaded', inject); } else { inject(); }`,
+`})();</script>`
+    ].join('\n');
+  }
+}
+
 function buildThirdPartyTag(size, format){
   const { w, h } = sizeDims(size);
   const a = resolved(size);
