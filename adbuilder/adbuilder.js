@@ -22,6 +22,27 @@ window.appState = window.appState || {
   }
 };
 
+window.Adbuilder = window.Adbuilder || {};
+const A = window.Adbuilder;
+
+// attach state references
+A.state = window.appState;
+
+// utils (move from shims here, then delete shims)
+A.utils = {
+  sizeDims(size){ const [w,h]=String(size).split('x').map(n=>parseInt(n,10)); return {w,h}; },
+  abs(u){ try{ return new URL(u, window.location.origin).href; } catch{ return u; } },
+  sanitizeUrl(u){ if(!u) return ''; try{ return new URL(u, window.location.origin).toString(); } catch{ return ''; } },
+  substituteDest(tmpl, dest){
+    if(!tmpl) return dest||'';
+    const enc = encodeURIComponent(dest||'');
+    return tmpl.replace(/\{\{DEST\}\}|\{DEST\}|%%DEST_URL%%|%%CLICK_URL_ESC%%/g, enc);
+  }
+};
+
+A.resolved = window.resolved;
+A.renderers = window.layoutRenderers;
+
 /* 1) Resolver helpers */
 function resolved(size) {
   const g = appState.global;
@@ -446,56 +467,35 @@ document.addEventListener('keydown', e=>{
 
 /* ---------- Tag builder row rendering (single canonical impl) ---------- */
 function renderExportRows(){
-  const list   = document.getElementById('exportList');
-  const fmtSel = document.getElementById('exportFormat');
+  const list = document.getElementById('exportList');
+  const fmt  = document.getElementById('exportFormat')?.value || 'js';
   if (!list) return;
-
   list.innerHTML = '';
-  const fmt = fmtSel?.value || 'js';
 
-  Object.keys(appState.creatives).forEach(size=>{
-    const tag = buildThirdPartyTag(size, fmt);
+  Object.keys(A.state.creatives).forEach(size=>{
+    const tag = A.buildTag(size, fmt);
 
-    const row   = document.createElement('div');
-    row.className = 'export-row';
+    const row  = document.createElement('div'); row.className='export-row';
+    const name = document.createElement('div'); name.className='export-name'; name.textContent=size;
+    const pre  = document.createElement('pre'); const code=document.createElement('code'); code.textContent=tag; pre.appendChild(code);
 
-    const label = document.createElement('div');
-    label.className = 'export-name';
-    label.textContent = size;
-
-    const pre   = document.createElement('pre');
-    const code  = document.createElement('code');
-    code.textContent = tag;
-    pre.appendChild(code);
-
-    const actions = document.createElement('div');
-    actions.className = 'export-actions';
-
-    const copyBtn = document.createElement('button');
-    copyBtn.type = 'button';
-    copyBtn.textContent = 'Copy';
+    const actions = document.createElement('div'); actions.className='export-actions';
+    const copyBtn = document.createElement('button'); copyBtn.type='button'; copyBtn.textContent='Copy';
     copyBtn.addEventListener('click', ()=>navigator.clipboard.writeText(tag));
-
-    const dlBtn = document.createElement('button');
-    dlBtn.type = 'button';
-    dlBtn.textContent = 'Download';
+    const dlBtn = document.createElement('button'); dlBtn.type='button'; dlBtn.textContent='Download';
     dlBtn.addEventListener('click', ()=>{
-      const ext  = fmt === 'html' ? 'html' : (fmt === 'iframe' ? 'html' : 'txt');
+      const ext = fmt==='html' ? 'html' : (fmt==='iframe' ? 'html' : 'txt');
       const blob = new Blob([tag], {type:'text/plain;charset=utf-8'});
-      const a    = document.createElement('a');
-      a.href     = URL.createObjectURL(blob);
-      a.download = `ad_${size}.${ext}`;
+      const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=`ad_${size}.${ext}`;
       document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(a.href);
     });
 
-    actions.appendChild(copyBtn);
-    actions.appendChild(dlBtn);
-    row.appendChild(label);
-    row.appendChild(pre);
-    row.appendChild(actions);
+    actions.appendChild(copyBtn); actions.appendChild(dlBtn);
+    row.appendChild(name); row.appendChild(pre); row.appendChild(actions);
     list.appendChild(row);
   });
 }
+
 document.getElementById('exportFormat')?.addEventListener('change', renderExportRows);
 
 /* ---------- Third‑party tag formats (define if missing) ---------- */
@@ -533,37 +533,9 @@ if (typeof standaloneHTML === 'undefined'){
   }
 }
 
-/* ---------- Build tag from state (uses your helpers defined earlier) ---------- */
-
-// Helper shims required by buildThirdPartyTag
-if (typeof sizeDims === 'undefined') {
-  function sizeDims(size){ const [w,h]=String(size).split('x').map(n=>parseInt(n,10)); return {w,h}; }
-}
-if (typeof abs === 'undefined') {
-  function abs(u){ try { return new URL(u, window.location.origin).href; } catch { return u; } }
-}
-if (typeof sanitizeUrl === 'undefined') {
-  function sanitizeUrl(u){
-    if (!u) return '';
-    try { return new URL(u, window.location.origin).toString(); }
-    catch { return ''; }
-  }
-}
-if (typeof substituteDest === 'undefined') {
-  function substituteDest(urlTemplate, dest){
-    if (!urlTemplate) return dest || '';
-    const enc = encodeURIComponent(dest || '');
-    return urlTemplate
-      .replace(/\{\{DEST\}\}/g, enc)
-      .replace(/\{DEST\}/g, enc)
-      .replace(/%%DEST_URL%%/g, enc)
-      .replace(/%%CLICK_URL_ESC%%/g, enc);
-  }
-}
-
 // Tag shims
-if (typeof jsTag === 'undefined') {
-  function jsTag({w,h,media,clickUrl,pixels}){
+A.tags = {
+  jsTag({w,h,media,clickUrl,pixels}){ /* your existing jsTag body */ 
     return [
 `<script>(function(){`,
 `var W=${w}, H=${h};`,
@@ -591,8 +563,28 @@ if (typeof jsTag === 'undefined') {
 `if(d.readyState==='loading'){ d.addEventListener('DOMContentLoaded', inject); } else { inject(); }`,
 `})();</script>`
     ].join('\n');
-  }
-}
+  },
+};
+
+A.buildTag = function(size, format='js'){
+  const { sizeDims, abs, sanitizeUrl, substituteDest } = A.utils;
+  const { jsTag, iframeTag, standaloneHTML } = A.tags;
+
+  const { w,h } = sizeDims(size);
+  const a = A.resolved(size);
+  const t = A.state.creatives[size]?.trackers || { click:'', imps:[] };
+
+  const dest     = sanitizeUrl(a.clickthrough || '');
+  const clickUrl = substituteDest((t.click||'').trim(), dest) || dest;
+  const media    = abs(a.mediaUrl || '');
+  const pixels   = (t.imps||[]).filter(Boolean).map(u=>abs(u.trim()));
+
+  if (format === 'html')   return standaloneHTML({w,h,media,clickUrl,pixels});
+  if (format === 'iframe') return iframeTag({w,h,media,clickUrl,pixels});
+  return jsTag({w,h,media,clickUrl,pixels});
+};
+
+
 
 function buildThirdPartyTag(size, format){
   const { w, h } = sizeDims(size);
@@ -610,75 +602,96 @@ function buildThirdPartyTag(size, format){
 }
 
 /* ---------- All‑sizes PNG exporter (single source) ---------- */
+// Replace your entire window.downloadPngZip with this
 window.downloadPngZip = async function(){
-  // deps
+  // Namespace + helpers
+  const A = window.Adbuilder || {};
+  const resolve   = A.resolved || window.resolved;
+  const sizeDims  = (A.utils && A.utils.sizeDims)
+    ? A.utils.sizeDims
+    : (s=>{ const [w,h]=String(s).split('x').map(n=>parseInt(n,10)); return {w,h}; });
+  const renderers = window.layoutRenderers || A.renderers || {};
+
+  // Deps
   async function loadOnce(url){
     if ([...document.scripts].some(s=>s.src===url)) return;
-    await new Promise((res,rej)=>{ const s=document.createElement('script'); s.src=url; s.async=true; s.onload=res; s.onerror=()=>rej(new Error('load '+url)); document.head.appendChild(s); });
+    await new Promise((res,rej)=>{
+      const s=document.createElement('script');
+      s.src=url; s.async=true; s.onload=res; s.onerror=()=>rej(new Error('load '+url));
+      document.head.appendChild(s);
+    });
   }
   if (!window.html2canvas) await loadOnce('https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js');
   if (!window.JSZip)       await loadOnce('https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js');
 
-  const stamp   = () => { const d=new Date(), p=n=>String(n).padStart(2,'0'); return `${d.getFullYear()}${p(d.getMonth()+1)}${p(d.getDate())}_${p(d.getHours())}${p(d.getMinutes())}${p(d.getSeconds())}`; };
-  const sizeDim = (size)=>{ const [w,h]=size.split('x').map(n=>parseInt(n,10)); return {w,h}; };
+  // Guards
+  const sizes = Object.keys((A.state?.creatives) || (window.appState?.creatives) || {});
+  if (!sizes.length){ alert('No creatives defined in appState.creatives.'); return; }
+  if (typeof resolve !== 'function'){ alert('resolved(size) not found.'); return; }
 
-  const renderers = window.layoutRenderers || {};
-  const resolve   = window.resolved;
-  const sizes     = Object.keys(window.appState?.creatives || {});
-  if (!sizes.length) { alert('No creatives defined in appState.creatives.'); return; }
-  if (!resolve)      { alert('resolved(size) not found. Expose it on window.'); return; }
-
-  // offscreen sandbox
+  // Offscreen sandbox
   const sandbox = document.createElement('div');
   sandbox.id='__export_sandbox';
   sandbox.style.cssText='position:fixed;left:-10000px;top:0;width:0;height:0;pointer-events:none;background:#fff;z-index:-1;';
   document.body.appendChild(sandbox);
 
+  // Render each size using your renderer map
   for (const size of sizes){
-    const renderer = renderers[size];
-    if (typeof renderer !== 'function') continue;
-    const {w,h} = sizeDim(size);
+    const renderer = typeof renderers[size] === 'function' ? renderers[size] : null;
+    if (!renderer) continue;
+    const {w,h} = sizeDims(size);
     const html  = renderer(resolve(size));
     if (!html) continue;
 
     const wrap = document.createElement('div');
     wrap.className='export-capture';
-    wrap.setAttribute('data-export','creative');
-    wrap.setAttribute('data-name', size);
+    wrap.dataset.export='creative';
+    wrap.dataset.name=size;
     wrap.style.cssText=`width:${w}px;height:${h}px;display:block;position:relative;background:#ffffff;overflow:hidden;`;
     wrap.innerHTML = html;
     sandbox.appendChild(wrap);
   }
 
-  // wait for images
+  // Wait for images
   const imgs = Array.from(sandbox.querySelectorAll('img'));
   await Promise.all(imgs.map(img => img.complete ? Promise.resolve() :
     new Promise(r => { img.addEventListener('load', r, {once:true}); img.addEventListener('error', r, {once:true}); })
   ));
 
+  // Capture to zip
   const nodes = Array.from(sandbox.querySelectorAll('.export-capture'));
   if (!nodes.length){
     document.body.removeChild(sandbox);
-    alert('No creatives rendered for export. Ensure window.layoutRenderers is set.');
+    alert('No creatives rendered for export.');
     return;
   }
 
   const zip = new JSZip();
   for (let i=0;i<nodes.length;i++){
     const el   = nodes[i];
-    const name = el.getAttribute('data-name') || `creative_${i+1}`;
-    const canvas = await html2canvas(el, { backgroundColor:'#ffffff', useCORS:true, scale:2, windowWidth:el.offsetWidth, windowHeight:el.offsetHeight });
-    const blob   = await new Promise(r=>canvas.toBlob(r,'image/png'));
+    const name = el.dataset.name || `creative_${i+1}`;
+    const canvas = await html2canvas(el, {
+      backgroundColor:'#ffffff',
+      useCORS:true,
+      scale:2,
+      windowWidth:el.offsetWidth,
+      windowHeight:el.offsetHeight
+    });
+    const blob = await new Promise(r=>canvas.toBlob(r,'image/png'));
     zip.file(`${name}.png`, blob);
   }
 
+  // Cleanup + download
   document.body.removeChild(sandbox);
   const out = await zip.generateAsync({type:'blob'});
   const a=document.createElement('a');
+  const ts=()=>{const d=new Date(),p=n=>String(n).padStart(2,'0');return `${d.getFullYear()}${p(d.getMonth()+1)}${p(d.getDate())}_${p(d.getHours())}${p(d.getMinutes())}${p(d.getSeconds())}`;};
   a.href=URL.createObjectURL(out);
-  a.download=`creatives_${stamp()}.zip`;
+  a.download=`creatives_${ts()}.zip`;
   document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(a.href);
 };
+
+
 
 /* ---------- Dropdown wiring (single source) ---------- */
 (function(){
