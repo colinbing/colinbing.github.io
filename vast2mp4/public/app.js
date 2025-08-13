@@ -1,5 +1,5 @@
 const sel = q=>document.querySelector(q);
-const API_BASE = location.hostname === 'localhost' ? '' : 'https://YOUR-BACKEND-HOST'; // set when deployed
+const API_BASE = 'https://vast-backend.onrender.com';
 
 const vastUrl=sel('#vastUrl'), btnUnwrap=sel('#btnUnwrap'), btnCsv=sel('#btnExportCsv'), btnMp4=sel('#btnDownloadMp4');
 const fileSize=sel('#fileSize'), summary=sel('#vastSummary'), tbody=sel('#trackerTable tbody');
