@@ -60,3 +60,20 @@ sel('#btnDownloadMp4').addEventListener('click', ()=>{
   const src  = last.mediaSummary.url;
   window.open(`${API_BASE}/api/download-mp4?kind=${kind}&url=${encodeURIComponent(src)}`,'_blank');
 });
+
+const video = document.querySelector('#preview');
+
+// after you call render(last) and size fetch:
+if (last.mediaSummary.kind === 'mp4') {
+  video.src = `${API_BASE}/api/download-mp4?kind=mp4&inline=1&url=${encodeURIComponent(last.mediaSummary.url)}`;
+  video.style.display = 'block';
+  video.load();
+} else if (last.mediaSummary.kind === 'hls') {
+  // will remux on the fly; first frame may take a moment
+  video.src = `${API_BASE}/api/download-mp4?kind=hls&inline=1&url=${encodeURIComponent(last.mediaSummary.url)}`;
+  video.style.display = 'block';
+  video.load();
+} else {
+  video.removeAttribute('src');
+  video.style.display = 'none';
+}
