@@ -738,7 +738,10 @@ button[id^="clearOverrides-"] {
   opacity:0; pointer-events:none;
   transition:opacity .2s ease-out;
 }
+/* when JS opens it */
 .export-modal.is-open{ opacity:1; pointer-events:auto; }
+/* when explicitly hidden (e.g., initial state or on close) */
+.export-modal[hidden]{ display:none !important; }
 
 /* Dialog */
 .export-modal__dialog{
@@ -755,7 +758,7 @@ button[id^="clearOverrides-"] {
   transform:translateY(0); opacity:1;
 }
 
-/* Header: black bar with gray X */
+/* Header */
 .export-modal__head{
   display:flex; align-items:center; justify-content:space-between;
   background:#0b0c0f; color:#fff;
@@ -858,8 +861,8 @@ button[id^="clearOverrides-"] {
 }
 .export-menu button:hover { background:#1f2937; }
 
-/* Hover open */
-#exportRoot:hover > .export-menu { display:block; }
-
-/* Click/touch open */
-#exportRoot.is-open > .export-menu { display:block; }
+#exportMenu{display:none}
+#exportRoot.is-open>#exportMenu,#exportRoot:hover>#exportMenu{display:block}
+/* Make modal visibility deterministic */
+.export-modal{display:none}
+.export-modal.is-open{display:flex}

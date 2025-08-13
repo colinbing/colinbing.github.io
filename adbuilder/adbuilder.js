@@ -36,10 +36,15 @@ function resolved(size) {
   };
 }
 
+window.resolved = window.resolved || resolved;
+
+
 /* 2) Renderers (unchanged API: take assets) */
 function render970x250(assets) {
   return `
-    <div class="ad-preview ad-970x250" data-size="970x250" style="width:970px; height:250px;">
+    <div class="ad-preview ad-970x250" data-size="970x250"
+         data-export="creative" data-name="970x250"
+         style="width:970px; height:250px;">
       <div class="left-content">
         <img class="logo" src="${assets.logoUrl}" alt="Logo" />
         <h1 class="headline">${assets.headline}</h1>
@@ -55,7 +60,8 @@ function render970x250(assets) {
 
 function render320x50(assets) {
   return `
-    <div class="ad-preview ad-320x50" data-size="320x50">
+    <div class="ad-preview ad-320x50" data-size="320x50"
+         data-export="creative" data-name="320x50">
       <img class="logo" src="${assets.logoUrl}" alt="Logo" />
       <div class="text-wrapper">
         <div class="headline">${assets.headline}</div>
@@ -67,7 +73,8 @@ function render320x50(assets) {
 
 function render728x90(assets) {
   return `
-    <div class="ad-preview ad-728x90" data-size="728x90">
+    <div class="ad-preview ad-728x90" data-size="728x90"
+         data-export="creative" data-name="728x90">
       <div class="left-column">
         <img class="logo" src="${assets.logoUrl}" alt="Logo" />
       </div>
@@ -84,7 +91,8 @@ function render728x90(assets) {
 
 function render620x250(assets) {
   return `
-    <div class="ad-preview ad-620x250" data-size="620x250">
+    <div class="ad-preview ad-620x250" data-size="620x250"
+         data-export="creative" data-name="620x250">
       <div class="left-content">
         <div class="logo-wrapper">
           <img class="logo" src="${assets.logoUrl}" alt="Logo" />
@@ -102,7 +110,8 @@ function render620x250(assets) {
 
 function render300x250(assets) {
   return `
-    <div class="ad-preview ad-300x250" data-size="300x250">
+    <div class="ad-preview ad-300x250" data-size="300x250"
+         data-export="creative" data-name="300x250">
       <div class="media">
         <img src="${assets.mediaUrl}" alt="Media" />
       </div>
@@ -119,7 +128,8 @@ function render300x250(assets) {
 
 function render300x600(assets) {
   return `
-    <div class="ad-preview ad-300x600" data-size="300x600">
+    <div class="ad-preview ad-300x600" data-size="300x600"
+         data-export="creative" data-name="300x600">
       <div class="logo-row">
         <img class="logo" src="${assets.logoUrl || ''}" alt="Logo" />
       </div>
@@ -144,6 +154,9 @@ const layoutRenderers = {
   "300x600": render300x600,
   "320x50":  render320x50
 };
+
+window.layoutRenderers = layoutRenderers;
+
 
 /* 4) Side highlight */
 function setHighlight(el) {
@@ -390,357 +403,254 @@ const defaultLayout = activeItem.getAttribute('data-layout') || activeItem.getAt
 renderLayout(defaultLayout);
 setHighlight(activeItem);
 
-/* 10) Optional: export button stub (safe no-op if absent) */
-document.getElementById('exportBtn')?.addEventListener('click', () => {
-  const payload = {
-    global: { ...appState.global },
-    creatives: JSON.parse(JSON.stringify(appState.creatives))
-  };
-  console.log('Export payload', payload);
-});
+/* ============================================
+   REPLACE everything from 
+   // === Export Modal: full replacement JS === 
+   to the end of the file with THIS BLOCK.
+   ============================================ */
 
-// === Export Modal: full replacement JS ===
+/* Ensure renderer map and resolver are global (defined earlier in your file) */
+window.layoutRenderers = window.layoutRenderers || layoutRenderers;
+window.resolved        = window.resolved || resolved;
 
-// Elements
-const exportModal      = document.getElementById('exportModal');
-const exportOpenBtn    = document.getElementById('exportBtn');
-const exportCloseBtn   = document.getElementById('exportModalClose');
-const exportList       = document.getElementById('exportList');
-
-// Always JS format
-const EXPORT_FORMAT = 'js';
-
-// Open/Close
-function openExport(){
-  // Build rows before showing
-  renderExportRows(EXPORT_FORMAT);
-  exportModal.classList.add('is-open');
-  exportModal.setAttribute('aria-hidden','false');
+/* ---------- Modal open/close (single source of truth) ---------- */
+function openExportModal(){
+  const modal = document.getElementById('exportModal');
+  if (!modal) { console.warn('exportModal not found'); return; }
+  renderExportRows(); // populate on open
+  modal.classList.add('is-open');
+  modal.removeAttribute('hidden');
+  modal.setAttribute('aria-hidden','false');
   document.body.style.overflow = 'hidden';
+  modal.querySelector('button,[href],input,select,textarea,[tabindex]:not([tabindex="-1"])')?.focus();
 }
-function closeExport(){
-  exportModal.classList.remove('is-open');
-  exportModal.setAttribute('aria-hidden','true');
+function closeExportModal(){
+  const modal = document.getElementById('exportModal');
+  if (!modal) return;
+  modal.classList.remove('is-open');
+  modal.setAttribute('aria-hidden','true');
+  modal.setAttribute('hidden','');
   document.body.style.overflow = '';
 }
+window.openExportModal  = openExportModal;
+window.closeExportModal = closeExportModal;
 
-// Wire events
-exportOpenBtn?.addEventListener('click', openExport);
-exportCloseBtn?.addEventListener('click', closeExport);
-// Click backdrop to close
-exportModal?.addEventListener('click', (e)=>{ if(e.target === exportModal) closeExport(); });
-// Escape to close
-document.addEventListener('keydown', (e)=>{
-  if(e.key === 'Escape' && exportModal.classList.contains('is-open')) closeExport();
+/* Backdrop + close button + ESC */
+document.getElementById('exportModal')?.addEventListener('click', e=>{
+  if (e.target === e.currentTarget) closeExportModal();
+});
+document.getElementById('exportModalClose')?.addEventListener('click', closeExportModal);
+document.addEventListener('keydown', e=>{
+  if (e.key === 'Escape' && document.getElementById('exportModal')?.classList.contains('is-open')) closeExportModal();
 });
 
-// Remove any legacy listeners that referenced #exportFormat
-// (Ensure your HTML no longer includes the format <select>)
-
-/**
- * renderExportRows(format)
- * Expects your existing row builder to append into #exportList.
- * Call with fixed 'js' format.
- */
-function renderExportRows(format = EXPORT_FORMAT){
-  // Example stub. Replace with your actual logic.
-  // Clears and repopulates rows for each creative.
-  exportList.innerHTML = '';
-  const creatives = getCreativesForExport(); // implement or reuse your function
-
-  creatives.forEach((creative, i) => {
-    const code = buildJsTagForCreative(creative); // implement or reuse
-    const row  = document.createElement('div');
-    row.className = 'export-row';
-    row.innerHTML = `
-      <div class="export-name">${creative.name ?? `Creative ${i+1}`}</div>
-      <pre><code>${escapeHtml(code)}</code></pre>
-      <div class="export-actions">
-        <button type="button" data-act="copy">Copy</button>
-        <button type="button" data-act="download">Download .js</button>
-      </div>
-    `;
-    // Copy
-    row.querySelector('[data-act="copy"]').addEventListener('click', async ()=>{
-      await navigator.clipboard.writeText(code);
-    });
-    // Download
-    row.querySelector('[data-act="download"]').addEventListener('click', ()=>{
-      const blob = new Blob([code], {type:'text/javascript;charset=utf-8'});
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = (creative.slug ?? creative.name ?? `creative-${i+1}`)+'.js';
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(a.href);
-    });
-
-    exportList.appendChild(row);
-  });
-}
-
-// Utility: escape code for <pre><code>
-function escapeHtml(s){
-  return String(s)
-    .replace(/&/g,'&amp;')
-    .replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;');
-}
-
-// Placeholder: replace with your data source
-function getCreativesForExport(){
-  // return an array of creatives with {name, slug, ...}
-  return window.exportCreatives ?? [];
-}
-
-// Placeholder: replace with your JS tag builder
-function buildJsTagForCreative(creative){
-  // return a string containing the JS tag for this creative
-  return (window.buildJsTagForCreative)
-    ? window.buildJsTagForCreative(creative)
-    : `/* JS tag for ${creative.name || 'creative'} */`;
-}
-
-
-/* Utilities */
-function sizeDims(size){ const [w,h]=size.split('x').map(n=>parseInt(n,10)); return {w,h}; }
-function sanitizeUrl(u){ try{ return new URL(u, location.origin).toString(); }catch{ return ''; } }
-function substituteDest(urlTemplate, dest){
-  if(!urlTemplate) return dest;
-  const enc = encodeURIComponent(dest);
-  return urlTemplate
-    .replace(/\{\{DEST\}\}/g, enc)
-    .replace(/\{DEST\}/g, enc)
-    .replace(/%%DEST_URL%%/g, enc)
-    .replace(/%%CLICK_URL_ESC%%/g, enc);
-}
-async function copyToClipboard(text){
-  try{ await navigator.clipboard.writeText(text); }catch(e){ /* noop */ }
-}
-function downloadText(filename, text){
-  const blob = new Blob([text], {type:'text/plain'});
-  const url = URL.createObjectURL(blob);
-  const a = Object.assign(document.createElement('a'), {href:url, download:filename});
-  document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
-}
-
-/* Build export rows for every creative size present */
+/* ---------- Tag builder row rendering (single canonical impl) ---------- */
 function renderExportRows(){
-  const list = document.getElementById('exportList');
+  const list   = document.getElementById('exportList');
+  const fmtSel = document.getElementById('exportFormat');
+  if (!list) return;
+
   list.innerHTML = '';
-  const fmt = document.getElementById('exportFormat').value;
+  const fmt = fmtSel?.value || 'js';
 
   Object.keys(appState.creatives).forEach(size=>{
     const tag = buildThirdPartyTag(size, fmt);
-    const row = document.createElement('div');
+
+    const row   = document.createElement('div');
     row.className = 'export-row';
 
     const label = document.createElement('div');
+    label.className = 'export-name';
     label.textContent = size;
 
-    const pre = document.createElement('pre');
-    pre.textContent = tag;
+    const pre   = document.createElement('pre');
+    const code  = document.createElement('code');
+    code.textContent = tag;
+    pre.appendChild(code);
 
     const actions = document.createElement('div');
     actions.className = 'export-actions';
+
     const copyBtn = document.createElement('button');
     copyBtn.type = 'button';
     copyBtn.textContent = 'Copy';
-    copyBtn.addEventListener('click', ()=>copyToClipboard(tag));
+    copyBtn.addEventListener('click', ()=>navigator.clipboard.writeText(tag));
 
     const dlBtn = document.createElement('button');
     dlBtn.type = 'button';
     dlBtn.textContent = 'Download';
     dlBtn.addEventListener('click', ()=>{
-      const ext = fmt === 'html' ? 'html' : 'txt';
-      downloadText(`ad_${size}.${ext}`, tag);
+      const ext  = fmt === 'html' ? 'html' : (fmt === 'iframe' ? 'html' : 'txt');
+      const blob = new Blob([tag], {type:'text/plain;charset=utf-8'});
+      const a    = document.createElement('a');
+      a.href     = URL.createObjectURL(blob);
+      a.download = `ad_${size}.${ext}`;
+      document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(a.href);
     });
 
     actions.appendChild(copyBtn);
     actions.appendChild(dlBtn);
-
     row.appendChild(label);
     row.appendChild(pre);
     row.appendChild(actions);
     list.appendChild(row);
   });
 }
+document.getElementById('exportFormat')?.addEventListener('change', renderExportRows);
 
-/* Tag generation (MVP: image + click + impression pixels) */
+/* ---------- Third‑party tag formats (define if missing) ---------- */
+if (typeof iframeTag === 'undefined'){
+  function iframeTag({w,h,media,clickUrl,pixels}){
+    const pxImgs = (pixels||[]).map(u=>`<img src="${u}" width="1" height="1" style="position:absolute;left:-9999px;top:-9999px;border:0;" alt="">`).join('');
+    const srcdoc = [
+      '<!DOCTYPE html>',
+      '<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">',
+      `<title>Ad ${w}x${h}</title></head>`,
+      `<body style="margin:0;padding:0;">`,
+      `<a href="${clickUrl}" target="_blank" rel="noopener">`,
+      `  <img src="${media}" width="${w}" height="${h}" style="display:block;border:0;object-fit:cover;" alt="">`,
+      `</a>`,
+      `${pxImgs}`,
+      `</body></html>`
+    ].join('\n').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    return `<iframe srcdoc="${srcdoc}" width="${w}" height="${h}" frameborder="0" scrolling="no" style="border:0;display:block;"></iframe>`;
+  }
+}
+if (typeof standaloneHTML === 'undefined'){
+  function standaloneHTML({w,h,media,clickUrl,pixels}){
+    const pxImgs = (pixels||[]).map(u=>`<img src="${u}" width="1" height="1" style="position:absolute;left:-9999px;top:-9999px;border:0;" alt="">`).join('');
+    return [
+      '<!DOCTYPE html>',
+      '<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">',
+      `<title>Ad ${w}x${h}</title></head>`,
+      `<body style="margin:0;padding:0;">`,
+      `<a href="${clickUrl}" target="_blank" rel="noopener">`,
+      `  <img src="${media}" width="${w}" height="${h}" style="display:block;border:0;object-fit:cover;" alt="">`,
+      `</a>`,
+      `${pxImgs}`,
+      `</body></html>`
+    ].join('\n');
+  }
+}
+
+/* ---------- Build tag from state (uses your helpers defined earlier) ---------- */
 function buildThirdPartyTag(size, format){
   const { w, h } = sizeDims(size);
   const a = resolved(size);
   const t = appState.creatives[size]?.trackers || { click:'', imps:[] };
 
-  const dest = sanitizeUrl(a.clickthrough || '');
+  const dest     = sanitizeUrl(a.clickthrough || '');
   const clickUrl = substituteDest((t.click||'').trim(), dest) || dest;
+  const media    = abs(a.mediaUrl || '');
+  const pixels   = (t.imps||[]).filter(Boolean).map(u=>abs(u.trim()));
 
-  // make everything absolute for offsite usage
-  const media = abs(a.mediaUrl || '');
-  const pixels = (t.imps||[])
-    .filter(Boolean)
-    .map(u=>abs(u.trim()));
+  if (format === 'html')   return standaloneHTML({w,h, media, clickUrl, pixels});
+  if (format === 'iframe') return iframeTag({w,h, media, clickUrl, pixels});
+  return jsTag({w,h, media, clickUrl, pixels}); // default js
+}
 
-  if(format === 'html'){
-    return standaloneHTML({w,h, media, clickUrl, pixels});
+/* ---------- All‑sizes PNG exporter (single source) ---------- */
+window.downloadPngZip = async function(){
+  // deps
+  async function loadOnce(url){
+    if ([...document.scripts].some(s=>s.src===url)) return;
+    await new Promise((res,rej)=>{ const s=document.createElement('script'); s.src=url; s.async=true; s.onload=res; s.onerror=()=>rej(new Error('load '+url)); document.head.appendChild(s); });
   }
-  if(format === 'iframe'){
-    return iframeTag({w,h, media, clickUrl, pixels});
+  if (!window.html2canvas) await loadOnce('https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js');
+  if (!window.JSZip)       await loadOnce('https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js');
+
+  const stamp   = () => { const d=new Date(), p=n=>String(n).padStart(2,'0'); return `${d.getFullYear()}${p(d.getMonth()+1)}${p(d.getDate())}_${p(d.getHours())}${p(d.getMinutes())}${p(d.getSeconds())}`; };
+  const sizeDim = (size)=>{ const [w,h]=size.split('x').map(n=>parseInt(n,10)); return {w,h}; };
+
+  const renderers = window.layoutRenderers || {};
+  const resolve   = window.resolved;
+  const sizes     = Object.keys(window.appState?.creatives || {});
+  if (!sizes.length) { alert('No creatives defined in appState.creatives.'); return; }
+  if (!resolve)      { alert('resolved(size) not found. Expose it on window.'); return; }
+
+  // offscreen sandbox
+  const sandbox = document.createElement('div');
+  sandbox.id='__export_sandbox';
+  sandbox.style.cssText='position:fixed;left:-10000px;top:0;width:0;height:0;pointer-events:none;background:#fff;z-index:-1;';
+  document.body.appendChild(sandbox);
+
+  for (const size of sizes){
+    const renderer = renderers[size];
+    if (typeof renderer !== 'function') continue;
+    const {w,h} = sizeDim(size);
+    const html  = renderer(resolve(size));
+    if (!html) continue;
+
+    const wrap = document.createElement('div');
+    wrap.className='export-capture';
+    wrap.setAttribute('data-export','creative');
+    wrap.setAttribute('data-name', size);
+    wrap.style.cssText=`width:${w}px;height:${h}px;display:block;position:relative;background:#ffffff;overflow:hidden;`;
+    wrap.innerHTML = html;
+    sandbox.appendChild(wrap);
   }
-  return jsTag({w,h, media, clickUrl, pixels});
-}
 
-function abs(u){
-  try { return new URL(u, window.location.origin).href; }
-  catch { return u; }
-}
+  // wait for images
+  const imgs = Array.from(sandbox.querySelectorAll('img'));
+  await Promise.all(imgs.map(img => img.complete ? Promise.resolve() :
+    new Promise(r => { img.addEventListener('load', r, {once:true}); img.addEventListener('error', r, {once:true}); })
+  ));
 
-/* Formats */
-function jsTag({w,h,media,clickUrl,pixels}){
-  return [
-`<script>(function(){`,
-`var W=${w}, H=${h};`,
-`var media=${JSON.stringify(media||'')};`,
-`var clickUrl=${JSON.stringify(clickUrl||'')};`,
-`var pixels=${JSON.stringify((pixels||[]))};`,
-`var d=document;`,
-`function currentScript(){`,
-`  return d.currentScript || (function(a){ a=d.getElementsByTagName('script'); return a[a.length-1]; })();`,
-`}`,
-`function inject(){`,
-`  var s=currentScript();`,
-`  var box=d.createElement('div');`,
-`  box.style.cssText='width:'+W+'px;height:'+H+'px;display:block;overflow:hidden;border:0;';`,
-`  var a=d.createElement('a');`,
-`  a.href=clickUrl; a.target='_blank'; a.rel='noopener';`,
-`  a.style.cssText='display:block;width:100%;height:100%;position:relative;';`,
-`  var img=d.createElement('img');`,
-`  img.src=media; img.alt=''; img.width=W; img.height=H;`,
-`  img.style.cssText='width:100%;height:100%;object-fit:cover;display:block;border:0;';`,
-`  a.appendChild(img); box.appendChild(a);`,
-`  s.parentNode.insertBefore(box, s.nextSibling);`,
-`  try{ if(Array.isArray(pixels)) pixels.forEach(function(u){ if(u){ var p=new Image(); p.src=String(u); } }); }catch(e){}`,
-`}`,
-`if(d.readyState==='loading'){ d.addEventListener('DOMContentLoaded', inject); } else { inject(); }`,
-`})();</script>`
-  ].join('\n');
-}
+  const nodes = Array.from(sandbox.querySelectorAll('.export-capture'));
+  if (!nodes.length){
+    document.body.removeChild(sandbox);
+    alert('No creatives rendered for export. Ensure window.layoutRenderers is set.');
+    return;
+  }
 
+  const zip = new JSZip();
+  for (let i=0;i<nodes.length;i++){
+    const el   = nodes[i];
+    const name = el.getAttribute('data-name') || `creative_${i+1}`;
+    const canvas = await html2canvas(el, { backgroundColor:'#ffffff', useCORS:true, scale:2, windowWidth:el.offsetWidth, windowHeight:el.offsetHeight });
+    const blob   = await new Promise(r=>canvas.toBlob(r,'image/png'));
+    zip.file(`${name}.png`, blob);
+  }
 
-function iframeTag({w,h,media,clickUrl,pixels}){
-  const srcdoc = standaloneHTML({w,h,media,clickUrl,pixels})
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  return `<iframe srcdoc="${srcdoc}" width="${w}" height="${h}" frameborder="0" scrolling="no" style="border:0;display:block;"></iframe>`;
-}
-
-function standaloneHTML({w,h,media,clickUrl,pixels}){
-  const pxImgs = pixels.map(u=>`<img src="${u}" width="1" height="1" style="position:absolute;left:-9999px;top:-9999px;border:0;" alt="">`).join('');
-  return [
-`<!DOCTYPE html>`,
-`<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">`,
-`<title>Ad ${w}x${h}</title></head>`,
-`<body style="margin:0;padding:0;">`,
-`<a href="${clickUrl}" target="_blank" rel="noopener">`,
-`  <img src="${media}" width="${w}" height="${h}" style="display:block;border:0;object-fit:cover;" alt="">`,
-`</a>`,
-`${pxImgs}`,
-`</body></html>`
-  ].join('\n');
-}
-
-/* Optional: expose a tiny helper so you can set trackers from UI later */
-window.setTrackers = function(size,{click='',imps=[]}={}){
-  const slot = appState.creatives[size];
-  if(!slot) return;
-  slot.trackers.click = click;
-  slot.trackers.imps = Array.isArray(imps)? imps : [];
+  document.body.removeChild(sandbox);
+  const out = await zip.generateAsync({type:'blob'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(out);
+  a.download=`creatives_${stamp()}.zip`;
+  document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(a.href);
 };
 
+/* ---------- Dropdown wiring (single source) ---------- */
 (function(){
-  // ===== hook existing modal =====
-  const modal     = document.querySelector(".export-modal");
-  const dialog    = document.querySelector(".export-modal__dialog");
-  const closeBtns = modal ? modal.querySelectorAll("[data-export-close], .export-modal__close") : [];
+  const root = document.getElementById('exportRoot');
+  const btn  = document.getElementById('exportBtn');
+  const menu = document.getElementById('exportMenu');
 
-  function trapFocus(e){
-    if (!modal || modal.hasAttribute("hidden")) return;
-    if (e.key !== "Tab") return;
-    const focusables = modal.querySelectorAll('a,button,input,select,textarea,[tabindex]:not([tabindex="-1"])');
-    if (!focusables.length) return;
-    const first = focusables[0], last = focusables[focusables.length-1];
-    if (e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
-    else if (!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
-  }
+  if (menu?.hasAttribute('hidden')) menu.removeAttribute('hidden');
 
-  function onEsc(e){ if (e.key === "Escape") closeExportModal(); }
+  // toggle dropdown
+  btn?.addEventListener('click', (e)=>{
+    e.stopPropagation();
+    const open = root.classList.toggle('is-open');
+    btn.setAttribute('aria-expanded', String(open));
+  });
+  // close on outside
+  document.addEventListener('click', (e)=>{
+    if (!root?.classList.contains('is-open')) return;
+    if (root.contains(e.target)) return;
+    root.classList.remove('is-open');
+    btn?.setAttribute('aria-expanded','false');
+  });
 
-  function openExportModal(){
-    if (!modal){ console.warn("export-modal not found"); return; }
-    modal.removeAttribute("hidden");
-    document.body.style.overflow = "hidden";
-    document.addEventListener("keydown", trapFocus);
-    document.addEventListener("keydown", onEsc);
-    // focus first control
-    const first = modal.querySelector('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
-    if (first) first.focus();
-  }
+  // actions
+  menu?.addEventListener('click', async (e)=>{
+    const b = e.target.closest('button[data-action]');
+    if (!b) return;
+    const act = b.getAttribute('data-action');
+    root?.classList.remove('is-open');
+    btn?.setAttribute('aria-expanded','false');
 
-  function closeExportModal(){
-    if (!modal) return;
-    modal.setAttribute("hidden", "");
-    document.body.style.overflow = "";
-    document.removeEventListener("keydown", trapFocus);
-    document.removeEventListener("keydown", onEsc);
-  }
-
-  // backdrop click
-  if (modal){
-    modal.addEventListener("click", (e)=>{ if (e.target === modal) closeExportModal(); });
-    closeBtns.forEach(btn=>btn.addEventListener("click", closeExportModal));
-  }
-
-  // expose for dropdown
-  window.openExportModal  = openExportModal;
-  window.closeExportModal = closeExportModal;
-
-  // ===== PNG zip export: hide modal if open during capture =====
-  async function downloadPngZip(){
-    const wasOpen = modal && !modal.hasAttribute("hidden");
-    if (wasOpen) modal.setAttribute("hidden","");
-
-    // ensure deps (same as prior snippet)
-    async function load(url){ if ([...document.scripts].some(s=>s.src===url)) return; await new Promise((res,rej)=>{const s=document.createElement("script");s.src=url;s.onload=res;s.onerror=()=>rej(new Error("load fail "+url));document.head.appendChild(s);});}
-    if (!window.html2canvas) await load("https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js");
-    if (!window.JSZip)       await load("https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js");
-
-    const nodes = Array.from(document.querySelectorAll(".ad-container"));
-    if (!nodes.length){ alert("No creatives found."); if (wasOpen) modal.removeAttribute("hidden"); return; }
-
-    const zip = new JSZip();
-    for (let i=0;i<nodes.length;i++){
-      const el = nodes[i];
-      const nameBase = el.getAttribute("data-name") || el.id || `creative_${el.clientWidth}x${el.clientHeight}_${i+1}`;
-      const canvas = await html2canvas(el, { backgroundColor:"#ffffff", useCORS:true, scale:2 });
-      const blob = await new Promise(r=>canvas.toBlob(r,"image/png"));
-      zip.file(`${nameBase}.png`, blob);
-    }
-    const out = await zip.generateAsync({type:"blob"});
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(out);
-    a.download = `creatives_${new Date().toISOString().replace(/[-:TZ]/g,"").slice(0,14)}.zip`;
-    document.body.appendChild(a); a.click(); URL.revokeObjectURL(a.href); a.remove();
-
-    if (wasOpen) modal.removeAttribute("hidden");
-  }
-
-  // wire dropdown items if present
-  const menu = document.getElementById("exportMenu");
-  if (menu){
-    menu.addEventListener("click", async (e)=>{
-      const act = e.target?.dataset?.action;
-      if (act === "png"){ try{ await downloadPngZip(); }catch(err){ console.error(err); alert("PNG export failed."); } }
-      if (act === "tag"){ openExportModal(); }
-    });
-  }
+    if (act === 'tag'){ openExportModal(); }
+    if (act === 'png'){ try { await window.downloadPngZip(); } catch(err){ console.error(err); alert('PNG export failed. See console.'); } }
+  }, {capture:true});
 })();
