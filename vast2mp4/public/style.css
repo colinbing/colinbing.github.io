@@ -26,13 +26,19 @@ button.primary{background:linear-gradient(135deg,var(--accent),var(--accent2));b
 .preview video{display:block;width:100%;max-height:420px}
 
 table{width:100%;border-collapse:collapse}
+table a, td.url a { color:#ADD8E6; text-decoration:none }
+table a:hover, td.url a:hover { text-decoration:none; opacity:.9 }
 th,td{border-bottom:1px solid var(--border);padding:8px 6px;vertical-align:top}
-tbody tr{height:64px}                  /* uniform row height */
-td{position:relative}
-td .cell{
-  max-height:2.8em;   /* ~2 lines */
-  overflow:auto;      /* scroll within cell when collapsed */
-}  /* scrollable area inside the cell */
+tbody tr{height:auto}
+td{position:relative; vertical-align:top}
+td .cell{overflow:visible}
+td.url .bubble{
+  background:var(--cell); border:1px solid var(--border);
+  border-radius:8px; padding:6px; display:block;
+  word-break:break-word; overflow-wrap:anywhere;
+  max-height:calc(2.8em + 12px);   /* two lines + padding */
+  overflow:auto;
+}
 td.url .bubble{
   background:var(--cell); border:1px solid var(--border);
   border-radius:8px; padding:6px; display:block;
@@ -40,8 +46,12 @@ td.url .bubble{
 }
 
 tr.expanded td .cell{max-height:none;overflow:visible}
-.expand-btn{padding:6px 10px;border:1px solid var(--border);background:#10152a;border-radius:8px}
-.expand-btn:hover{filter:brightness(1.1)}
+.expand-btn{
+  padding:6px 10px; border:1px solid var(--border);
+  background:#10152a; border-radius:8px;
+  width:96px;               /* fixed width for both labels */
+  text-align:center;
+}.expand-btn:hover{filter:brightness(1.1)}
 
 .footer{margin-top:auto; color:var(--muted); font-size:12px; display:flex; justify-content:space-between; align-items:center; padding:12px 0}
 .footer.sticky{position:static;bottom:0;background:linear-gradient(180deg,transparent,rgba(15,18,32,.8) 30%, rgba(15,18,32,1));backdrop-filter:saturate(140%) blur(6px);border-top:1px solid var(--border)}
