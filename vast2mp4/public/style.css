@@ -2,7 +2,15 @@
 *{box-sizing:border-box}
 html,body{height:100%}
 body{margin:0;background:linear-gradient(135deg,var(--bg),#0b0e1a);color:var(--fg);font:14px/1.45 ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial}
-.container{min-height:100%;max-width:1100px;margin:0 auto;padding:24px;display:flex;flex-direction:column;gap:16px}
+.container{
+  min-height:100vh;            /* fill viewport */
+  max-width:1100px;
+  margin:0 auto;
+  padding:24px;
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+}
 .header{display:flex;align-items:center;gap:12px}
 .logo{height:28px;width:auto}
 h1{font-size:20px;margin:0}
@@ -28,6 +36,6 @@ tr.expanded td .cell{max-height:none;overflow:visible}
 .expand-btn{padding:6px 10px;border:1px solid var(--border);background:#10152a;border-radius:8px}
 .expand-btn:hover{filter:brightness(1.1)}
 
-.footer{color:var(--muted);font-size:12px;display:flex;justify-content:space-between;align-items:center;padding:12px 0}
-.footer.sticky{position:sticky;bottom:0;background:linear-gradient(180deg,transparent,rgba(15,18,32,.8) 30%, rgba(15,18,32,1));backdrop-filter:saturate(140%) blur(6px);border-top:1px solid var(--border)}
+.footer{margin-top:auto; color:var(--muted); font-size:12px; display:flex; justify-content:space-between; align-items:center; padding:12px 0}
+.footer.sticky{position:static;bottom:0;background:linear-gradient(180deg,transparent,rgba(15,18,32,.8) 30%, rgba(15,18,32,1));backdrop-filter:saturate(140%) blur(6px);border-top:1px solid var(--border)}
 .link{color:var(--accent2);text-decoration:none}

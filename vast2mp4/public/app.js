@@ -1,6 +1,6 @@
 // Set this to your backend in production Pages build.
 // For local dev when served by the backend itself, '' uses same-origin.
-const API_BASE = typeof window.API_BASE_OVERRIDE === 'string' ? window.API_BASE_OVERRIDE : '';
+const API_BASE = 'https://vast-backend-fv3l.onrender.com';
 
 const sel = q => document.querySelector(q);
 const vastUrl = sel('#vastUrl');
