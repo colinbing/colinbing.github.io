@@ -1,48 +1,53 @@
 <!doctype html>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>VAST → MP4 · Colin Bingham</title>
-<link rel="stylesheet" href="./public/style.css">
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>VAST2MP4</title>
+  <link rel="stylesheet" href="./public/style.css">
+  <link rel="icon" type="image/png" href="./images/vast2mp4-icon.png">
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <img src="./vast2mp4/images/vast2mp4-logo.png" alt="vast2mp4-logo" class="logo" onerror="this.style.display='none'">
+      <h1>VAST Tag Extractor</h1>
+    </header>
 
-<div class="container">
-  <header class="header">
-    <img src="/vast2mp4/images/vast2mp4-logo.png" alt="vast2mp4-logo" class="logo" onerror="this.style.display='none'">
-    <h1>VAST Tag Extractor</h1>
-  </header>
+    <section class="card">
+      <div class="row">
+        <input id="vastUrl" type="url" placeholder="https://...vast.xml">
+        <button id="btnUnwrap" class="primary">Unwrap</button>
+        <button id="btnExportCsv" disabled>Export CSV</button>
+        <button id="btnDownloadMp4" disabled>Download MP4</button>
+        <span id="fileSize" class="muted"></span>
+      </div>
 
-  <section class="card">
-    <div class="row">
-      <input id="vastUrl" type="url" placeholder="https://...vast.xml">
-      <button id="btnUnwrap" class="primary">Unwrap</button>
-      <button id="btnExportCsv" disabled>Export CSV</button>
-      <button id="btnDownloadMp4" disabled>Download MP4</button>
-      <span id="fileSize" class="muted"></span>
-    </div>
+      <div class="preview" id="previewWrap" style="display:none">
+        <video id="preview" controls playsinline muted crossorigin="anonymous"></video>
+      </div>
 
-    <!-- VIDEO PREVIEW -->
-    <div class="preview" id="previewWrap" style="display:none">
-      <video id="preview" controls playsinline muted crossorigin="anonymous"></video>
-    </div>
+      <div id="vastSummary" class="muted" style="margin-top:8px"></div>
+    </section>
 
-    <div id="vastSummary" class="muted" style="margin-top:8px"></div>
-  </section>
+    <section class="card">
+      <table id="trackerTable">
+        <thead>
+          <tr>
+            <th>Type</th><th>Event</th><th>Provider</th><th>Domain</th><th>URL</th><th style="width:84px">Expand</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
 
-  <section class="card">
-    <table id="trackerTable">
-      <thead>
-        <tr>
-          <th>Type</th><th>Event</th><th>Provider</th><th>Domain</th><th>URL</th><th style="width:84px">Expand</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-  </section>
+    <footer class="footer">
+      <span>© <span id="year"></span> Colin Bingham</span>
+      <a class="link" href="https://colinbing.com" target="_blank" rel="noopener">Back to site</a>
+    </footer>
+  </div>
 
-  <footer class="footer">
-    <span>© <span id="year"></span> Colin Bingham</span>
-    <a class="link" href="https://colinbing.com" target="_blank" rel="noopener">Back to site</a>
-  </footer>
-</div>
-
-<script src="./public/app.js"></script>
-<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+  <script src="./public/app.js"></script>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>
