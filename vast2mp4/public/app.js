@@ -1,79 +1,114 @@
-const sel = q=>document.querySelector(q);
-const API_BASE = 'https://vast-backend-fv3l.onrender.com';
+// Set this to your backend in production Pages build.
+// For local dev when served by the backend itself, '' uses same-origin.
+const API_BASE = typeof window.API_BASE_OVERRIDE === 'string' ? window.API_BASE_OVERRIDE : '';
 
-const vastUrl=sel('#vastUrl'), btnUnwrap=sel('#btnUnwrap'), btnCsv=sel('#btnExportCsv'), btnMp4=sel('#btnDownloadMp4');
-const fileSize=sel('#fileSize'), summary=sel('#vastSummary'), tbody=sel('#trackerTable tbody');
-let last=null;
+const sel = q => document.querySelector(q);
+const vastUrl = sel('#vastUrl');
+const btnUnwrap = sel('#btnUnwrap');
+const btnCsv = sel('#btnExportCsv');
+const btnMp4 = sel('#btnDownloadMp4');
+const fileSize = sel('#fileSize');
+const summary = sel('#vastSummary');
+const tbody = sel('#trackerTable tbody');
+const video = sel('#preview');
+const previewWrap = sel('#previewWrap');
+
+let last = null;
 
 const humanBytes = n => { if(!n||n<=0) return ''; const u=['B','KB','MB','GB']; let i=0,v=n; while(v>=1024&&i<u.length-1){v/=1024;i++;} return v.toFixed(1)+' '+u[i]; };
 
 async function unwrap(url){
-  const r = await fetch(`${API_BASE}/api/unwrap`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({url})});
-  if(!r.ok) throw new Error(await r.text()); return r.json();
+  const r = await fetch(`${API_BASE}/api/unwrap`, {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ url })
+  });
+  if(!r.ok) throw new Error(await r.text());
+  return r.json();
 }
 async function getSize(kind,url){
   const r = await fetch(`${API_BASE}/api/filesize?kind=${kind}&url=${encodeURIComponent(url)}`);
-  return r.ok ? r.json() : {bytes:null,method:'unknown'};
+  return r.ok ? r.json() : { bytes:null, method:'unknown' };
 }
-function render(m){
-  const { placementId, adSystem, click, mediaSummary } = m;
-  summary.innerHTML = `Placement ID: <b>${placementId??'n/a'}</b> · AdSystem: <b>${adSystem??'n/a'}</b> ·
-    ClickThrough: ${click?.through?`<a target="_blank" href="${click.through}">open</a>`:'n/a'} ·
-    Media: ${mediaSummary.kind==='mp4' ? `MP4 ${mediaSummary.width}x${mediaSummary.height}` :
-            mediaSummary.kind==='hls' ? 'HLS stream' : 'None'}`;
-  tbody.innerHTML='';
-  for(const t of m.trackers){
+
+function updatePreview(m){
+  if(!m || !m.mediaSummary || (m.mediaSummary.kind!=='mp4' && m.mediaSummary.kind!=='hls')){
+    video.removeAttribute('src'); previewWrap.style.display='none'; return;
+  }
+  const k = m.mediaSummary.kind;
+  const src = `${API_BASE}/api/download-mp4?kind=${k}&inline=1&url=${encodeURIComponent(m.mediaSummary.url)}`;
+  video.src = src; previewWrap.style.display='block'; video.load();
+}
+
+function render(man){
+  const { placementId, adSystem, click, mediaSummary } = man;
+  summary.innerHTML = `
+    Placement ID: <b>${placementId ?? 'n/a'}</b> · AdSystem: <b>${adSystem ?? 'n/a'}</b> ·
+    ClickThrough: ${click?.through ? `<a target="_blank" href="${click.through}">open</a>` : 'n/a'} ·
+    Media: ${mediaSummary.kind==='mp4'
+      ? `MP4 ${mediaSummary.width}x${mediaSummary.height}`
+      : mediaSummary.kind==='hls' ? 'HLS stream' : 'None'}
+  `;
+
+  tbody.innerHTML = '';
+  for(const t of man.trackers){
     const domain = (()=>{ try{ return new URL(t.url).hostname } catch{ return '' } })();
-    const tr=document.createElement('tr');
-    tr.innerHTML = `<td>${t.type}</td><td>${t.event||''}</td><td>${t.provider}</td><td>${domain}</td>
-                    <td class="url"><a target="_blank" href="${t.url}">${t.url}</a></td>`;
+    const tr = document.createElement('tr');
+
+    const tdType = `<td><div class="cell">${t.type}</div></td>`;
+    const tdEvent = `<td><div class="cell">${t.event||''}</div></td>`;
+    const tdProv = `<td><div class="cell">${t.provider}</div></td>`;
+    const tdDom  = `<td><div class="cell">${domain}</div></td>`;
+    const tdUrl  = `<td class="url"><div class="cell"><div class="bubble"><a target="_blank" href="${t.url}">${t.url}</a></div></div></td>`;
+    const tdExp  = `<td><button class="expand-btn">Expand</button></td>`;
+
+    tr.innerHTML = tdType + tdEvent + tdProv + tdDom + tdUrl + tdExp;
+
+    tr.querySelector('.expand-btn').addEventListener('click', () => {
+      const expanded = tr.classList.toggle('expanded');
+      tr.querySelector('.expand-btn').textContent = expanded ? 'Collapse' : 'Expand';
+    });
+
     tbody.appendChild(tr);
   }
-  btnCsv.disabled=false;
-  btnMp4.disabled=!(m.mediaSummary.kind==='mp4'||m.mediaSummary.kind==='hls');
+
+  btnCsv.disabled = false;
+  btnMp4.disabled = !(man.mediaSummary.kind==='mp4' || man.mediaSummary.kind==='hls');
 }
-sel('#btnUnwrap').addEventListener('click', async ()=>{
-  btnUnwrap.disabled=true; btnUnwrap.textContent='Unwrapping...'; fileSize.textContent=''; last=null;
+
+btnUnwrap.addEventListener('click', async ()=>{
+  btnUnwrap.disabled = true; btnUnwrap.textContent = 'Unwrapping...';
+  fileSize.textContent = ''; last = null; updatePreview(null);
   try{
     const url = vastUrl.value.trim(); if(!url) throw new Error('Enter a VAST URL');
-    last = await unwrap(url); render(last);
-    if(last.mediaSummary.kind==='mp4'){
-      const s=await getSize('mp4', last.mediaSummary.url);
+    last = await unwrap(url); render(last); updatePreview(last);
+
+    if (last.mediaSummary.kind === 'mp4'){
+      const s = await getSize('mp4', last.mediaSummary.url);
       fileSize.textContent = s.bytes ? `Size: ${humanBytes(s.bytes)}` : '';
-    } else if(last.mediaSummary.kind==='hls'){
-      const s=await getSize('hls', last.mediaSummary.url);
+    } else if (last.mediaSummary.kind === 'hls'){
+      const s = await getSize('hls', last.mediaSummary.url);
       fileSize.textContent = s.bytes ? `Est. size: ${humanBytes(s.bytes)}` : 'Est. size unavailable';
     }
-  } catch(e){ alert(e.message||String(e)); }
-  finally{ btnUnwrap.disabled=false; btnUnwrap.textContent='Unwrap'; }
+  } catch(e){ alert(e.message || String(e)); }
+  finally { btnUnwrap.disabled = false; btnUnwrap.textContent = 'Unwrap'; }
 });
-sel('#btnExportCsv').addEventListener('click', async ()=>{
-  if(!last) return;
-  const r = await fetch(`${API_BASE}/api/trackers.csv`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({trackers:last.trackers, click:last.click})});
-  if(!r.ok) return alert('CSV export failed');
-  const blob = await r.blob(); const a=document.createElement('a');
-  a.href=URL.createObjectURL(blob); a.download='vast-trackers.csv'; a.click(); URL.revokeObjectURL(a.href);
+
+btnCsv.addEventListener('click', async ()=>{
+  if (!last) return;
+  const r = await fetch(`${API_BASE}/api/trackers.csv`, {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ trackers: last.trackers, click: last.click })
+  });
+  if (!r.ok) return alert('CSV export failed');
+  const blob = await r.blob();
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = 'vast-trackers.csv'; a.click();
+  URL.revokeObjectURL(a.href);
 });
-sel('#btnDownloadMp4').addEventListener('click', ()=>{
-  if(!last) return;
-  const kind = last.mediaSummary.kind==='mp4' ? 'mp4' : 'hls';
+
+btnMp4.addEventListener('click', ()=>{
+  if (!last) return;
+  const kind = last.mediaSummary.kind === 'mp4' ? 'mp4' : 'hls';
   const src  = last.mediaSummary.url;
   window.open(`${API_BASE}/api/download-mp4?kind=${kind}&url=${encodeURIComponent(src)}`,'_blank');
 });
-
-const video = document.querySelector('#preview');
-
-// after you call render(last) and size fetch:
-if (last.mediaSummary.kind === 'mp4') {
-  video.src = `${API_BASE}/api/download-mp4?kind=mp4&inline=1&url=${encodeURIComponent(last.mediaSummary.url)}`;
-  video.style.display = 'block';
-  video.load();
-} else if (last.mediaSummary.kind === 'hls') {
-  // will remux on the fly; first frame may take a moment
-  video.src = `${API_BASE}/api/download-mp4?kind=hls&inline=1&url=${encodeURIComponent(last.mediaSummary.url)}`;
-  video.style.display = 'block';
-  video.load();
-} else {
-  video.removeAttribute('src');
-  video.style.display = 'none';
-}

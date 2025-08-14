@@ -1,13 +1,13 @@
 <!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>VAST2MP4 · Colin Bingham</title>
-<link rel="stylesheet" href="public/style.css">
+<title>VAST → MP4 · Colin Bingham</title>
+<link rel="stylesheet" href="./style.css">
 
 <div class="container">
   <header class="header">
-    <img src="/vast2mp4/images/vast2mp4-logo.png" alt="Colin" class="logo" onerror="this.style.display='none'">
-    <h1>VAST Extractor</h1>
+    <img src="./logo.png" alt="Colin" class="logo" onerror="this.style.display='none'">
+    <h1>VAST → MP4</h1>
   </header>
 
   <section class="card">
@@ -18,24 +18,31 @@
       <button id="btnDownloadMp4" disabled>Download MP4</button>
       <span id="fileSize" class="muted"></span>
     </div>
-    <video id="preview" controls playsinline muted
-  style="width:100%;max-height:420px;border-radius:12px;margin-top:12px;background:#000;display:none"></video>
+
+    <!-- VIDEO PREVIEW -->
+    <div class="preview" id="previewWrap" style="display:none">
+      <video id="preview" controls playsinline muted></video>
+    </div>
 
     <div id="vastSummary" class="muted" style="margin-top:8px"></div>
   </section>
 
   <section class="card">
     <table id="trackerTable">
-      <thead><tr><th>Type</th><th>Event</th><th>Provider</th><th>Domain</th><th>URL</th></tr></thead>
+      <thead>
+        <tr>
+          <th>Type</th><th>Event</th><th>Provider</th><th>Domain</th><th>URL</th><th style="width:84px">Expand</th>
+        </tr>
+      </thead>
       <tbody></tbody>
     </table>
   </section>
 
-  <footer class="footer">
+  <footer class="footer sticky">
     <span>© <span id="year"></span> Colin Bingham</span>
-    <a class="link" href="https://colinbing.github.io" target="_blank" rel="noopener">Back to site</a>
+    <a class="link" href="https://colinbing.com" target="_blank" rel="noopener">Back to site</a>
   </footer>
 </div>
 
-<script src="public/app.js"></script>
+<script src="./app.js"></script>
 <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
