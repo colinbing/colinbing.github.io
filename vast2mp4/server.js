@@ -15,7 +15,9 @@ const { inferVendor } = require('./lib/vendors');
 const { getMp4Size, estimateHlsMp4Size } = require('./lib/size');
 
 const app = express();
-app.use(helmet());
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: 'cross-origin' }   // allow media to be embedded
+}));
 app.use(express.json({ limit: '2mb' }));
 app.use(morgan('tiny'));
 app.use(rate({ windowMs: 60_000, max: 60 }));
@@ -111,8 +113,9 @@ app.get('/api/download-mp4', async (req, res) => {
   if (!url || !kind) return res.status(400).send('url and kind required');
 
   const setHeaders = () => {
-    res.setHeader('Content-Type', 'video/mp4');
+    res.setHeader('Content-Type','video/mp4');
     res.setHeader('Content-Disposition', (inline ? 'inline' : 'attachment') + '; filename="creative.mp4"');
+    res.setHeader('Cross-Origin-Resource-Policy','cross-origin');
   };
 
   try {

@@ -27,10 +27,17 @@ button.primary{background:linear-gradient(135deg,var(--accent),var(--accent2));b
 
 table{width:100%;border-collapse:collapse}
 th,td{border-bottom:1px solid var(--border);padding:8px 6px;vertical-align:top}
-tbody tr{height:64px}                    /* uniform row height */
+tbody tr{height:64px}                  /* uniform row height */
 td{position:relative}
-td .cell{max-height:40px;overflow:auto}  /* scrollable area inside the cell */
-td.url .bubble{background:var(--cell);border:1px solid var(--border);border-radius:8px;padding:6px}
+td .cell{
+  max-height:2.8em;   /* ~2 lines */
+  overflow:auto;      /* scroll within cell when collapsed */
+}  /* scrollable area inside the cell */
+td.url .bubble{
+  background:var(--cell); border:1px solid var(--border);
+  border-radius:8px; padding:6px; display:block;
+  word-break:break-word; overflow-wrap:anywhere;
+}
 
 tr.expanded td .cell{max-height:none;overflow:visible}
 .expand-btn{padding:6px 10px;border:1px solid var(--border);background:#10152a;border-radius:8px}
