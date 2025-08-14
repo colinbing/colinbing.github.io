@@ -31,7 +31,18 @@ table a:hover, td.url a:hover { text-decoration:none; opacity:.9 }
 th,td{border-bottom:1px solid var(--border);padding:8px 6px;vertical-align:top}
 tbody tr{height:auto}
 td{position:relative; vertical-align:top}
-td .cell{overflow:visible}
+td:not(.url) .cell{max-height:2.8em; overflow:hidden}
+td.url .bubble{
+  background:var(--cell); border:1px solid var(--border);
+  border-radius:8px; padding:6px; display:block;
+  word-break:break-word; overflow-wrap:anywhere;
+  max-height:calc(2.8em + 12px); /* two lines + padding */
+  overflow:auto;
+}
+
+/* expanded */
+tr.expanded td .cell{max-height:none; overflow:visible}
+tr.expanded td.url .bubble{max-height:none; overflow:visible}
 td.url .bubble{
   background:var(--cell); border:1px solid var(--border);
   border-radius:8px; padding:6px; display:block;
@@ -39,13 +50,7 @@ td.url .bubble{
   max-height:calc(2.8em + 12px);   /* two lines + padding */
   overflow:auto;
 }
-td.url .bubble{
-  background:var(--cell); border:1px solid var(--border);
-  border-radius:8px; padding:6px; display:block;
-  word-break:break-word; overflow-wrap:anywhere;
-}
 
-tr.expanded td .cell{max-height:none;overflow:visible}
 .expand-btn{
   padding:6px 10px; border:1px solid var(--border);
   background:#10152a; border-radius:8px;
