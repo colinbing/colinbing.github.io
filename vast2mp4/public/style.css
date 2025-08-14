@@ -55,8 +55,19 @@ td.url .bubble{
   display:block;
   word-break:break-word; overflow-wrap:anywhere;
   max-height: var(--cap);
+  position:relative; cursor:copy;
   overflow: auto;                 /* keep same in both states */
 }
+td.url .bubble a{ pointer-events:none; color:#ADD8E6; text-decoration:none } /* keep color, disable link */
+
+td.url .bubble::after{
+  content:'Copy';
+  position:absolute; top:6px; right:8px;
+  font-size:12px; color:var(--muted);
+  opacity:0; transition:opacity .15s ease; pointer-events:none;
+}
+td.url .bubble:hover::after{ opacity:.85 }
+td.url .bubble.copied::after{ content:'Copied'; color:var(--accent2); opacity:1 }
 
 .expand-btn{
   padding:6px 10px; border:1px solid var(--border);

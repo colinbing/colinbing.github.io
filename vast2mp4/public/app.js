@@ -67,13 +67,15 @@ function render(man){
 
     const btn = tr.querySelector('.expand-btn');
     const bubble = tr.querySelector('td.url .bubble');
+    const anchor = tr.querySelector('td.url .bubble a');
+    if (anchor) anchor.setAttribute('tabindex', '-1');        // avoid focus jump
+    bubble.dataset.url = t.url;
 
-    // force layout, then test if it overflows the 2-line cap
+    // force layout, then test overflow for expand
     void bubble.offsetHeight;
     const needsExpand = bubble && (bubble.scrollHeight > bubble.clientHeight + 1);
-
     if (!needsExpand) {
-      btn.disabled = true; // no tiny shift for short URLs
+      btn.disabled = true;
     } else {
       btn.disabled = false;
       btn.addEventListener('click', () => {
@@ -81,6 +83,21 @@ function render(man){
         btn.textContent = expanded ? 'Collapse' : 'Expand';
       });
     }
+
+    // copy handler (any click inside bubble)
+    bubble.addEventListener('click', (e) => {
+      e.preventDefault(); e.stopPropagation();
+      const url = bubble.dataset.url || bubble.textContent.trim();
+      const done = () => { bubble.classList.add('copied'); setTimeout(()=>bubble.classList.remove('copied'), 900); };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(url).then(done).catch(() => done());
+      } else {
+        const ta = document.createElement('textarea');
+        ta.value = url; document.body.appendChild(ta); ta.select();
+        try { document.execCommand('copy'); } catch {}
+        document.body.removeChild(ta); done();
+      }
+    });
   }
 
   btnCsv.disabled = false;
