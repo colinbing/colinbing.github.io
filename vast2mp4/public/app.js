@@ -54,34 +54,39 @@ function render(man){
     const domain = (()=>{ try{ return new URL(t.url).hostname } catch{ return '' } })();
     const tr = document.createElement('tr');
 
-    const tdType = `<td><div class="cell">${t.type}</div></td>`;
-    const tdEvent = `<td><div class="cell">${t.event||''}</div></td>`;
-    const tdProv = `<td><div class="cell">${t.provider}</div></td>`;
-    const tdDom  = `<td><div class="cell">${domain}</div></td>`;
-    const tdUrl  = `<td class="url"><div class="cell"><div class="bubble"><a target="_blank" href="${t.url}">${t.url}</a></div></div></td>`;
-    const tdExp  = `<td><button class="expand-btn">Expand</button></td>`;
+    tr.innerHTML =
+      `<td><div class="cell">${t.type}</div></td>` +
+      `<td><div class="cell">${t.event||''}</div></td>` +
+      `<td><div class="cell">${t.provider}</div></td>` +
+      `<td><div class="cell">${domain}</div></td>` +
+      `<td class="url"><div class="cell"><div class="bubble"><a target="_blank" href="${t.url}">${t.url}</a></div></div></td>` +
+      `<td><button class="expand-btn">Expand</button></td>`;
 
-    tr.innerHTML = tdType + tdEvent + tdProv + tdDom + tdUrl + tdExp;
+    // append first so styles apply, then measure
+    tbody.appendChild(tr);
 
     const btn = tr.querySelector('.expand-btn');
     const bubble = tr.querySelector('td.url .bubble');
+
+    // force layout, then test if it overflows the 2-line cap
+    void bubble.offsetHeight;
     const needsExpand = bubble && (bubble.scrollHeight > bubble.clientHeight + 1);
 
     if (!needsExpand) {
-      btn.disabled = true; // prevent tiny layout shift for short URLs
+      btn.disabled = true; // no tiny shift for short URLs
     } else {
+      btn.disabled = false;
       btn.addEventListener('click', () => {
         const expanded = tr.classList.toggle('expanded');
         btn.textContent = expanded ? 'Collapse' : 'Expand';
       });
     }
-
-    tbody.appendChild(tr);
   }
 
   btnCsv.disabled = false;
   btnMp4.disabled = !(mediaSummary.kind==='mp4' || mediaSummary.kind==='hls');
 }
+
 
 
 btnUnwrap.addEventListener('click', async ()=>{
