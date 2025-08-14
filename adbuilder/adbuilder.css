@@ -30,6 +30,14 @@
   .menu-left {
     font-size: 1.5rem;
     font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .page-title {
+    font-size: 1.4rem;
+    font-weight: bold;
   }
   
   .menu-right a {
@@ -866,3 +874,7 @@ button[id^="clearOverrides-"] {
 /* Make modal visibility deterministic */
 .export-modal{display:none}
 .export-modal.is-open{display:flex}
+
+.adbuilder-logo {
+  max-height:40px;
+}

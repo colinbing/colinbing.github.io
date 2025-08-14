@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Adbuilder 2.0</title>
+  <title>Adbuilder 0.1</title>
   <link rel="stylesheet" href="/adbuilder/adbuilder.css" />
   <meta name="robots" content="noindex, nofollow">
 </head>
@@ -11,23 +11,27 @@
   <!-- Top Menu -->
   <div class="app"></div>
   <nav class="menu-bar">
-    <div class="menu-left">Adbuilder 0.1 (beta)</div>
-    <div class="menu-right">
-      <a href="#">Placeholder_Campaign</a>
-      <a href="#">Placeholder_Creative</a>
+  <div class="menu-left">
+    <img src="./images/adbuilder-logo.png" alt="adbuilder-logo" class="adbuilder-logo" onerror="this.style.display='none'">
+    <span class="page-title">Adbuilder 0.1 (beta)</span>
+  </div>
 
-      <!-- Updated export dropdown -->
-      <div class="export" id="exportRoot">
-        <button id="exportBtn" class="export-btn" type="button" aria-haspopup="true" aria-expanded="false">
-          Export ▾
-        </button>
-        <div id="exportMenu" class="export-menu" hidden role="menu" aria-label="Export options">
-          <button type="button" data-action="png" role="menuitem">Download PNG (.zip)</button>
-          <button type="button" data-action="tag" role="menuitem">JavaScript Tag…</button>
-        </div>
+  <div class="menu-right">
+    <a href="#">Placeholder_Campaign</a>
+    <a href="#">Placeholder_Creative</a>
+
+    <!-- Updated export dropdown -->
+    <div class="export" id="exportRoot">
+      <button id="exportBtn" class="export-btn" type="button" aria-haspopup="true" aria-expanded="false">
+        Export ▾
+      </button>
+      <div id="exportMenu" class="export-menu" hidden role="menu" aria-label="Export options">
+        <button type="button" data-action="png" role="menuitem">Download PNG (.zip)</button>
+        <button type="button" data-action="tag" role="menuitem">JavaScript Tag…</button>
       </div>
     </div>
-  </nav>
+  </div>
+</nav>
 
   <!-- Side Menu -->
   <div class="side-menu">
