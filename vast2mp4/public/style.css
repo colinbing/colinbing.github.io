@@ -1,5 +1,10 @@
-:root{--bg:#0f1220;--fg:#e6e8f2;--muted:#98a2b3;--card:#171a2b;--accent:#8b5cf6;--accent2:#22d3ee;--border:#272b40;--cell:#1b2033}
-*{box-sizing:border-box}
+:root{
+  --bg:#0f1220; --fg:#e6e8f2; --muted:#98a2b3; --card:#171a2b; --accent:#8b5cf6;
+  --accent2:#22d3ee; --border:#272b40; --cell:#1b2033;
+  --lh:20px;              /* line-height */
+  --padY:8px;             /* vertical padding for bubble */
+  --cap: calc(var(--lh)*2 + var(--padY)*2 + 2px); /* 2 lines + padding + 1px*2 border */
+}*{box-sizing:border-box}
 html,body{height:100%}
 body{margin:0;background:linear-gradient(135deg,var(--bg),#0b0e1a);color:var(--fg);font:14px/1.45 ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial}
 .container{
@@ -29,26 +34,28 @@ table{width:100%;border-collapse:collapse}
 table a, td.url a { color:#ADD8E6; text-decoration:none }
 table a:hover, td.url a:hover { text-decoration:none; opacity:.9 }
 th,td{border-bottom:1px solid var(--border);padding:8px 6px;vertical-align:top}
-tbody tr{height:auto}
+tbody tr{ min-height: var(--cap); }
 td{position:relative; vertical-align:top}
-td:not(.url) .cell{max-height:2.8em; overflow:hidden}
-td.url .bubble{
-  background:var(--cell); border:1px solid var(--border);
-  border-radius:8px; padding:6px; display:block;
-  word-break:break-word; overflow-wrap:anywhere;
-  max-height:calc(2.8em + 12px);  /* two lines + padding */
-  overflow:auto;                  /* keep in both states */
+td:not(.url) .cell{
+  line-height: var(--lh);
+  max-height: calc(var(--lh)*2);
+  overflow: hidden;
 }
 
 /* expanded */
 tr.expanded td .cell{max-height:none; overflow:visible}
 tr.expanded td.url .bubble{ max-height:none; overflow:auto }
 td.url .bubble{
-  background:var(--cell); border:1px solid var(--border);
-  border-radius:8px; padding:6px; display:block;
+  box-sizing: border-box;
+  line-height: var(--lh);
+  padding: var(--padY) 10px;
+  background: var(--cell);
+  border:1px solid var(--border);
+  border-radius:8px;
+  display:block;
   word-break:break-word; overflow-wrap:anywhere;
-  max-height:calc(2.8em + 12px);   /* two lines + padding */
-  overflow:auto;
+  max-height: var(--cap);
+  overflow: auto;                 /* keep same in both states */
 }
 
 .expand-btn{
