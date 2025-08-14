@@ -50,7 +50,7 @@ function render(man){
   `;
 
   tbody.innerHTML = '';
-  for(const t of man.trackers){
+  for (const t of man.trackers) {
     const domain = (()=>{ try{ return new URL(t.url).hostname } catch{ return '' } })();
     const tr = document.createElement('tr');
 
@@ -63,17 +63,26 @@ function render(man){
 
     tr.innerHTML = tdType + tdEvent + tdProv + tdDom + tdUrl + tdExp;
 
-    tr.querySelector('.expand-btn').addEventListener('click', () => {
-      const expanded = tr.classList.toggle('expanded');
-      tr.querySelector('.expand-btn').textContent = expanded ? 'Collapse' : 'Expand';
-    });
+    const btn = tr.querySelector('.expand-btn');
+    const bubble = tr.querySelector('td.url .bubble');
+    const needsExpand = bubble && (bubble.scrollHeight > bubble.clientHeight + 1);
+
+    if (!needsExpand) {
+      btn.disabled = true; // prevent tiny layout shift for short URLs
+    } else {
+      btn.addEventListener('click', () => {
+        const expanded = tr.classList.toggle('expanded');
+        btn.textContent = expanded ? 'Collapse' : 'Expand';
+      });
+    }
 
     tbody.appendChild(tr);
   }
 
   btnCsv.disabled = false;
-  btnMp4.disabled = !(man.mediaSummary.kind==='mp4' || man.mediaSummary.kind==='hls');
+  btnMp4.disabled = !(mediaSummary.kind==='mp4' || mediaSummary.kind==='hls');
 }
+
 
 btnUnwrap.addEventListener('click', async ()=>{
   btnUnwrap.disabled = true; btnUnwrap.textContent = 'Unwrapping...';

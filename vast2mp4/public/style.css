@@ -36,13 +36,13 @@ td.url .bubble{
   background:var(--cell); border:1px solid var(--border);
   border-radius:8px; padding:6px; display:block;
   word-break:break-word; overflow-wrap:anywhere;
-  max-height:calc(2.8em + 12px); /* two lines + padding */
-  overflow:auto;
+  max-height:calc(2.8em + 12px);  /* two lines + padding */
+  overflow:auto;                  /* keep in both states */
 }
 
 /* expanded */
 tr.expanded td .cell{max-height:none; overflow:visible}
-tr.expanded td.url .bubble{max-height:none; overflow:visible}
+tr.expanded td.url .bubble{ max-height:none; overflow:auto }
 td.url .bubble{
   background:var(--cell); border:1px solid var(--border);
   border-radius:8px; padding:6px; display:block;
@@ -56,7 +56,10 @@ td.url .bubble{
   background:#10152a; border-radius:8px;
   width:96px;               /* fixed width for both labels */
   text-align:center;
-}.expand-btn:hover{filter:brightness(1.1)}
+}
+.expand-btn:hover{filter:brightness(1.1)}
+.expand-btn:disabled{ opacity:.5; cursor:default }
+
 
 .footer{margin-top:auto; color:var(--muted); font-size:12px; display:flex; justify-content:space-between; align-items:center; padding:12px 0}
 .footer.sticky{position:static;bottom:0;background:linear-gradient(180deg,transparent,rgba(15,18,32,.8) 30%, rgba(15,18,32,1));backdrop-filter:saturate(140%) blur(6px);border-top:1px solid var(--border)}
