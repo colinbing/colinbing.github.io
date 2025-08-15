@@ -29,11 +29,14 @@
     --hdr-h:40px;
     --bar-h:56px; /* runtime-corrected via JS */
     --vr:16px;
+    --accent:#8b5cf6;
+    --accent2:#22d3ee;
   }
   [data-theme="light"]{
     --bg:#fafafa; --panel:#ffffff; --text:#0e1420; --muted:#465064; --chip:#f1f3f7;
     --chip-text:#0e1420; --chip-muted:#5c667a; --accent:#1d6fff; --ok:#0a9157; --warn:#c18b14;
-    --danger:#c53b49; --border:#d8deea; --link:#0a66d9; --shadow:0 6px 18px rgba(0,0,0,.08)
+    --danger:#c53b49; --border:#d8deea; --link:#0a66d9; --shadow:0 6px 18px rgba(0,0,0,.08)--accent:#8b5cf6;
+    --accent2:#22d3ee;
   }
   
   /* =========================
@@ -463,6 +466,118 @@
   opacity:1; transform:translateY(0);
 }
 
+/* Clickable hint with higher contrast, no UA purple outline */
+:root{ --chip-hover:#9ad1ff; } /* fixed light blue for chips */
+
+.chip{ transition: background-color .12s ease, box-shadow .12s ease; }
+.chip:focus, .chip:focus-visible{ outline:0; } /* remove purple outline */
+
+.chip.hover-soft{
+  background: color-mix(in oklab, var(--chip-hover) 38%, transparent);
+  box-shadow: inset 0 0 0 1.5px color-mix(in oklab, var(--chip-hover) 70%, transparent);
+}
+.chip.chip-active{
+  background: color-mix(in oklab, var(--chip-hover) 54%, transparent);
+  box-shadow: inset 0 0 0 2px color-mix(in oklab, var(--chip-hover) 88%, transparent);
+}
+
+/* Intent states override the blue hint */
+.chip.will-add{    background: color-mix(in oklab, var(--ok)     30%, transparent); box-shadow:none; }
+.chip.will-remove{ background: color-mix(in oklab, var(--danger) 30%, transparent); box-shadow:none; }
+
+/* Slight readability boost on dark theme only */
+html[data-theme="dark"] .chip.hover-soft,
+html[data-theme="dark"] .chip.chip-active{ text-shadow: 0 1px 0 rgba(0,0,0,.35); }
+
+/* Keep Scan blue, independent of global accents */
+#scanBtn.btn.primary{
+  background:#5aa3ff; border:0; color:#fff;
+  box-shadow:0 4px 12px rgba(0,0,0,.18);
+}
+#scanBtn.btn.primary:hover{ filter:saturate(1.05) brightness(1.03); }
+#scanBtn.btn.primary:focus-visible{
+  outline:2px solid color-mix(in oklab, #5aa3ff 60%, transparent);
+  outline-offset:2px;
+}
+
+#scanBtn.btn.primary{ box-shadow:none !important; }
+
+
+#blockedDetails > summary{ cursor:pointer !important; }
+
+input[type="text"],
+input[type="number"],
+textarea,
+select{ outline:none; }
+input[type="text"]:focus,
+input[type="number"]:focus,
+textarea:focus,
+select:focus,
+input[type="text"]:focus-visible,
+input[type="number"]:focus-visible,
+textarea:focus-visible,
+select:focus-visible{
+  outline:none !important;
+  box-shadow:none !important;
+  border-color:var(--border) !important;
+}
+/* Dropzone and paste area containers: no focus glow */
+.dropzone:focus,
+.dropzone:focus-within{ outline:none !important; box-shadow:none !important; border-color:var(--border) !important; }
+
+/* 3) Restore “Generate List” gradient with higher specificity */
+#createBtn.btn.primary{
+  background-image:linear-gradient(135deg,var(--accent),var(--accent2)) !important;
+  background-color:transparent !important; /* defeat any .btn background */
+  border:0 !important;
+  color:#fff !important;
+  box-shadow:0 6px 18px rgba(0,0,0,.18);
+}
+#createBtn.btn.primary:hover{ filter:saturate(1.1) brightness(1.04); }
+#createBtn.btn.primary:focus-visible{ outline:0; }
+
+/* Add All: sharper in light mode, keeps red hint in dark */
+#addAllAvail{
+  border:1px solid color-mix(in oklab, var(--danger) 55%, transparent);
+  color: color-mix(in oklab, var(--danger) 78%, black);
+  background: color-mix(in oklab, var(--danger) 10%, transparent);
+}
+#addAllAvail:hover{
+  background: color-mix(in oklab, var(--danger) 18%, transparent);
+}
+[data-theme="light"] #addAllAvail{
+  background:#fff;
+  color:#b0182a;
+  border-color:#e16a78;
+  box-shadow:0 1px 0 rgba(0,0,0,.04), 0 6px 14px rgba(0,0,0,.06);
+}
+[data-theme="light"] #addAllAvail:hover{
+  background:#ffeef0; /* light pink tint */
+  border-color:#d94b5e;
+}
+#addAllAvail:focus-visible{
+  outline:2px solid color-mix(in oklab, var(--danger) 45%, transparent);
+  outline-offset:2px;
+}
+
+/* Chip text turns pure white ONLY in dark mode */
+html[data-theme="dark"] .chip.chip-active,
+html[data-theme="dark"] .chip.chip-active b,
+html[data-theme="dark"] .chip.chip-active small,
+html[data-theme="dark"] .chip.chip-active .btn{
+  color:#fff !important;
+  text-shadow:0 1px 0 rgba(0,0,0,.25);
+}
+
+/* Light mode keeps normal text color */
+html[data-theme="light"] .chip.chip-active,
+html[data-theme="light"] .chip.chip-active b,
+html[data-theme="light"] .chip.chip-active small,
+html[data-theme="light"] .chip.chip-active .btn{
+  color:inherit !important;
+  text-shadow:none;
+}
+
 
   </style>
   
@@ -588,9 +703,7 @@
                 <span id="availSort" class="hint small"></span>
                 <div class="row" style="margin-left:auto;align-items:center;gap:8px">
                   <button id="showAllAvail" class="btn ghost small">Show all</button>
-                  <button id="addAllAvail" class="btn small" style="background:#5d1f1f1a;border:1px solid #a44; color:#a44">
-                    Add All
-                  </button>
+                  <button id="addAllAvail" class="btn small">Add All</button>
                   <span id="availableImpactTotal" class="hint small">Impact: 0</span>
                 </div>                
               </div>                          
@@ -975,6 +1088,14 @@ function canonicalUrl(u){
     x.search = ''; x.hash = '';
     return x.toString().replace(/\/+$/,'');
   }catch{ return u; }
+}
+
+function closeHoverSticky(){
+  if (stickyAnchor){ stickyAnchor.classList.remove('chip-active'); }
+  stickyToken = null;
+  stickyAnchor = null;
+  hoverBox.style.display = 'none';
+  hoverBox.removeAttribute('data-sticky');
 }
 
 // Click-to-copy for CSV output
@@ -1494,6 +1615,22 @@ function render(){
   availableCount.textContent = String(state.availableOrder.length);
   updateOutputMetrics();
   updateSectionTotals();
+
+    // reconcile sticky after DOM changes
+    if (stickyToken){
+    const fresh = document.querySelector(`.chip[data-token="${stickyToken}"]`);
+    if (fresh && document.body.contains(fresh)){
+      if (stickyAnchor !== fresh){
+        if (stickyAnchor) stickyAnchor.classList.remove('chip-active');
+        stickyAnchor = fresh;
+        stickyAnchor.classList.add('chip-active');
+        positionHover(stickyAnchor);
+      }
+    } else {
+      closeHoverSticky();
+    }
+  }
+
 }
 
 /* ---------- Interactions ---------- */
@@ -1508,6 +1645,7 @@ sortAvailable.addEventListener('change', ()=>{
 const addAllAvailBtn = document.getElementById('addAllAvail');
 addAllAvailBtn?.addEventListener('click', ()=>{
   // move every available token into Included
+  closeHoverSticky();
   for (const tok of Array.from(state.availableSet)){
     state.availableSet.delete(tok);
     if (!state.includedSet.has(tok)) state.includedSet.add(tok);
@@ -1516,6 +1654,21 @@ addAllAvailBtn?.addEventListener('click', ()=>{
   sortAndRenderAvailable();   // refresh list now empty or reduced
   render();
   recomputeBlocked();
+});
+
+window.addEventListener('scroll', ()=>{
+  if (stickyToken && stickyAnchor && document.body.contains(stickyAnchor)){
+    positionHover(stickyAnchor);
+  } else {
+    closeHoverSticky();
+  }
+});
+window.addEventListener('resize', ()=>{
+  if (stickyToken && stickyAnchor && document.body.contains(stickyAnchor)){
+    positionHover(stickyAnchor);
+  } else {
+    closeHoverSticky();
+  }
 });
 
 
@@ -1560,6 +1713,7 @@ addCustom.addEventListener('click', ()=>{
 includedBox.addEventListener('click', (e)=>{
   const btn = e.target.closest('button[data-act="remove"]');
   if (!btn) return;
+  closeHoverSticky();
   const chip = btn.closest('.chip');
   const tok = chip.getAttribute('data-token');
   if (state.includedSet.delete(tok)){
@@ -1577,6 +1731,7 @@ includedBox.addEventListener('click', (e)=>{
 availableBox.addEventListener('click', (e)=>{
   const btn = e.target.closest('button[data-act="add"]');
   if (!btn) return;
+  closeHoverSticky();
   const chip = e.target.closest('.chip');
   const tok = chip.getAttribute('data-token');
   if (!state.includedSet.has(tok)){
@@ -1635,6 +1790,7 @@ function showHover(token, anchorEl, makeSticky=false){
     stickyToken = token;
     stickyAnchor = anchorEl;
     hoverBox.setAttribute('data-sticky','1');
+    anchorEl.classList.add('chip-active');
   } else {
     hoverBox.removeAttribute('data-sticky');
   }
@@ -1665,10 +1821,13 @@ function chipToggleSticky(e){
   if (e.target.closest('button[data-act]')) return; // let add/remove work
   const tok = chip.getAttribute('data-token');
   if (stickyToken === tok){
-    stickyToken = null; stickyAnchor = null;
+    stickyToken = null; 
+    if (stickyAnchor){ stickyAnchor.classList.remove('chip-active'); }
+    stickyAnchor = null;
     hoverBox.style.display = 'none';
     hoverBox.removeAttribute('data-sticky');
   }else{
+    if (stickyAnchor){ stickyAnchor.classList.remove('chip-active'); }
     stickyToken = tok;
     stickyAnchor = chip;
     showHover(tok, chip, true);
@@ -1681,6 +1840,7 @@ availableBox.addEventListener('click', chipToggleSticky);
 document.addEventListener('click', (e)=>{
   if (!stickyToken) return;
   if (e.target.closest('#hoverBox') || e.target.closest('.chip')) return;
+  if (stickyAnchor){ stickyAnchor.classList.remove('chip-active'); }
   stickyToken = null; stickyAnchor = null;
   hoverBox.style.display = 'none';
   hoverBox.removeAttribute('data-sticky');
@@ -1913,28 +2073,32 @@ document.addEventListener('click', (e)=>{
 })();
 
     // button hover -> parent chip intent class
-    includedBox.addEventListener('mouseover', e=>{
-    const btn = e.target.closest('button[data-act]');
+    includedBox.addEventListener('mouseover', (e)=>{
+    const btn  = e.target.closest('button[data-act]');
     const chip = e.target.closest('.chip');
     if (!chip) return;
     chip.classList.remove('will-add','will-remove');
+    chip.classList.toggle('hover-soft', !btn);           // light blue when not over +/- 
     if (btn && btn.dataset.act==='remove') chip.classList.add('will-remove');
-    });
-    includedBox.addEventListener('mouseout', e=>{
+  });
+  includedBox.addEventListener('mouseout', e=>{
     const chip = e.target.closest('.chip');
-    if (chip) chip.classList.remove('will-add','will-remove');
-    });
-    availableBox.addEventListener('mouseover', e=>{
-    const btn = e.target.closest('button[data-act]');
+    if (chip) chip.classList.remove('will-add','will-remove','hover-soft');
+  });
+
+    availableBox.addEventListener('mouseover', (e)=>{
+    const btn  = e.target.closest('button[data-act]');
     const chip = e.target.closest('.chip');
     if (!chip) return;
     chip.classList.remove('will-add','will-remove');
+    chip.classList.toggle('hover-soft', !btn);           // light blue when not over +/- 
     if (btn && btn.dataset.act==='add') chip.classList.add('will-add');
-    });
-    availableBox.addEventListener('mouseout', e=>{
+  });
+  availableBox.addEventListener('mouseout', e=>{
     const chip = e.target.closest('.chip');
-    if (chip) chip.classList.remove('will-add','will-remove');
-    });
+    if (chip) chip.classList.remove('will-add','will-remove','hover-soft');
+  });
+
 
     document.addEventListener('DOMContentLoaded', ()=>{
       const minWidth = 980; // was 1024
