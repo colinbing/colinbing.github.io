@@ -6,356 +6,477 @@
 <title>UnsafeTermScanner</title>
 <link rel="icon" href="data:,">
 <style>
-:root{
-  --wrap: 1400px;              /* unified content width */
-  --bg:#0f1115;
-  --panel:#151922;
-  --text:#e6e6e6;
-  --muted:#a8b0bf;
-  --chip:#232a36;
-  --chip-text:#e6e6e6;
-  --chip-muted:#9aa4b6;
-  --accent:#5aa3ff;
-  --ok:#2fb170;
-  --warn:#f5c451;
-  --danger:#e35d6a;
-  --border:#2b3442;
-  --link:#75b4ff;
-  --shadow:0 5px 20px rgba(0,0,0,.4);
-  --content-pad:14px;
-  --hdr-h:40px;
-  --bar-h:56px;               /* runtime-corrected via JS */
-  --vr:16px;                  /* vertical rhythm */
-}
-[data-theme="light"]{
-  --bg:#fafafa; --panel:#ffffff; --text:#0e1420; --muted:#465064; --chip:#f1f3f7;
-  --chip-text:#0e1420; --chip-muted:#5c667a; --accent:#1d6fff; --ok:#0a9157; --warn:#c18b14;
-  --danger:#c53b49; --border:#d8deea; --link:#0a66d9; --shadow:0 6px 18px rgba(0,0,0,.08)
-}
-html, body { height:100%; scrollbar-gutter: stable both-edges; }
-body{
-  margin:0;
-  background:var(--bg);
-  color:var(--text);
-  font:14px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;
-  display:flex;
-  flex-direction:column;
-  padding-top: var(--bar-h); 
-}
+  /* =========================
+     Vars + Theme
+     ========================= */
+  :root{
+    --wrap: 1400px;
+    --bg:#0f1115;
+    --panel:#151922;
+    --text:#e6e6e6;
+    --muted:#a8b0bf;
+    --chip:#232a36;
+    --chip-text:#e6e6e6;
+    --chip-muted:#9aa4b6;
+    --accent:#5aa3ff;
+    --ok:#2fb170;
+    --warn:#f5c451;
+    --danger:#e35d6a;
+    --border:#2b3442;
+    --link:#75b4ff;
+    --shadow:0 5px 20px rgba(0,0,0,.4);
+    --content-pad:14px;
+    --hdr-h:40px;
+    --bar-h:56px; /* runtime-corrected via JS */
+    --vr:16px;
+  }
+  [data-theme="light"]{
+    --bg:#fafafa; --panel:#ffffff; --text:#0e1420; --muted:#465064; --chip:#f1f3f7;
+    --chip-text:#0e1420; --chip-muted:#5c667a; --accent:#1d6fff; --ok:#0a9157; --warn:#c18b14;
+    --danger:#c53b49; --border:#d8deea; --link:#0a66d9; --shadow:0 6px 18px rgba(0,0,0,.08)
+  }
+  
+  /* =========================
+     Base + One horizontal scrollbar
+     ========================= */
+  html, body { height:100%; scrollbar-gutter: stable both-edges; }
+  html { min-width:980px; overflow-x:auto; }
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font:14px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;
+    display:flex; flex-direction:column;
+    padding-top:var(--bar-h);
+    overflow-x:visible; /* prevent nested scrollbars */
+  }
+  @supports not (scrollbar-gutter: stable) { html { overflow-y:scroll; } }
+  
+  /* =========================
+     App bar + Footer
+     ========================= */
+  .appbar{
+    position:fixed; top:0; left:0; right:0; z-index:1000;
+    background:var(--panel); border-bottom:1px solid var(--border); box-shadow:var(--shadow);
+  }
+  .appbar .bar, .footer .bar{
+    max-width:var(--wrap); margin:0 auto; padding:10px 16px;
+    display:flex; gap:16px; align-items:center;
+  }
+  .title{font-weight:700; letter-spacing:.2px}
+  .spacer{flex:1}
+  .toggle{display:inline-flex; gap:8px; align-items:center}
+  .footer{ border-top:1px solid var(--border); }
+  .footer .bar{
+    padding:12px 16px; justify-content:space-between; color:var(--muted); font-size:12px;
+  }
+  .footer .link{ color:var(--link); text-decoration:none; }
+  .footer .link:hover{ text-decoration:underline; }
+  
+  /* =========================
+     Layout
+     ========================= */
+  .page{ flex:1; display:block; }
+  .container{ max-width:var(--wrap); margin:18px auto; padding:0 16px 40px; }
+  .grid{
+    display:grid;
+    grid-template-columns:340px minmax(620px,1fr); /* 340 + 20 gap + 620 = 980 */
+    column-gap:20px;
+    min-width:0; /* no inner horizontal scrollbars */
+  }
+  
+  /* =========================
+     Panels
+     ========================= */
+  .panel{
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:10px;
+    box-shadow:var(--shadow);
+  }
+  .panel h3{
+    margin:0; padding:16px 14px; border-bottom:1px solid var(--border); font-size:15px;
+  }
+  .panel h3 + .content{ padding-top:var(--vr) }
+  .content{ padding:16px var(--content-pad) }
+  
+  /* Sidebar: sticky, no horizontal scroll */
+  .panel.sidebar{
+    position:sticky; top:calc(var(--bar-h) + 10px); align-self:start;
+    width:340px; flex:0 0 340px; min-width:340px;
+    max-height:calc(100vh - var(--bar-h) - 10px);
+    overflow:auto; overflow-x:hidden; overscroll-behavior:contain;
+    -ms-overflow-style:none; scrollbar-width:none; scrollbar-gutter:auto;
+  }
+  .panel.sidebar::-webkit-scrollbar{ width:0; height:0; }
+  
+  /* Results panel min width */
+  .panel.results{ min-width:620px; overflow-x:visible; }
+  
+  /* =========================
+     Controls, text, form elements
+     ========================= */
+  label{font-size:13px; color:var(--muted)}
+  input[type=file]{display:block; margin-top:8px}
+  textarea{
+    width:100%; height:90px; max-width:100%;
+    border:1px solid var(--border); background:var(--bg); color:var(--text);
+    border-radius:8px; padding:8px; resize:vertical; box-sizing:border-box;
+  }
+  select, input[type=number], input[type=text]{
+    border:1px solid var(--border); background:var(--bg); color:var(--text);
+    border-radius:8px; padding:6px 8px; box-sizing:border-box; max-width:100%;
+  }
+  .panel.sidebar input[type="number"]#minUrls{ width:110px; }
+  .panel.sidebar select#sortIncluded,
+  .panel.sidebar select#sortAvailable{ max-width:220px; }
+  .panel.sidebar select#impactCol{ max-width:260px; }
+  
+  .row{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+  
+  /* Buttons */
+  .btn{
+    border:1px solid var(--border); background:var(--chip); color:var(--text);
+    padding:8px 12px; border-radius:8px; cursor:pointer; flex:0 0 auto;
+  }
+  .btn.primary{ background:var(--accent); border-color:transparent; color:#fff }
+  .btn.ghost{ background:transparent }
+  .btn[disabled]{ opacity:.55; cursor:not-allowed }
+  
+  /* Toolbar stays one line */
+  .toolbar{
+    display:flex; align-items:center; gap:8px; flex-wrap:nowrap; min-width:0; margin-top:10px;
+  }
+  .pill{
+    display:inline-flex; gap:6px; align-items:center;
+    border:1px solid var(--border); padding:6px 10px; border-radius:999px;
+    background:var(--chip); color:var(--chip-text); white-space:nowrap;
+  }
+  .hint{ color:var(--muted); font-size:12px }
+  .small{ font-size:12px }
+  .mono{ font-family:ui-monospace,SFMono-Regular,Consolas,Menlo,monospace }
+  .muted{ color:var(--muted) }
+  .float-right{ margin-left:auto }
+  .danger{ color:var(--danger) }
+  .ok{ color:var(--ok) }
+  .warn{ color:var(--warn) }
+  #availFilters{ color:var(--muted) }
+  
+  /* Two-column control groups fit */
+  .two{
+    display:grid;
+    grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+    gap:var(--vr);
+  }
+  .stack{ display:grid; grid-template-columns:1fr; gap:var(--vr) }
+  
+  /* =========================
+     Chips
+     ========================= */
+  .chips{ display:flex; flex-wrap:wrap; gap:8px; min-width:0; }
+  .chip{
+    display:inline-flex; align-items:center; gap:8px;
+    background:var(--chip); border:1px solid var(--border); color:var(--chip-text);
+    padding:6px 10px; border-radius:999px; cursor:pointer; flex:0 0 auto;
+  }
+  .chip small{ color:var(--chip-muted); font-size:11px }
+  .chip .btn{ border:0; background:transparent; color:var(--muted); font-weight:700; cursor:pointer }
+  .chip .btn:hover{ color:var(--text) }
+  .chip.auto{ border-style:solid }
+  .chip.recent{ outline:1px dashed var(--warn) }
+  /* +/- hover intent */
+  .chip.will-add{
+    background:color-mix(in oklab, var(--ok) 22%, transparent);
+    border-color:var(--ok);
+  }
+  .chip.will-remove{
+    background:color-mix(in oklab, var(--danger) 22%, transparent);
+    border-color:var(--danger);
+  }
+  .chip.will-add b, .chip.will-add small,
+  .chip.will-remove b, .chip.will-remove small{ color:inherit }
+  
+  /* =========================
+     Sticky section headers
+     ========================= */
+  .section-header{
+    display:flex; align-items:center; gap:8px; margin-bottom:0;
+  }
+  .section-header .row{
+    margin-left:auto; display:flex; align-items:center; gap:8px; white-space:nowrap; flex:0 0 auto;
+  }
+  .section-header.sticky{
+    position:sticky; top:var(--bar-h); z-index:7;
+    background:var(--bg);
+    margin-left:calc(var(--content-pad) * -1);
+    margin-right:calc(var(--content-pad) * -1);
+    padding:10px var(--content-pad);
+    min-height:40px; border-bottom:1px solid var(--border);
+  }
+  .section-header.sticky b{ margin:0; line-height:1 }
+  .section-header.sticky .hint{ margin:0 0 0 8px }
+  .section-header.sticky + #included,
+  .section-header.sticky + #available{ margin-top:var(--vr) }
+  #included{ margin-top:8px }
+  .sticky-scope{ min-width:0; }
+  
+  /* =========================
+     Dropzone
+     ========================= */
+  .dropzone{
+    position:relative; border:2px dashed var(--border); border-radius:12px;
+    padding:18px; text-align:center; background:var(--bg);
+    transition:.15s border-color,.15s background; box-sizing:border-box; width:100%;
+  }
+  .dropzone.dragover{ border-color:var(--accent); background:color-mix(in oklab, var(--accent) 12%, transparent) }
+  #dropZone{ position:relative }
+  #dropZone input[type="file"]{ display:none !important }
+  #dropZone .dz-input{ position:absolute; inset:0; width:100%; height:100%; opacity:0; cursor:pointer; }
+  .dz-inner{ display:flex; gap:10px; justify-content:center; align-items:center; flex-wrap:wrap }
+  .dz-title{ font-weight:600; text-align:center }
+  .sidebar .dropzone, .sidebar textarea#paste{ width:100%; max-width:100%; }
+  .sidebar textarea#paste{ resize:vertical; box-sizing:border-box }
+  .sidebar .dropzone .dz-title{ overflow-wrap:anywhere; word-break:break-word }
+  .sidebar .dropzone, .sidebar .dropzone * { box-sizing:border-box }
+  
+  /* space helpers for dropzone */
+  .sidebar label + .dropzone{ margin-top:10px; }
+  .sidebar .dropzone, .sidebar #fileNameRow.filechip{ margin-bottom:12px; }
+  
+  /* =========================
+     File chip (selected file)
+     ========================= */
+  .filechip{
+    display:flex; align-items:center; gap:8px;
+    width:100%; max-width:100%; min-width:0;
+    padding:8px 10px; border:1px solid var(--border); border-radius:10px;
+    background:var(--bg); margin-top:6px; overflow:hidden;
+  }
+  .filechip .name{
+    flex:1 1 auto; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+  }
+  .filechip .size{ flex:0 0 auto }
+  .filechip .btn{ flex:0 0 auto; margin-left:8px }
+  
+  /* =========================
+     Hover popover
+     ========================= */
+  .popover{
+    position:absolute; z-index:50; min-width:360px; max-width:520px;
+    background:var(--panel); border:1px solid var(--border);
+    border-radius:10px; box-shadow:var(--shadow); padding:10px 10px
+  }
+  .list{ max-height:220px; overflow:auto; margin:4px 0 0; padding:0 }
+  .list a{
+    display:block; padding:6px 8px; color:var(--link); text-decoration:none;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis
+  }
+  .list a:hover{ text-decoration:underline }
+  html[data-theme="dark"] #blockedList a{ color:#e6f8f2; text-decoration:none }
+  
+  /* =========================
+     Output panel + blocked list
+     ========================= */
+  #outputPanel{ margin:14px 0; }
+  #outputPanel .two{ display:grid; grid-template-columns:2fr 1fr; gap:12px }
+  #outputTopRow{
+    display:grid; grid-template-columns:minmax(0,2fr) minmax(260px,1fr);
+    gap:12px; align-items:start;
+  }
+  #outputTopRow > div:last-child{ padding-top:24px }
+  #outputTopRow label{ display:block; margin-bottom:6px }
+  #outputPanel textarea#csvOut{ width:100%; min-height:180px }
+  #outputTopRow > div:nth-child(2){ margin:7px 22px } /* custom tweak */
+  
+  #blockedDetails{ margin-top:18px }
+  #blockedList .row{
+    display:grid; grid-template-columns:110px 1fr; gap:8px;
+    align-items:start; margin:4px 0;
+  }
+  #blockedList .row .pill.small{ justify-self:start; text-align:center }
+  #blockedList .row a{ display:block; word-break:break-word; overflow-wrap:anywhere; line-height:1.25 }
+  #blockedList .pill.small{ min-width:84px; text-align:center }
+  
+  /* =========================
+     Back to top
+     ========================= */
+  #backTop{
+    position:fixed; right:16px; bottom:16px;
+    padding:8px 12px; border-radius:999px;
+    border:1px solid var(--border);
+    background:var(--panel); color:var(--text);
+    box-shadow:0 2px 8px rgb(0 0 0 / 12%);
+    cursor:pointer; opacity:0; pointer-events:none; transition:opacity .15s ease;
+  }
+  #backTop.show{ opacity:1; pointer-events:auto }
+  
+  /* =========================
+     Safety: force overlay if under 980px (even if JS fails)
+     ========================= */
+  @media (max-width:980px){
+    #viewportOverlay{ display:flex !important; }
+  }
+  
+  /* =========================
+     Compact tweaks near 1100px
+     ========================= */
+  @media (max-width:1100px){
+    .toolbar .pill{ font-size:12px; padding:2px 6px; }
+    .toolbar .btn{ padding:4px 8px; }
+  }
 
-@supports not (scrollbar-gutter: stable) {
-  html { overflow-y: scroll; }  /* always show scrollbar */
-}
+    /* --- Sidebar width guard: nothing may grow wider than 340px --- */
+.panel.sidebar,
+.panel.sidebar .content,
+.panel.sidebar .stack,
+.panel.sidebar .two,
+.panel.sidebar .row { max-width: 100%; min-width: 0; overflow-x: hidden; }
 
-.appbar{
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  z-index: 1000;
-  background: var(--panel);
-  border-bottom: 1px solid var(--border);
-  box-shadow: var(--shadow);
+/* --- File chip: grid with hard columns so long names truncate --- */
+.filechip{
+  display: grid;                 /* switch from flex -> grid */
+  grid-template-columns: 1fr auto auto; /* name | size | button */
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
 }
-.appbar .bar,
-.footer .bar{ max-width: var(--wrap);
-  margin: 0 auto;
-  padding: 10px 16px;
-  display: flex; gap: 16px; align-items: center; }
-.page{ flex:1; display:block; }
-
-.bar{
-  max-width: var(--wrap);
-  margin: 0 auto;
-  padding: 10px 16px;
-  display: flex; gap: 16px; align-items: center;
+.filechip .name{
+  min-width: 0;                  /* allow shrink */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
-.title{font-weight:700;letter-spacing:.2px}
-.spacer{flex:1}
-.toggle{display:inline-flex;gap:8px;align-items:center}
+.filechip .size{ white-space: nowrap; }
+.filechip .btn{ justify-self: end; }
 
-/* Layout */
-.container{ max-width:var(--wrap); margin:18px auto; padding:0 16px 40px; }
-
-.grid{display:grid; grid-template-columns:420px 1fr; gap:16px}
-
-.panel{
-  background:var(--panel);
-  border:1px solid var(--border);
-  border-radius:10px;
-  box-shadow:var(--shadow)
-}
-.panel h3{
-  margin:0;
-  padding:16px 14px;
-  border-bottom:1px solid var(--border);
-  font-size:15px
-}
-.panel h3 + .content{ padding-top:var(--vr) }  /* space below panel header */
-.content{ padding:16px var(--content-pad) }
-
-/* Sidebar: sticky but never under the header, scroll only if taller */
-.panel.sidebar{
-  position: sticky;
-  top: calc(var(--bar-h) + 10px);
-  align-self: start;
-  max-height: calc(100vh - var(--bar-h) - 10px);
-  overflow: auto;
-  overflow-x: hidden;
-  overscroll-behavior: contain;
-  scrollbar-gutter: stable both-edges;
-}
-
-/* Controls, text, chips */
-label{font-size:13px;color:var(--muted)}
-input[type=file]{display:block;margin-top:8px}
-textarea{
-  width:100%; height:90px; max-width:100%;
-  border:1px solid var(--border); background:var(--bg); color:var(--text);
-  border-radius:8px; padding:8px; resize:vertical
-}
-
-.row{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
-.chips{display:flex; flex-wrap:wrap; gap:8px}
-.chip{
-  display:inline-flex; align-items:center; gap:8px;
-  background:var(--chip); border:1px solid var(--border); color:var(--chip-text);
-  padding:6px 10px; border-radius:999px; cursor:pointer
-}
-.chip small{color:var(--chip-muted); font-size:11px}
-.chip .btn{border:0; cursor:pointer; background:transparent; color:var(--muted); font-weight:700}
-.chip .btn:hover{color:var(--text)}
-.chip.auto{ border-style:solid }
-.chip.recent{ outline:1px dashed var(--warn) }
-
-/* +/- hover intent: color whole bubble */
-.chip.will-add{
-  background: color-mix(in oklab, var(--ok) 22%, transparent);
-  border-color: var(--ok);
-}
-.chip.will-remove{
-  background: color-mix(in oklab, var(--danger) 22%, transparent);
-  border-color: var(--danger);
-}
-.chip.will-add b, .chip.will-add small,
-.chip.will-remove b, .chip.will-remove small{ color:inherit }
-
-/* Sticky section bars */
-.section-header{
-  display:flex; align-items:center; justify-content:space-between;
-  margin-bottom:0;
-}
-.section-header.sticky{
-    position: sticky;
-    top: var(--bar-h);
-  z-index:7;
-  background:var(--bg);
-  margin-left:calc(var(--content-pad) * -1);
-  margin-right:calc(var(--content-pad) * -1);
-  padding:10px var(--content-pad);           /* comfy */
-  min-height:40px;
-  border-bottom:1px solid var(--border);
-}
-.section-header.sticky b{ margin:0; line-height:1 }
-.section-header.sticky .hint{ margin:0 0 0 8px }
-.section-header.sticky .row{ margin-left:auto; gap:8px; white-space:nowrap }
-.section-header.sticky + #included,
-.section-header.sticky + #available{ margin-top:var(--vr) }
-
-#included{ margin-top:8px }
-
-/* Buttons, misc */
-select, input[type=number], input[type=text]{
-  border:1px solid var(--border); background:var(--bg); color:var(--text);
-  border-radius:8px; padding:6px 8px
-}
-.btn{
-  border:1px solid var(--border); background:var(--chip); color:var(--text);
-  padding:8px 12px; border-radius:8px; cursor:pointer
-}
-.btn.primary{background:var(--accent); border-color:transparent; color:#fff}
-.btn.ghost{background:transparent}
-.btn[disabled]{ opacity:.55; cursor:not-allowed }
-
-.hint{color:var(--muted); font-size:12px}
-.kv{display:grid; grid-template-columns:auto 1fr; gap:6px 12px; font-size:13px}
-details{border-top:1px dashed var(--border); padding-top:8px; margin-top:8px}
-summary{cursor:pointer}
-.two{display:grid; grid-template-columns:1fr 1fr; gap:var(--vr)}
-.stack{display:grid; grid-template-columns:1fr; gap:var(--vr)}
-.toolbar{display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin:var(--vr) 0}
-.pill{display:inline-flex; gap:6px; align-items:center; border:1px solid var(--border);
-      padding:6px 10px; border-radius:999px; background:var(--chip); color:var(--chip-text)}
-.right{justify-content:flex-end}
-.mono{font-family:ui-monospace,SFMono-Regular,Consolas,Menlo,monospace}
-.small{font-size:12px}
-.muted{color:var(--muted)}
-.float-right{margin-left:auto}
-.danger{color:var(--danger)}
-.ok{color:var(--ok)}
-.warn{color:var(--warn)}
-#availFilters{color:var(--muted)}
-
-/* Dropzone */
-.dropzone{
-  position:relative; border:2px dashed var(--border); border-radius:12px;
-  padding:18px; text-align:center; background:var(--bg);
-  transition:.15s border-color,.15s background;
+/* --- Dropzone + paste: never exceed sidebar --- */
+.sidebar .dropzone{ width:100%; max-width:100%; box-sizing:border-box; }
+.sidebar textarea#paste{
+  display:block;
+  width:100%;
+  max-width:100%;
   box-sizing:border-box;
 }
-.dropzone.dragover{ border-color:var(--accent); background:color-mix(in oklab, var(--accent) 12%, transparent) }
-#dropZone{ position:relative }
-#dropZone input[type="file"]{ display:none !important }
-#dropZone .dz-input{
-  position:absolute; inset:0; width:100%; height:100%;
-  opacity:0; cursor:pointer;
-}
-.dz-inner{ display:flex; gap:10px; justify-content:center; align-items:center; flex-wrap:wrap }
-.dz-title{ font-weight:600; text-align:center }
-.sidebar .dropzone{ width:100%; max-width:100% }
-.sidebar textarea#paste{ width:100%; max-width:100%; resize:vertical; box-sizing:border-box }
-.sidebar .dropzone .dz-title{ overflow-wrap:anywhere; word-break:break-word }
-.sidebar .dropzone, .sidebar .dropzone * { box-sizing:border-box }
 
-/* File chip */
-.filechip{
-  display:flex; align-items:center; gap:8px;
-  width:100%;                 /* force to sidebar width */
+/* --- Controls: no horizontal growth on focus/content --- */
+.panel.sidebar input[type="number"],
+.panel.sidebar input[type="text"],
+.panel.sidebar select,
+.panel.sidebar textarea{
   max-width:100%;
-  min-width:0;                /* allow shrink in grid/flex */
-  padding:8px 10px;
+  min-width:0;
+  box-sizing:border-box;
+}
+
+/* --- Sidebar toolbars may wrap; no width push --- */
+.panel.sidebar .toolbar{ flex-wrap: wrap; min-width: 0; }
+
+/* Keep ONLY the Scan/Rows/Domains/Terms toolbar on one line */
+.panel.sidebar .toolbar:has(#scanBtn){
+  flex-wrap: nowrap;       /* no wrap for this toolbar */
+  gap: 6px;
+  overflow: hidden;        /* never widen the sidebar */
+  min-width: 0;
+}
+
+/* Compact its controls so all four fit */
+.panel.sidebar .toolbar:has(#scanBtn) .btn{
+  padding: 6px 10px;
+  flex: 0 0 auto;
+}
+.panel.sidebar .toolbar:has(#scanBtn) .pill{
+  padding: 4px 8px;
+  font-size: 11px;
+  flex: 0 1 auto;          /* allow slight shrink */
+  min-width: 0;
+  white-space: nowrap;
+}
+.panel.sidebar .toolbar:has(#scanBtn) .pill .muted{ font-size: 11px; }
+
+/* Click-to-copy box */
+.copybox{
+  position: relative;
   border:1px solid var(--border);
-  border-radius:10px;
-  background:var(--bg);
-  margin-top:6px;
-  overflow:hidden;            /* clip any overflow */
+  border-radius:8px;
+  cursor: copy;
 }
-.filechip{ max-width:100%;overflow:hidden;}
-.filechip .name{
-  flex:1 1 auto;
-  min-width:0;                /* critical for ellipsis */
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
+.copybox textarea{
+  pointer-events: none;       /* block typing/selection */
+  background: var(--bg);
+  color: var(--text);
+  border:0;                   /* border handled by .copybox */
+  width:100%; min-height:180px;
+  padding:8px; resize: none;  /* no manual resize */
+  outline: none;
 }
-.filechip .size{ flex:0 0 auto }
-.filechip .btn{ flex:0 0 auto; margin-left:8px }
-.filechip .spacer{ display:none; }
-
-.sidebar .dropzone,
-.sidebar .filechip{
-  box-sizing: border-box;
-  max-width: 100%;   /* replaces your 96% guess */
+.copybox::after{
+  content:"Click to copy";
+  position:absolute; inset:0;
+  display:flex; align-items:center; justify-content:center;
+  background:color-mix(in oklab, var(--panel) 65%, transparent);
+  color:var(--muted);
+  font-weight:600; letter-spacing:.2px;
+  opacity:0; transition:opacity .12s ease-in-out;
+  border-radius:8px;
 }
+.copybox:hover::after{ opacity:1; }
+.copybox.copied::after{ content:"Copied"; opacity:1; }
 
-/* space between “Upload CSV/XLSX” label and the box */
-.sidebar label + .dropzone{ margin-top: 10px; }
+/* Small tweak so our label doesn’t look disabled next to overlay */
+#outputTopRow label + .copybox{ margin-top:6px; }
 
-/* space below the dropzone (or file chip) */
-.sidebar .dropzone,
-.sidebar #fileNameRow.filechip{ margin-bottom: 12px; }
-
-
-/* Hover popover */
-.popover{
-  position:absolute; z-index:50; min-width:360px; max-width:520px;
-  background:var(--panel); border:1px solid var(--border);
-  border-radius:10px; box-shadow:var(--shadow); padding:10px 10px
+/* “i” info badge + tooltip */
+.icon-btn.info{
+  display:inline-flex; align-items:center; justify-content:center;
+  width:26px; height:26px; border-radius:50%;
+  border:1px solid var(--border); background:var(--chip); color:var(--text);
+  font-weight:700; line-height:1; cursor:help;
 }
-.list{ max-height:220px; overflow:auto; margin:4px 0 0; padding:0 }
-.list a{
-  display:block; padding:6px 8px; color:var(--link); text-decoration:none;
-  white-space:nowrap; overflow:hidden; text-overflow:ellipsis
-}
-.list a:hover{ text-decoration:underline }
-html[data-theme="dark"] #blockedList a{ color:#e6f8f2; text-decoration:none }
+.icon-btn.info:hover{ filter:brightness(1.05); }
 
-/* Back to top */
-#backTop{
-  position:fixed; right:16px; bottom:16px;
-  padding:8px 12px; border-radius:999px;
-  border:1px solid var(--border);
+/* Pure-css tooltip from data-tip */
+.icon-btn.info[data-tip]{
+  position:relative;
+}
+.icon-btn.info[data-tip]::after{
+  content:attr(data-tip);
+  position:absolute; right:0; top:calc(100% + 10px);
+  width:min(520px, 70vw);
   background:var(--panel); color:var(--text);
-  box-shadow:0 2px 8px rgb(0 0 0 / 12%);
-  cursor:pointer; opacity:0; pointer-events:none; transition:opacity .15s ease;
+  border:1px solid var(--border); border-radius:10px; box-shadow:var(--shadow);
+  padding:10px 12px; font-size:12px; line-height:1.35;
+  opacity:0; pointer-events:none; transform:translateY(-4px);
+  transition:opacity .12s, transform .12s;
+  z-index:1001; text-align:left;
 }
-#backTop.show{ opacity:1; pointer-events:auto }
-
-/* Output panel + blocked list */
-#outputPanel{ margin-top:14px; margin-bottom:14px }         /* bottom spacing added */
-#outputPanel .two{ display:grid; grid-template-columns:2fr 1fr; gap:12px }
-#outputTopRow{
-  display:grid;
-  grid-template-columns:minmax(0,2fr) minmax(260px,1fr);
-  gap:12px; align-items:start;
+.icon-btn.info[data-tip]::before{
+  content:""; position:absolute; right:8px; top:100%;
+  border:6px solid transparent; border-top-color:var(--border);
+  transform:translateY(-1px);
+  opacity:0; transition:opacity .12s;
 }
-#outputTopRow > div:last-child{ padding-top:24px }
-#outputTopRow label{ display:block; margin-bottom:6px }
-#outputPanel textarea#csvOut{ width:100%; min-height:180px }
-
-/* Your custom tweak */
-#outputTopRow > div:nth-child(2){ margin:7px 22px }
-
-/* Give more space before blocked articles dropdown */
-#blockedDetails{ margin-top:18px }                          /* increased */
-#blockedList .row{
-  display:grid; grid-template-columns:110px 1fr; gap:8px;
-  align-items:start; margin:4px 0;
-}
-#blockedList .row .pill.small{ justify-self:start; text-align:center }
-#blockedList .row a{ display:block; word-break:break-word; overflow-wrap:anywhere; line-height:1.25 }
-#blockedList .pill.small{ min-width:84px; text-align:center }
-
-/* Footer uses same width and side padding as header/content */
-.footer{ border-top:1px solid var(--border); }
-.footer .bar{
-  max-width:var(--wrap);
-  margin:0 auto;
-  padding:12px 16px;
-  display:flex; justify-content:space-between; align-items:center;
-  color:var(--muted); font-size:12px;
-}
-.footer .link{ color:var(--link); text-decoration:none; }
-.footer .link:hover{ text-decoration:underline; }
-
-/* Right column: remove the extra top padding just under "3) Results" */
-.panel.results h3 + .content{ padding-top: 0 }
-
-/* Keep sticky bars aligned in the right column */
-.panel.results .section-header.sticky{ top: var(--bar-h) }
-#emptyState.empty-inline{
-  margin:8px 0 0;
-  padding:10px;
-}
-/* Left menu: scrollable, no visible scrollbar */
-.panel.sidebar{
-    position: sticky;
-  top: calc(var(--bar-h) + 10px);
-  max-height: calc(100vh - var(--bar-h) - 10px);
-  overflow: auto;
-  overflow-x: hidden;
-  align-self: start;
-  -ms-overflow-style: none;   /* IE/Edge legacy */
-  scrollbar-width: none;      /* Firefox */
-  scrollbar-gutter: auto;     /* override any global "stable" */
+.icon-btn.info:hover::after,
+.icon-btn.info:hover::before{
+  opacity:1; transform:translateY(0);
 }
 
-.panel.sidebar::-webkit-scrollbar{
-  width: 0;
-  height: 0;
-}
 
-.container .grid > .panel.sidebar,
-.panel.sidebar .content,
-.panel.sidebar .stack > div,
-.panel.sidebar .dropzone,
-.panel.sidebar .filechip { min-width:0 }
-
-</style>
+  </style>
+  
 </head>
 <body>
     <header class="appbar">
       <div class="bar">
         <div class="title">UnsafeTermScanner</div>
         <div class="spacer"></div>
+        <button id="infoBtn" class="icon-btn info" type="button"
+        aria-label="About this tool"
+        data-tip="Upload a CSV/XLSX with at least one URL column and, optionally, an impressions/impact column. The tool extracts risky terms from URL paths, auto-includes known unsafe terms, and shows deduped blocked/available impact by URL. Choose a numeric impact column or let Auto pick. You can also paste URLs. Click Generate List to produce the comma-separated block list.">
+          i
+        </button>
         <label class="toggle">
           <input id="themeToggle" type="checkbox" />
           <span class="hint">Light mode</span>
@@ -482,7 +603,9 @@ html[data-theme="dark"] #blockedList a{ color:#e6f8f2; text-decoration:none }
                   <div class="two" id="outputTopRow">
                     <div>
                       <label>Comma-separated</label>
-                      <textarea id="csvOut" class="mono"></textarea>
+                      <div class="copybox" id="csvOutBox" role="button" aria-label="Click to copy">
+                        <textarea id="csvOut" class="mono" readonly aria-readonly="true" tabindex="-1"></textarea>
+                      </div>
                     </div>
                     <div>
                         <label>Metrics</label>
@@ -853,6 +976,37 @@ function canonicalUrl(u){
     return x.toString().replace(/\/+$/,'');
   }catch{ return u; }
 }
+
+// Click-to-copy for CSV output
+(function initCopyCsv(){
+  const box = document.getElementById('csvOutBox');
+  const ta  = document.getElementById('csvOut');
+  if (!box || !ta) return;
+
+  // ensure readonly and non-focusable
+  ta.readOnly = true;
+  ta.setAttribute('aria-readonly','true');
+  ta.setAttribute('tabindex','-1');
+
+  box.addEventListener('click', async ()=>{
+    const text = ta.value || '';
+    try{
+      await navigator.clipboard.writeText(text);
+      box.classList.add('copied');
+      setTimeout(()=>box.classList.remove('copied'), 900);
+    }catch{
+      // fallback: select and copy
+      ta.removeAttribute('tabindex');
+      ta.select();
+      document.execCommand && document.execCommand('copy');
+      ta.setAttribute('tabindex','-1');
+      box.classList.add('copied');
+      setTimeout(()=>box.classList.remove('copied'), 900);
+      window.getSelection()?.removeAllRanges();
+    }
+  });
+})();
+
 
 function updateOutputMetrics(){
   const list = state.includedOrder.slice();
@@ -1687,14 +1841,6 @@ document.addEventListener('click', (e)=>{
   window.addEventListener('resize', set);
 })();
 
-/*************  ✨ Windsurf Command ⭐  *************/
-
-/**
- * Resets all UI inputs, computed state, and control inputs.
- *
- * @returns {void}
- */
-/*******  99f8e8b1-c770-4c25-b935-0f7ae631e2bf  *******/
     function resetAll(){
     // clear UI inputs
     const fileInputEl = document.getElementById('file');
@@ -1741,6 +1887,7 @@ document.addEventListener('click', (e)=>{
 
 // run on initial load and BFCache restores
     window.addEventListener('DOMContentLoaded', resetAll);
+
     window.addEventListener('pageshow', (e)=>{ if (e.persisted) resetAll(); });
 
     document.addEventListener('DOMContentLoaded', ()=>{
@@ -1789,6 +1936,16 @@ document.addEventListener('click', (e)=>{
     if (chip) chip.classList.remove('will-add','will-remove');
     });
 
+    document.addEventListener('DOMContentLoaded', ()=>{
+      const minWidth = 980; // was 1024
+      const overlay = document.getElementById('viewportOverlay');
+      if (!overlay) return;
+      const check = ()=>{ overlay.style.display = (window.innerWidth < minWidth) ? 'flex' : 'none'; };
+      window.addEventListener('resize', check, {passive:true});
+      check();
+    });
+
+
 
 /* ---------- Ready ---------- */
 </script>
@@ -1800,5 +1957,19 @@ document.addEventListener('click', (e)=>{
     </div>
     <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
   </footer>  
+
+  <div id="viewportOverlay" style="
+  display:none;position:fixed;inset:0;z-index:99999;
+  background:rgba(0,0,0,0.85);color:#fff;
+  font-family:sans-serif;font-size:18px;
+  align-items:center;justify-content:center;text-align:center;padding:2rem;
+">
+  <div>
+    <h2 style="margin-bottom:0.5em">Screen too small</h2>
+    <p>Please use this tool on a larger screen for the best experience.<br>
+    Minimum width: 980 px</p>
+  </div>
+</div>
+
 </body>
 </html>
