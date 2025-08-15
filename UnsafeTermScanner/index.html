@@ -6,152 +6,363 @@
 <title>UnsafeTermScanner</title>
 <link rel="icon" href="data:,">
 <style>
-  :root{
-    --bg: #0f1115;
-    --panel:#151922;
-    --text:#e6e6e6;
-    --muted:#a8b0bf;
-    --chip:#232a36;
-    --chip-text:#e6e6e6;
-    --chip-muted:#9aa4b6;
-    --accent:#5aa3ff;
-    --ok:#2fb170;
-    --warn:#f5c451;
-    --danger:#e35d6a;
-    --border:#2b3442;
-    --link:#75b4ff;
-    --shadow:0 5px 20px rgba(0,0,0,.4)
-  }
-  [data-theme="light"]{
-    --bg:#fafafa; --panel:#ffffff; --text:#0e1420; --muted:#465064; --chip:#f1f3f7;
-    --chip-text:#0e1420; --chip-muted:#5c667a; --accent:#1d6fff; --ok:#0a9157; --warn:#c18b14;
-    --danger:#c53b49; --border:#d8deea; --link:#0a66d9; --shadow:0 6px 18px rgba(0,0,0,.08)
-  }
-  html,body{height:100%}
-  body{margin:0;background:var(--bg);color:var(--text);font:14px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif}
-  header{position:sticky;top:0;z-index:10;background:var(--panel);border-bottom:1px solid var(--border);box-shadow:var(--shadow)}
-  .bar{max-width:1100px;margin:0 auto;display:flex;gap:16px;align-items:center;padding:10px 16px}
-  .title{font-weight:700;letter-spacing:.2px}
-  .spacer{flex:1}
-  .toggle{display:inline-flex;gap:8px;align-items:center}
-  .container{max-width:1400px;margin:18px auto;padding:0 16px 40px}
-  .grid{display:grid;grid-template-columns:1.1fr .9fr;gap:16px}
-  .panel{background:var(--panel);border:1px solid var(--border);border-radius:10px;box-shadow:var(--shadow)}
-  .panel h3{margin:0;padding:12px 14px;border-bottom:1px solid var(--border);font-size:15px}
-  .panel .content{padding:12px 14px}
-  label{font-size:13px;color:var(--muted)}
-  input[type=file]{display:block;margin-top:8px}
-  textarea{width:100%;height:90px;border:1px solid var(--border);background:var(--bg);color:var(--text);border-radius:8px;padding:8px}
-  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-  .chips{display:flex;flex-wrap:wrap;gap:8px}
-  .chip{display:inline-flex;align-items:center;gap:8px;background:var(--chip);border:1px solid var(--border);color:var(--chip-text);padding:6px 10px;border-radius:999px}
-  .chip small{color:var(--chip-muted);font-size:11px}
-  .chip .btn{border:0;cursor:pointer;background:transparent;color:var(--muted);font-weight:700}
-  .chip .btn:hover{color:var(--text)}
-  .chip.auto{outline:1px dashed var(--accent)}
-  .chip.recent{outline:1px dashed var(--warn)}
-  .section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-  select, input[type=number], input[type=text]{border:1px solid var(--border);background:var(--bg);color:var(--text);border-radius:8px;padding:6px 8px}
-  .btn{border:1px solid var(--border);background:var(--chip);color:var(--text);padding:8px 12px;border-radius:8px;cursor:pointer}
-  .btn.primary{background:var(--accent);border-color:transparent;color:#fff}
-  .btn.ghost{background:transparent}
-  .hint{color:var(--muted);font-size:12px}
-  .kv{display:grid;grid-template-columns:auto 1fr;gap:6px 12px;font-size:13px}
-  details{border-top:1px dashed var(--border);padding-top:8px;margin-top:8px}
-  summary{cursor:pointer}
-  .two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-  .popover{position:absolute;z-index:50;min-width:360px;max-width:520px;background:var(--panel);border:1px solid var(--border);border-radius:10px;box-shadow:var(--shadow);padding:10px 10px}
-  .list{max-height:220px;overflow:auto;margin:4px 0 0;padding:0}
-  .list a{display:block;padding:6px 8px;color:var(--link);text-decoration:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .list a:hover{text-decoration:underline}
-  .toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:6px 0 10px}
-  .pill{display:inline-flex;gap:6px;align-items:center;border:1px solid var(--border);padding:6px 10px;border-radius:999px;background:var(--chip);color:var(--chip-text)}
-  .right{justify-content:flex-end}
-  .mono{font-family:ui-monospace,SFMono-Regular,Consolas,Menlo,monospace}
-  .small{font-size:12px}
-  .muted{color:var(--muted)}
-  .float-right{margin-left:auto}
-  .danger{color:var(--danger)}
-  .ok{color:var(--ok)}
-  .warn{color:var(--warn)}
-  .stack{display:grid;grid-template-columns:1fr;gap:12px}
+:root{
+  --wrap: 1400px;              /* unified content width */
+  --bg:#0f1115;
+  --panel:#151922;
+  --text:#e6e6e6;
+  --muted:#a8b0bf;
+  --chip:#232a36;
+  --chip-text:#e6e6e6;
+  --chip-muted:#9aa4b6;
+  --accent:#5aa3ff;
+  --ok:#2fb170;
+  --warn:#f5c451;
+  --danger:#e35d6a;
+  --border:#2b3442;
+  --link:#75b4ff;
+  --shadow:0 5px 20px rgba(0,0,0,.4);
+  --content-pad:14px;
+  --hdr-h:40px;
+  --bar-h:56px;               /* runtime-corrected via JS */
+  --vr:16px;                  /* vertical rhythm */
+}
+[data-theme="light"]{
+  --bg:#fafafa; --panel:#ffffff; --text:#0e1420; --muted:#465064; --chip:#f1f3f7;
+  --chip-text:#0e1420; --chip-muted:#5c667a; --accent:#1d6fff; --ok:#0a9157; --warn:#c18b14;
+  --danger:#c53b49; --border:#d8deea; --link:#0a66d9; --shadow:0 6px 18px rgba(0,0,0,.08)
+}
+html, body { height:100%; scrollbar-gutter: stable both-edges; }
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font:14px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;
+  display:flex;
+  flex-direction:column;
+  padding-top: var(--bar-h); 
+}
 
-  .dropzone{
-  position:relative;border:2px dashed var(--border);border-radius:12px;
-  padding:18px;text-align:center;background:var(--bg);
-  transition:.15s border-color,.15s background
-    }
-    .dropzone.dragover{border-color:var(--accent);background:color-mix(in oklab, var(--accent) 12%, transparent)}
-    .dz-inner{display:flex;gap:10px;justify-content:center;align-items:center;flex-wrap:wrap}
-    .dz-title{font-weight:600}
-    textarea{width:100%;max-width:100%}
-    #dropZone input[type="file"]{ display:none !important; }
-    #dropZone{ position:relative }
-    #dropZone .dz-input{
-    position:absolute; inset:0; width:100%; height:100%;
-    opacity:0; cursor:pointer; /* not display:none */
-    }
-    .dz-inner{ display:flex; gap:10px; justify-content:center; align-items:center; flex-wrap:wrap }
-    .dz-title{ text-align:center }
-    .chip { cursor:pointer }
-    #backTop{
-    position:fixed; right:16px; bottom:16px;
-    padding:8px 12px; border-radius:999px; border:1px solid var(--border);
-    background:var(--bg-elev); box-shadow:0 2px 8px rgb(0 0 0 / 12%);
-    cursor:pointer; opacity:0; pointer-events:none; transition:opacity .15s ease;
-    }
-    #backTop.show{ opacity:1; pointer-events:auto; }
-    .chip:hover{ outline:1px solid var(--border-strong); }
+@supports not (scrollbar-gutter: stable) {
+  html { overflow-y: scroll; }  /* always show scrollbar */
+}
 
-    /* full-bubble intent colors on +/- hover */
-    .chip.will-add{
-    background: color-mix(in oklab, var(--ok) 22%, transparent);
-    border-color: var(--ok);
-    }
-    .chip.will-remove{
-    background: color-mix(in oklab, var(--danger) 22%, transparent);
-    border-color: var(--danger);
-    }
-    /* keep text readable */
-    .chip.will-add b, .chip.will-add small,
-    .chip.will-remove b, .chip.will-remove small{ color: inherit }
-    #availFilters{ color: var(--muted); }
-    /* two-column, sticky left */
-    .container .grid{ display:grid; grid-template-columns: 420px 1fr; gap:16px }
-    .panel.sidebar{ position:sticky; top:12px; align-self:start; height:fit-content }
-    #outputPanel .two{ display:grid; grid-template-columns: 2fr 1fr; gap:12px }
-    #outputTopRow{
-        display:grid;
-        grid-template-columns:minmax(0,2fr) minmax(220px,1fr);
-        gap:12px;
-        align-items:start;
-    }
-    #outputPanel textarea#csvOut{ width:100%; min-height:180px; }
-    #blockedList .row{
-        display:flex;
-        gap:8px;
-        align-items:flex-start;
-        margin:4px 0;
-        }
+.appbar{
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 1000;
+  background: var(--panel);
+  border-bottom: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+.appbar .bar,
+.footer .bar{ max-width: var(--wrap);
+  margin: 0 auto;
+  padding: 10px 16px;
+  display: flex; gap: 16px; align-items: center; }
+.page{ flex:1; display:block; }
 
-    #blockedList .row .pill.small{ flex:0 0 auto; margin-top:2px; min-width:90px; text-align:center }
-    #blockedList .row a{ flex:1 1 auto; word-break:break-word; overflow-wrap:anywhere }
-    #blockedList .pill.small{ min-width:84px; text-align:center }
+.bar{
+  max-width: var(--wrap);
+  margin: 0 auto;
+  padding: 10px 16px;
+  display: flex; gap: 16px; align-items: center;
+}
+.title{font-weight:700;letter-spacing:.2px}
+.spacer{flex:1}
+.toggle{display:inline-flex;gap:8px;align-items:center}
+
+/* Layout */
+.container{ max-width:var(--wrap); margin:18px auto; padding:0 16px 40px; }
+
+.grid{display:grid; grid-template-columns:420px 1fr; gap:16px}
+
+.panel{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:10px;
+  box-shadow:var(--shadow)
+}
+.panel h3{
+  margin:0;
+  padding:16px 14px;
+  border-bottom:1px solid var(--border);
+  font-size:15px
+}
+.panel h3 + .content{ padding-top:var(--vr) }  /* space below panel header */
+.content{ padding:16px var(--content-pad) }
+
+/* Sidebar: sticky but never under the header, scroll only if taller */
+.panel.sidebar{
+  position: sticky;
+  top: calc(var(--bar-h) + 10px);
+  align-self: start;
+  max-height: calc(100vh - var(--bar-h) - 10px);
+  overflow: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable both-edges;
+}
+
+/* Controls, text, chips */
+label{font-size:13px;color:var(--muted)}
+input[type=file]{display:block;margin-top:8px}
+textarea{
+  width:100%; height:90px; max-width:100%;
+  border:1px solid var(--border); background:var(--bg); color:var(--text);
+  border-radius:8px; padding:8px; resize:vertical
+}
+
+.row{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+.chips{display:flex; flex-wrap:wrap; gap:8px}
+.chip{
+  display:inline-flex; align-items:center; gap:8px;
+  background:var(--chip); border:1px solid var(--border); color:var(--chip-text);
+  padding:6px 10px; border-radius:999px; cursor:pointer
+}
+.chip small{color:var(--chip-muted); font-size:11px}
+.chip .btn{border:0; cursor:pointer; background:transparent; color:var(--muted); font-weight:700}
+.chip .btn:hover{color:var(--text)}
+.chip.auto{ border-style:solid }
+.chip.recent{ outline:1px dashed var(--warn) }
+
+/* +/- hover intent: color whole bubble */
+.chip.will-add{
+  background: color-mix(in oklab, var(--ok) 22%, transparent);
+  border-color: var(--ok);
+}
+.chip.will-remove{
+  background: color-mix(in oklab, var(--danger) 22%, transparent);
+  border-color: var(--danger);
+}
+.chip.will-add b, .chip.will-add small,
+.chip.will-remove b, .chip.will-remove small{ color:inherit }
+
+/* Sticky section bars */
+.section-header{
+  display:flex; align-items:center; justify-content:space-between;
+  margin-bottom:0;
+}
+.section-header.sticky{
+    position: sticky;
+    top: var(--bar-h);
+  z-index:7;
+  background:var(--bg);
+  margin-left:calc(var(--content-pad) * -1);
+  margin-right:calc(var(--content-pad) * -1);
+  padding:10px var(--content-pad);           /* comfy */
+  min-height:40px;
+  border-bottom:1px solid var(--border);
+}
+.section-header.sticky b{ margin:0; line-height:1 }
+.section-header.sticky .hint{ margin:0 0 0 8px }
+.section-header.sticky .row{ margin-left:auto; gap:8px; white-space:nowrap }
+.section-header.sticky + #included,
+.section-header.sticky + #available{ margin-top:var(--vr) }
+
+#included{ margin-top:8px }
+
+/* Buttons, misc */
+select, input[type=number], input[type=text]{
+  border:1px solid var(--border); background:var(--bg); color:var(--text);
+  border-radius:8px; padding:6px 8px
+}
+.btn{
+  border:1px solid var(--border); background:var(--chip); color:var(--text);
+  padding:8px 12px; border-radius:8px; cursor:pointer
+}
+.btn.primary{background:var(--accent); border-color:transparent; color:#fff}
+.btn.ghost{background:transparent}
+.btn[disabled]{ opacity:.55; cursor:not-allowed }
+
+.hint{color:var(--muted); font-size:12px}
+.kv{display:grid; grid-template-columns:auto 1fr; gap:6px 12px; font-size:13px}
+details{border-top:1px dashed var(--border); padding-top:8px; margin-top:8px}
+summary{cursor:pointer}
+.two{display:grid; grid-template-columns:1fr 1fr; gap:var(--vr)}
+.stack{display:grid; grid-template-columns:1fr; gap:var(--vr)}
+.toolbar{display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin:var(--vr) 0}
+.pill{display:inline-flex; gap:6px; align-items:center; border:1px solid var(--border);
+      padding:6px 10px; border-radius:999px; background:var(--chip); color:var(--chip-text)}
+.right{justify-content:flex-end}
+.mono{font-family:ui-monospace,SFMono-Regular,Consolas,Menlo,monospace}
+.small{font-size:12px}
+.muted{color:var(--muted)}
+.float-right{margin-left:auto}
+.danger{color:var(--danger)}
+.ok{color:var(--ok)}
+.warn{color:var(--warn)}
+#availFilters{color:var(--muted)}
+
+/* Dropzone */
+.dropzone{
+  position:relative; border:2px dashed var(--border); border-radius:12px;
+  padding:18px; text-align:center; background:var(--bg);
+  transition:.15s border-color,.15s background;
+  box-sizing:border-box;
+}
+.dropzone.dragover{ border-color:var(--accent); background:color-mix(in oklab, var(--accent) 12%, transparent) }
+#dropZone{ position:relative }
+#dropZone input[type="file"]{ display:none !important }
+#dropZone .dz-input{
+  position:absolute; inset:0; width:100%; height:100%;
+  opacity:0; cursor:pointer;
+}
+.dz-inner{ display:flex; gap:10px; justify-content:center; align-items:center; flex-wrap:wrap }
+.dz-title{ font-weight:600; text-align:center }
+.sidebar .dropzone{ width:100%; max-width:100% }
+.sidebar textarea#paste{ width:100%; max-width:100%; resize:vertical; box-sizing:border-box }
+.sidebar .dropzone .dz-title{ overflow-wrap:anywhere; word-break:break-word }
+.sidebar .dropzone, .sidebar .dropzone * { box-sizing:border-box }
+
+/* File chip */
+.filechip{
+  display:flex; align-items:center; gap:8px;
+  width:100%;                 /* force to sidebar width */
+  max-width:100%;
+  min-width:0;                /* allow shrink in grid/flex */
+  padding:8px 10px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  background:var(--bg);
+  margin-top:6px;
+  overflow:hidden;            /* clip any overflow */
+}
+.filechip{ max-width:100%;overflow:hidden;}
+.filechip .name{
+  flex:1 1 auto;
+  min-width:0;                /* critical for ellipsis */
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.filechip .size{ flex:0 0 auto }
+.filechip .btn{ flex:0 0 auto; margin-left:8px }
+.filechip .spacer{ display:none; }
+
+.sidebar .dropzone,
+.sidebar .filechip{
+  box-sizing: border-box;
+  max-width: 100%;   /* replaces your 96% guess */
+}
+
+/* space between “Upload CSV/XLSX” label and the box */
+.sidebar label + .dropzone{ margin-top: 10px; }
+
+/* space below the dropzone (or file chip) */
+.sidebar .dropzone,
+.sidebar #fileNameRow.filechip{ margin-bottom: 12px; }
+
+
+/* Hover popover */
+.popover{
+  position:absolute; z-index:50; min-width:360px; max-width:520px;
+  background:var(--panel); border:1px solid var(--border);
+  border-radius:10px; box-shadow:var(--shadow); padding:10px 10px
+}
+.list{ max-height:220px; overflow:auto; margin:4px 0 0; padding:0 }
+.list a{
+  display:block; padding:6px 8px; color:var(--link); text-decoration:none;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis
+}
+.list a:hover{ text-decoration:underline }
+html[data-theme="dark"] #blockedList a{ color:#e6f8f2; text-decoration:none }
+
+/* Back to top */
+#backTop{
+  position:fixed; right:16px; bottom:16px;
+  padding:8px 12px; border-radius:999px;
+  border:1px solid var(--border);
+  background:var(--panel); color:var(--text);
+  box-shadow:0 2px 8px rgb(0 0 0 / 12%);
+  cursor:pointer; opacity:0; pointer-events:none; transition:opacity .15s ease;
+}
+#backTop.show{ opacity:1; pointer-events:auto }
+
+/* Output panel + blocked list */
+#outputPanel{ margin-top:14px; margin-bottom:14px }         /* bottom spacing added */
+#outputPanel .two{ display:grid; grid-template-columns:2fr 1fr; gap:12px }
+#outputTopRow{
+  display:grid;
+  grid-template-columns:minmax(0,2fr) minmax(260px,1fr);
+  gap:12px; align-items:start;
+}
+#outputTopRow > div:last-child{ padding-top:24px }
+#outputTopRow label{ display:block; margin-bottom:6px }
+#outputPanel textarea#csvOut{ width:100%; min-height:180px }
+
+/* Your custom tweak */
+#outputTopRow > div:nth-child(2){ margin:7px 22px }
+
+/* Give more space before blocked articles dropdown */
+#blockedDetails{ margin-top:18px }                          /* increased */
+#blockedList .row{
+  display:grid; grid-template-columns:110px 1fr; gap:8px;
+  align-items:start; margin:4px 0;
+}
+#blockedList .row .pill.small{ justify-self:start; text-align:center }
+#blockedList .row a{ display:block; word-break:break-word; overflow-wrap:anywhere; line-height:1.25 }
+#blockedList .pill.small{ min-width:84px; text-align:center }
+
+/* Footer uses same width and side padding as header/content */
+.footer{ border-top:1px solid var(--border); }
+.footer .bar{
+  max-width:var(--wrap);
+  margin:0 auto;
+  padding:12px 16px;
+  display:flex; justify-content:space-between; align-items:center;
+  color:var(--muted); font-size:12px;
+}
+.footer .link{ color:var(--link); text-decoration:none; }
+.footer .link:hover{ text-decoration:underline; }
+
+/* Right column: remove the extra top padding just under "3) Results" */
+.panel.results h3 + .content{ padding-top: 0 }
+
+/* Keep sticky bars aligned in the right column */
+.panel.results .section-header.sticky{ top: var(--bar-h) }
+#emptyState.empty-inline{
+  margin:8px 0 0;
+  padding:10px;
+}
+/* Left menu: scrollable, no visible scrollbar */
+.panel.sidebar{
+    position: sticky;
+  top: calc(var(--bar-h) + 10px);
+  max-height: calc(100vh - var(--bar-h) - 10px);
+  overflow: auto;
+  overflow-x: hidden;
+  align-self: start;
+  -ms-overflow-style: none;   /* IE/Edge legacy */
+  scrollbar-width: none;      /* Firefox */
+  scrollbar-gutter: auto;     /* override any global "stable" */
+}
+
+.panel.sidebar::-webkit-scrollbar{
+  width: 0;
+  height: 0;
+}
+
+.container .grid > .panel.sidebar,
+.panel.sidebar .content,
+.panel.sidebar .stack > div,
+.panel.sidebar .dropzone,
+.panel.sidebar .filechip { min-width:0 }
 
 </style>
 </head>
 <body>
-<header>
-  <div class="bar">
-    <div class="title">UnsafeTermScanner</div>
-    <div class="spacer"></div>
-    <label class="toggle">
-      <input id="themeToggle" type="checkbox" />
-      <span class="hint">Light mode</span>
-    </label>
-  </div>
-</header>
-
+    <header class="appbar">
+      <div class="bar">
+        <div class="title">UnsafeTermScanner</div>
+        <div class="spacer"></div>
+        <label class="toggle">
+          <input id="themeToggle" type="checkbox" />
+          <span class="hint">Light mode</span>
+        </label>
+      </div>
+    </header>
+<main class="page">
 <div class="container">
     <div class="grid">
         <!-- LEFT: sticky sidebar -->
@@ -162,12 +373,13 @@
               <div>
                 <label>Upload CSV/XLSX</label>
                 <div id="dropZone" class="dropzone" tabindex="0" role="button" aria-label="Browse or drop a file">
-                  <input id="file" class="dz-input" type="file" accept=".csv,.xlsx,.xls">
-                  <div class="dz-inner">
-                    <div class="dz-title"><b>Browse or drop CSV/XLSX here</b></div>
-                    <button id="browseBtn" class="btn">Browse</button>
+                    <input id="file" class="dz-input" type="file" accept=".csv,.xlsx,.xls">
+                    <div class="dz-inner">
+                      <div class="dz-title"><b>Browse or drop CSV/XLSX here</b></div>
+                      <button id="browseBtn" class="btn">Browse</button>
+                    </div>
                   </div>
-                </div>
+                  <div id="fileNameRow" class="filechip" style="display:none"></div>                           
                 <div class="hint small">No upload. Processing happens in your browser.</div>
               </div>
       
@@ -179,7 +391,6 @@
       
             <div class="toolbar">
               <button id="scanBtn" class="btn primary">Scan</button>
-              <button id="clearBtn" class="btn">Clear</button>
               <div class="pill"><span class="muted small">Rows:</span> <b id="rowCount">0</b></div>
               <div class="pill"><span class="muted small">Domains:</span> <b id="domainCount">0</b></div>
               <div class="pill"><span class="muted small">Terms:</span> <b id="tokenCount">0</b></div>
@@ -189,20 +400,29 @@
           <h3>2) Settings</h3>
           <div class="content">
             <div class="two" style="margin-top:0">
-              <div>
-                <label>Minimum URLs per term</label>
-                <input id="minUrls" type="number" min="1" value="2" />
-                <div class="hint small">Set to 1 to see all.</div>
-              </div>
-              <div>
-                <label>Sort “Available” by</label>
-                <select id="sortAvailable">
-                  <option value="alpha">Alphabetical</option>
-                  <option value="freq">Frequency</option>
-                  <option value="impact" selected>Impact</option>
-                </select>
-              </div>
-            </div>
+                <div>
+                  <label>Minimum URLs per term</label>
+                  <input id="minUrls" type="number" min="1" value="2" />
+                  <div class="hint small">Set to 1 to see all.</div>
+                </div>
+                <div>
+                  <label>Sort “Included” by</label>
+                  <select id="sortIncluded">
+                    <option value="impact">Impact</option>
+                    <option value="alpha" selected>Alphabetical</option>
+                    <option value="freq">Frequency</option>
+                  </select>
+              
+                  <div style="height:10px"></div>
+              
+                  <label>Sort “Available” by</label>
+                  <select id="sortAvailable">
+                    <option value="alpha">Alphabetical</option>
+                    <option value="freq">Frequency</option>
+                    <option value="impact" selected>Impact</option>
+                  </select>
+                </div>
+              </div>              
       
             <div class="two" style="margin-top:10px">
               <div>
@@ -226,27 +446,30 @@
         </div>
       
         <!-- RIGHT: results column -->
-        <div class="panel">
+        <div class="panel results" id="resultsPanel">
           <h3>3) Results</h3>
           <div class="content">
-            <div id="emptyState" class="panel" style="padding:12px">
-                <div class="content">
-                  <div class="hint">Upload a CSV/XLSX or paste URLs to start building your custom term list.</div>
+            <p id="emptyState" class="hint empty-inline">
+                Upload a CSV/XLSX or paste URLs to start building your custom term list.
+              </p>          
+              <div class="sticky-scope">
+                <div class="section-header sticky hdr-included">
+                  <b>Included (<span id="includedCount">0</span>)</b>
+                  <span id="includedSortLabel" class="hint small">Alphabetical ↓</span>
+                  <div class="row"></div>
                 </div>
+                <div id="included" class="chips" aria-live="polite"></div>
               </div>
-            <div class="section-header">
-              <b>Included (<span id="includedCount">0</span>)</b>
-              <div class="hint small">Auto from lexicon. Your additions append to the end.</div>
-            </div>
-            <div id="included" class="chips" aria-live="polite"></div>
-      
-            <div class="section-header" style="margin-top:12px">
+              
+              <div class="section-header sticky hdr-available">
                 <b>Available (<span id="availableCount">0</span>)</b>
-                <div class="row" style="gap:8px">
+                <span id="availFilters" class="hint small"></span>
+                <span id="availSort" class="hint small"></span>
+                <div class="row">
                   <button id="showAllAvail" class="btn ghost small">Show all</button>
-                  <span id="availFilters" class="hint small"></span>
                 </div>
               </div>              
+                            
             <div id="available" class="chips" aria-live="polite"></div>
       
             <div id="outputPanel" class="panel" style="margin-top:14px;display:none">
@@ -258,26 +481,26 @@
                       <textarea id="csvOut" class="mono"></textarea>
                     </div>
                     <div>
-                      <div class="kv">
-                        <div class="muted">Unique URLs blocked:</div><div id="blockedUrlCount">0</div>
-                        <div class="muted">Total impact blocked:</div><div id="blockedImpact">0</div>
-                      </div>
-                    </div>
+                        <label>Metrics</label>
+                        <div class="kv" style="margin-top:6px">
+                          <div class="muted">Unique URLs blocked:</div><div id="blockedUrlCount">0</div>
+                          <div class="muted" id="blockedImpactLabel">Total impact blocked:</div><div id="blockedImpact">0</div>
+                        </div>
+                      </div>              
                   </div>
               
-                  <!-- full-width list below -->
                   <details id="blockedDetails" style="margin-top:10px">
                     <summary>Show blocked articles</summary>
                     <div id="blockedList"></div>
                   </details>
                 </div>
-              </div>              
-      
+            </div>                         
             <div id="hoverBox" class="popover" style="display:none"></div>
           </div>
         </div>
       </div>      
 </div>
+</main>
 
 <script>
 /* ---------- Theme ---------- */
@@ -318,13 +541,13 @@ async function ensureXLSX(){
 function toggleEmptyState(){
   const hasData = state.rows.length>0;
   const empty = document.getElementById('emptyState');
-  if (!empty) return;
-  empty.style.display = hasData ? 'none' : 'block';
-  // hide results sections when empty
-  document.querySelectorAll('#included, #available, #outputPanel, .section-header')
-    .forEach(n=>{ if (n.id!=='emptyState') n.style.display = hasData ? '' : 'none'; });
-}
+  if (empty) empty.style.display = hasData ? 'none' : 'block';
 
+  // hide lists and output when empty, keep sticky headers visible
+  document.getElementById('included').style.display  = hasData ? '' : 'none';
+  document.getElementById('available').style.display = hasData ? '' : 'none';
+  document.getElementById('outputPanel').style.display = hasData ? document.getElementById('outputPanel').style.display : 'none';
+}
 
 
 /* ---------- Lexicon load (with fallback) ---------- */
@@ -380,6 +603,7 @@ const state = {
   availableOrder: [],       // display order (changes via sort and appends)
   autoIncluded: new Set(),  // from UNSAFE lexicon
   urlRegex: /https?:\/\/[^\s"']+/ig,
+  metricLabel: 'Impact',
   ignoreParams: new Set(["gclid","fbclid","mc_cid","mc_eid","utm_source","utm_medium","utm_campaign","utm_term","utm_content","utm_id","source","ref"])
 };
 
@@ -389,7 +613,6 @@ const fileInput = el('#file');
 const pasteInput = el('#paste');
 
 const scanBtn = el('#scanBtn');
-const clearBtn = el('#clearBtn');
 const rowCount = el('#rowCount');
 const domainCount = el('#domainCount');
 const tokenCount = el('#tokenCount');
@@ -416,6 +639,8 @@ const addCustom = el('#addCustom');
 const dropZone = el('#dropZone');
 const browseBtn = el('#browseBtn');
 const dzTitle = dropZone ? dropZone.querySelector('.dz-title') : null;
+const sortIncluded = el('#sortIncluded');
+const includedSortLabel = el('#includedSortLabel');
 
 
 function rebuildAvailable(){
@@ -437,8 +662,35 @@ function updateAvailFilters(){
   const u = Number(minUrls.value)||1;
   const parts = [];
   if (u>1) parts.push(`≥${u} URLs`);
-  availFilters.textContent = parts.join(' · ');
+  const sortMap = { alpha:'Alphabetical', freq:'Frequency', impact:'Impact' };
+  const s = sortMap[sortAvailable.value] || 'Impact';
+  parts.push(`${s} ↓`);
+  availFilters.textContent = parts.join(', ');
+  const availSort = document.getElementById('availSort');
+  if (availSort) availSort.textContent = ''; // keep spacing predictable (or remove this span)
 }
+
+function toNumber(v){
+  if (typeof v === 'number') return v;
+  const s = String(v ?? '').trim();
+  if (!s) return NaN;
+  const cleaned = s.replace(/,/g,'').replace(/^\((.*)\)$/,'-$1'); // "(123)"→-123
+  const n = Number(cleaned);
+  return Number.isFinite(n) ? n : NaN;
+}
+function getHeaderLabel(headers, i){
+  const h = headers?.[i];
+  const name = String(h ?? '').trim();
+  return name || null;                 // null → we’ll fall back to "Impact"
+}
+
+function applyMetricLabel(){
+  const lab = state.metricLabel || 'Impact';
+  const el = document.getElementById('blockedImpactLabel');
+  if (el) el.textContent = `Total ${lab} blocked:`;
+}
+
+
 
 /* ---------- Utilities ---------- */
 function asciiFold(s){
@@ -488,6 +740,68 @@ function urlPath(u){
     return (x.pathname || '/') + (x.search || '') + (x.hash || '');
   }catch{ return u; }
 }
+
+function canonicalUrl(u){
+  try{
+    const x = new URL(u);
+    x.search = ''; x.hash = '';
+    return x.toString().replace(/\/+$/,'');
+  }catch{ return u; }
+}
+
+function updateOutputMetrics(){
+  const list = state.includedOrder.slice();
+  const metricName = state.metricLabel || 'Impact';
+
+  // empty state
+  if (!state.rows.length || !list.length){
+    const lbl = document.getElementById('blockedImpactLabel');
+    if (lbl) lbl.textContent = `Total ${metricName} blocked:`;
+    blockedUrlCount.textContent = '0';
+    blockedImpact.textContent = '0';
+    blockedList.innerHTML = '<div class="muted small">None</div>';
+    return;
+  }
+
+  const urlImpact = new Map(); // canonical URL -> sum(metric)
+  let total = 0;
+
+  for (let i=0; i<state.rows.length; i++){
+    const row = state.rows[i];
+    if (!row) continue;
+
+    // does any included term hit this row? compare via tableIdx
+    let hit = false;
+    for (const tok of list){
+      const rec = state.tokens.get(tok);
+      if (rec && rec.rows && rec.rows.has(row.tableIdx)){ hit = true; break; }
+    }
+    if (!hit) continue;
+
+    const val = Number(row.impact||0);
+    total += val;
+
+    const u = canonicalUrl(row.urls[0]);
+    urlImpact.set(u, (urlImpact.get(u)||0) + val);
+  }
+
+  // metrics
+  blockedUrlCount.textContent = String(urlImpact.size);
+  blockedImpact.textContent   = String(Math.round(total));
+  const lbl = document.getElementById('blockedImpactLabel');
+  if (lbl) lbl.textContent = `Total ${metricName} blocked:`;
+
+  // list sorted by metric
+  const sorted = Array.from(urlImpact.entries()).sort((a,b)=>b[1]-a[1]);
+  blockedList.innerHTML = sorted.map(([u,val])=>`
+    <div class="row">
+      <span class="pill small">${metricName}&nbsp;<b>${Math.round(val)||0}</b></span>
+      <a href="${u}" target="_blank" rel="noopener">${u}</a>
+    </div>
+  `).join('') || '<div class="muted small">None</div>';
+}
+
+
 
 /* ---------- Tokenization ---------- */
 function extractUrlsFromRow(rowObj){
@@ -554,26 +868,6 @@ function normalizeTokensFromUrl(u, opts){
   }
   return [...new Set(out)];
 }
-    async function ensureXLSX(){
-    if (window.XLSX) return true;
-    const candidates = [
-        './lib/xlsx.full.min.js', // local copy if you add it
-        'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.20.2/xlsx.full.min.js',
-        'https://unpkg.com/xlsx@0.20.2/dist/xlsx.full.min.js'
-    ];
-    for (const url of candidates){
-        try{
-        await new Promise((res,rej)=>{
-            const s=document.createElement('script');
-            s.src=url; s.async=true;
-            s.onload=res; s.onerror=()=>rej(new Error('load fail '+url));
-            document.head.appendChild(s);
-        });
-        if (window.XLSX) return true;
-        }catch{}
-    }
-    return false; // XLSX unavailable → CSV-only mode
-    }
 
 /* ---------- Parsing pipeline ---------- */
     async function parseInput(){
@@ -610,35 +904,47 @@ function normalizeTokensFromUrl(u, opts){
 
     // file
     if (fileInput.files && fileInput.files[0]){
-        const f = fileInput.files[0];
-        const name = f.name.toLowerCase();
-        if (name.endsWith('.xlsx') || name.endsWith('.xls')){
+    const f = fileInput.files[0];
+    const name = f.name.toLowerCase();
+
+    if (name.endsWith('.xlsx') || name.endsWith('.xls')){
         const ok = await ensureXLSX();
         if (!ok){ alert('XLSX parsing unavailable. Add ./lib/xlsx.full.min.js or upload CSV.'); updateStats(); render(); return; }
         const buf = await f.arrayBuffer();
         const wb = XLSX.read(buf, {type:'array'});
-        wb.SheetNames.forEach(name=>{
-            const sh = wb.Sheets[name];
-            const json = XLSX.utils.sheet_to_json(sh, {header:1, raw:true, defval:''});
-            if (!json.length) return;
-            const h = json[0].map(x=>String(x??''));
-            const rows = json.slice(1);
-            if (!headers.length) headers = h;
-            for (const r of rows){ while (r.length<headers.length) r.push(''); }
-            tableRows.push(...rows);
+
+        let canonHeader = null;
+        wb.SheetNames.forEach(sname=>{
+        const sh = wb.Sheets[sname];
+        const A = XLSX.utils.sheet_to_json(sh, {header:1, raw:true, defval:''});
+        if (!A.length) return;
+        const h = A[0].map(x=>String(x??'').trim());
+        const rows = A.slice(1);
+
+        if (!canonHeader){                    // pick the first non-empty header as canonical
+            canonHeader = h.slice();
+            headers = h.slice();
+        }
+
+        // only accept sheets whose header exactly matches the canonical header
+        if (h.length !== canonHeader.length || h.join('\u0001') !== canonHeader.join('\u0001')) return;
+
+        for (const r of rows){ while (r.length<headers.length) r.push(''); }
+        tableRows.push(...rows);
         });
-        }else{
+
+    } else {
         const text = await f.text();
         const arr = parseCSV(text);
         if (arr.length){
-            const h = arr[0].map(x=>String(x??''));
-            const rows = arr.slice(1);
-            if (!headers.length) headers = h;
-            for (const r of rows){ while (r.length<headers.length) r.push(''); }
-            tableRows.push(...rows);
-        }
+        headers = arr[0].map(x=>String(x??'').trim());
+        const rows = arr.slice(1);
+        for (const r of rows){ while (r.length<headers.length) r.push(''); }
+        tableRows.push(...rows);
         }
     }
+    }
+
 
     // paste
     const pasted = pasteInput.value.trim();
@@ -663,46 +969,58 @@ function normalizeTokensFromUrl(u, opts){
 
     if (!headers.length && !tableRows.length){ updateStats(); return; }
 
+    const headerLabels = headers.map(h => String(h ?? '').trim());
+
     // ---- Impact column detection (only numeric-eligible columns) ----
+        function toNumber(v){
+    if (typeof v === 'number') return v;
+    const s = String(v ?? '').trim();
+    if (!s) return NaN;
+    const cleaned = s.replace(/,/g,'').replace(/^\((.*)\)$/,'-$1'); // "(123)" -> -123
+    const n = Number(cleaned);
+    return Number.isFinite(n) ? n : NaN;
+    }
+
     function analyzeNumericColumns(headers, rows){
-    const prefer = /(impressions|failed|blocked|views|view|qty|quantity|count|volume|reach|exposure)/i;
+    const prefer = /(impressions|failed|blocked|views|view|qty|quantity|count|volume|reach|exposure|clicks|spent|spend)/i;
     const out=[];
-    headers.forEach((h,i)=>{
+    headers.forEach((_, i)=>{
+        const label = getHeaderLabel(headers, i) || `Column ${i+1}`;
         let numeric=0, checked=0;
         for (let k=0;k<Math.min(300, rows.length);k++){
-        const v = rows[k][i];
-        if (v===''||v==null){ checked++; continue; }
-        if (typeof v==='number'){ numeric++; checked++; continue; }
-        const n = Number(String(v).replace(/,/g,''));
-        if (!Number.isNaN(n)){ numeric++; checked++; continue; }
+        const n = toNumber(rows[k][i]);
+        if (!Number.isNaN(n)) numeric++;
         checked++;
         }
         if (numeric>0){
         const frac = numeric/Math.max(1,checked);
-        out.push({i, h, frac, score:(prefer.test(h)?2:1)+frac});
+        out.push({ i, label, frac, score:(prefer.test(label)?2:1)+frac });
         }
     });
     out.sort((a,b)=>b.score-a.score);
     return out;
     }
+
+
+
     let impactIdx = null;
-    const numericEligible = analyzeNumericColumns(headers, tableRows);
+    const numericEligible = analyzeNumericColumns(headerLabels, tableRows);
     if (numericEligible.length){
     impactIdx = numericEligible[0].i;
-    if (numericEligible.length === 1){
-        impactCol.innerHTML = `<option value="${numericEligible[0].i}">${numericEligible[0].h}</option>`;
-        impactCol.value = String(numericEligible[0].i);
-        impactCol.disabled = true;
-    }else{
-        const opts = [`<option value="">Auto: ${numericEligible[0].h}</option>`]
-        .concat(numericEligible.map(c=>`<option value="${c.i}">${c.h}</option>`));
-        impactCol.innerHTML = opts.join('');
-        impactCol.disabled = false;
-    }
-    }else{
-    impactCol.innerHTML = `<option value="">Auto-detect…</option>`;
+    const top = numericEligible[0];
+    const opts = [`<option value="">Auto (${top.label})</option>`]
+        .concat(numericEligible.map(c=>`<option value="${c.i}">${c.label}</option>`));
+    impactCol.innerHTML = opts.join('');
+    impactCol.disabled = false;
+    impactCol.value = '';                                 // Auto = best column
+    state.metricLabel = getHeaderLabel(headerLabels, impactIdx) || 'Impact';
+    } else {
+    impactCol.innerHTML = `<option value="">Auto (none)</option>`;
     impactCol.disabled = true;
+    impactIdx = null;
+    state.metricLabel = 'Impact';
     }
+
 
     // detect URL/keyword columns
     const urlCols = new Set();
@@ -753,41 +1071,51 @@ function normalizeTokensFromUrl(u, opts){
     let domain = '';
     try{ domain = new URL(primary).hostname.replace(/^www\./,''); }catch{}
     let imp = 0;
-    const chosenImpactIdx = impactCol.value!=='' ? Number(impactCol.value) : impactIdx;
-    if (chosenImpactIdx!=null){
-        const v = arr[chosenImpactIdx];
-        const num = typeof v==='number' ? v : Number(String(v).replace(/,/g,''));
-        if (!Number.isNaN(num)) imp = num;
+    const chosenIdx = (impactCol.value!=='' ? Number(impactCol.value) : impactIdx);
+    if (chosenIdx != null){
+    const num = toNumber(arr[chosenIdx]);
+    if (!Number.isNaN(num)) imp = num;
+    }
+    // if user chose a specific column, update the label immediately
+    if (impactCol.value !== ''){
+    const chosen = Number(impactCol.value);
+    state.metricLabel = getHeaderLabel(headerLabels, chosen) || 'Impact';
     }
 
+
+
     /* ---------- tokens ---------- */
-    // Count unique URLs per token. Keywords affect row presence but not URL count.
+    // Count unique URLs per term. Keywords affect row presence but not URL count.
     const perRowTokenSet = new Set(); // tokens present anywhere in this row
 
-    // from URLs → add unique URL per token
+    // from URLs → add unique canonical URL per token
     for (const u of urls){
-        const toksArr = normalizeTokensFromUrl(u, opts);
-        const uniq = new Set(toksArr);
-        for (const t of uniq){
+    const can = canonicalUrl(u);
+    const toksArr = normalizeTokensFromUrl(u, opts);
+    const uniq = new Set(toksArr);
+    for (const t of uniq){
         if (!state.tokens.has(t)){
-            state.tokens.set(t, {freq:0, impact:0, domains:new Set(), samples:[], rows:new Set(), urls:new Set()});
+        state.tokens.set(t, {freq:0, impact:0, domains:new Set(), samples:[], rows:new Set(), urls:new Set()});
         }
         const rec = state.tokens.get(t);
-        rec.urls.add(u);                 // used for “URLs” count
-        perRowTokenSet.add(t);           // used for row presence
-        }
+        rec.urls.add(can);              // canonical for counting
+        perRowTokenSet.add(t);          // row presence
+    }
     }
 
     // from keyword-like columns → row presence only
     for (const c of keyCols){
-        const v = arr[c];
-        if (typeof v === 'string' && v.trim()){
+    const v = arr[c];
+    if (typeof v === 'string' && v.trim()){
         v.split(/[,;\|]+/).forEach(piece=>{
-            const toks2 = normalizeTokensFromUrl(String(piece), {scanHost:false, includeQuery:false});
-            for (const t of new Set(toks2)) perRowTokenSet.add(t);
+        const toks2 = normalizeTokensFromUrl(String(piece), {scanHost:false, includeQuery:false});
+        for (const t of new Set(toks2)) perRowTokenSet.add(t);
         });
-        }
     }
+    }
+
+/* ---------- update token map ---------- */
+
 
     /* ---------- update token map ---------- */
     for (const tok of perRowTokenSet){
@@ -802,10 +1130,11 @@ function normalizeTokensFromUrl(u, opts){
         rec.rows.add(idx);
     }
 
-    state.rows.push({urls, domain, impact:imp});
+    state.rows.push({urls, domain, impact: imp, tableIdx: idx});
     });
 
     // finalize included and available
+    // auto-include from lexicon
     // auto-include from lexicon
     for (const [tok] of state.tokens){
     if (LEX.UNSAFE.has(tok)){
@@ -813,13 +1142,17 @@ function normalizeTokensFromUrl(u, opts){
         state.autoIncluded.add(tok);
     }
     }
-    state.includedOrder = Array.from(state.includedSet).sort((a,b)=>a.localeCompare(b));
-
-    // build Available using URL threshold
+    // sort Included by current setting, then build Available
+    sortAndRenderIncluded();
     rebuildAvailable();
     updateStats();
+    applyMetricLabel();
     toggleEmptyState();
-
+    outputPanel.style.display = 'block';
+    updateOutputMetrics();
+    createBtn.disabled = state.rows.length === 0;
+    createBtn.title = state.rows.length ? '' : 'Upload data first';
+    recomputeBlocked();
     }
 
 function sortAndRenderAvailable(){
@@ -834,6 +1167,33 @@ function sortAndRenderAvailable(){
   render();
 }
 
+function sortAndRenderIncluded(){
+  const criterion = sortIncluded.value; // 'alpha' | 'impact' | 'freq'
+  const list = Array.from(state.includedSet);
+  list.sort((a,b)=>{
+    if (criterion==='alpha') return a.localeCompare(b);
+    const ra = state.tokens.get(a) || {};
+    const rb = state.tokens.get(b) || {};
+    const aImp = ra.impact|0, bImp = rb.impact|0;
+    const aURLs = ra.urls ? ra.urls.size : 0;
+    const bURLs = rb.urls ? rb.urls.size : 0;
+    if (criterion==='impact') return (bImp - aImp) || a.localeCompare(b);
+    if (criterion==='freq')   return (bURLs - aURLs) || a.localeCompare(b);
+    return a.localeCompare(b);
+  });
+  state.includedOrder = list;
+  render();
+  updateIncludedSortLabel();
+}
+
+sortIncluded.addEventListener('change', sortAndRenderIncluded);
+
+function updateIncludedSortLabel(){
+  const map = { alpha:'Alphabetical', impact:'Impact', freq:'Frequency' };
+  if (includedSortLabel) includedSortLabel.textContent = `${map[sortIncluded.value]||'Alphabetical'} ↓`;
+}
+
+
 /* ---------- Render ---------- */
 function updateStats(){
   rowCount.textContent = String(state.rows.length);
@@ -844,18 +1204,18 @@ function updateStats(){
 function chipHTML(tok, rec, kind){
   const auto = state.autoIncluded.has(tok);
   const urls = rec?.urls ? rec.urls.size : 0;
-  const imps = rec?.impact ? (rec.impact|0) : 0;
+  const valLabel = state.metricLabel || 'Impact';
+  const val = rec?.impact ? (rec.impact|0) : 0;
   const cls = ['chip', kind==='included' && auto ? 'auto':'', kind==='available' && rec && rec._recent ? 'recent':''].filter(Boolean).join(' ');
   const btn = kind==='included' ? '×' : '+';
   const title = kind==='included' ? 'Remove' : 'Add';
   return `<span class="${cls}" data-token="${tok}" data-kind="${kind}">
     <b>${tok}</b>
-    <small class="muted" title="URLs">URLs&nbsp;${urls}</small>
-    <small class="muted" title="Impressions">Imps.&nbsp;${imps}</small>
+    <small class="muted" title="URLs">URLs: ${urls}</small>
+    <small class="muted" title="${valLabel}">${valLabel}: ${val}</small>
     <button class="btn" aria-label="${title}" data-act="${kind==='included'?'remove':'add'}">${btn}</button>
   </span>`;
 }
-
 
 
 function render(){
@@ -871,30 +1231,18 @@ function render(){
   }
   availableBox.innerHTML = nodes.join('');
   availableCount.textContent = String(state.availableOrder.length);
+  updateOutputMetrics();
 }
 
 /* ---------- Interactions ---------- */
 scanBtn.addEventListener('click', parseInput);
-clearBtn.addEventListener('click', ()=>{
-  fileInput.value = '';
-  pasteInput.value = '';
-  updateFileUI && updateFileUI();
-
-  state.rows=[]; state.tokens.clear();
-  state.includedSet.clear(); state.includedOrder.length=0;
-  state.availableSet.clear(); state.availableOrder.length=0;
-  state.autoIncluded.clear();
-
-  rowCount.textContent='0'; domainCount.textContent='0'; tokenCount.textContent='0';
-  included.innerHTML=''; available.innerHTML='';
-  outputPanel.style.display='none';
-  toggleEmptyState();
-});
 
 minUrls.addEventListener('change', rebuildAvailable);
-sortAvailable.addEventListener('change', sortAndRenderAvailable);
+sortAvailable.addEventListener('change', ()=>{
+  sortAndRenderAvailable();
+  updateAvailFilters();
+});
 
-sortAvailable.addEventListener('change', sortAndRenderAvailable);
 impactCol.addEventListener('change', parseInput);
 // Show all / Collapse without touching Included
 let prevMinUrls = 2;
@@ -913,61 +1261,60 @@ showAllAvail.addEventListener('click', ()=>{
   rebuildAvailable();
 });
 
-
-
-
 addCustom.addEventListener('click', ()=>{
   const v = customKey.value.trim().toLowerCase();
   if (!v) return;
   const base = v.replace(/[^a-z\-]/g,'');
   if (!base) return;
+
   if (!state.includedSet.has(base)){
     state.includedSet.add(base);
     state.includedOrder.push(base);
-    // remove from available if present
     if (state.availableSet.delete(base)){
       const i = state.availableOrder.indexOf(base);
       if (i>=0) state.availableOrder.splice(i,1);
     }
     render();
+    recomputeBlocked();
   }
   customKey.value = '';
 });
+
 
 includedBox.addEventListener('click', (e)=>{
   const btn = e.target.closest('button[data-act="remove"]');
   if (!btn) return;
   const chip = btn.closest('.chip');
   const tok = chip.getAttribute('data-token');
-  // remove from included
   if (state.includedSet.delete(tok)){
     const i = state.includedOrder.indexOf(tok);
     if (i>=0) state.includedOrder.splice(i,1);
   }
-  // add to available at end
   state.availableSet.add(tok);
-  const rec = state.tokens.get(tok); rec._recent = true;
+  const rec = state.tokens.get(tok); if (rec) rec._recent = true;
   state.availableOrder.push(tok);
+  sortAndRenderIncluded();
   render();
+  recomputeBlocked();
 });
 
 availableBox.addEventListener('click', (e)=>{
   const btn = e.target.closest('button[data-act="add"]');
   if (!btn) return;
-  const chip = btn.closest('.chip');
+  const chip = e.target.closest('.chip');
   const tok = chip.getAttribute('data-token');
-  // add to included at end
   if (!state.includedSet.has(tok)){
     state.includedSet.add(tok);
-    state.includedOrder.push(tok);
   }
-  // remove from available
   if (state.availableSet.delete(tok)){
     const i = state.availableOrder.indexOf(tok);
     if (i>=0) state.availableOrder.splice(i,1);
   }
+  sortAndRenderIncluded();
   render();
+  recomputeBlocked();
 });
+
 
 /* ---------- Hover details ---------- */
 let stickyToken = null;
@@ -983,33 +1330,40 @@ function showHover(token, anchorEl, makeSticky=false){
   const rec = state.tokens.get(token);
   if (!rec) return;
 
-  const urlsCount = rec.urls ? rec.urls.size : 0;
-  const imps = rec.impact|0;
-  const paths = (rec.samples || []).map(u=>({ href:u, text:urlPath(u) }));
+  const urlsSet   = rec.urls || new Set();
+  const urlsCount = urlsSet.size;
+  const metric    = state.metricLabel || 'Impact';
+  const metricVal = rec.impact | 0;
+
+  const paths = Array.from(urlsSet).slice(0,10)  // cap at 10
+    .map(u=>({ href:u, text:urlPath(u) }));
 
   hoverBox.innerHTML = `
     <div class="row" style="margin-bottom:6px">
       <b>${token}</b>
-      <span class="pill small">URLs&nbsp;<b>${urlsCount}</b></span>
-      <span class="pill small">Imps.&nbsp;<b>${imps}</b></span>
+      <span class="pill small">URLs: <b>${urlsCount}</b></span>
+      <span class="pill small">${metric}: <b>${metricVal}</b></span>
     </div>
-    <div class="small muted">Sample paths</div>
+    <div class="small muted">Sample Paths (Max 10)</div>
     <div class="list">
       ${paths.map(p=>`<a href="${p.href}" target="_blank" rel="noopener">${p.text || p.href}</a>`).join('')}
     </div>
   `;
 
-  positionHover(anchorEl);
+  const rect = anchorEl.getBoundingClientRect();
+  hoverBox.style.left = Math.min(window.innerWidth-560, rect.left) + 'px';
+  hoverBox.style.top  = (window.scrollY + rect.bottom + 6) + 'px';
   hoverBox.style.display = 'block';
 
   if (makeSticky){
     stickyToken = token;
     stickyAnchor = anchorEl;
     hoverBox.setAttribute('data-sticky','1');
-  }else{
+  } else {
     hoverBox.removeAttribute('data-sticky');
   }
 }
+
 
 function hideHover(){
   if (stickyToken) return;
@@ -1060,19 +1414,18 @@ document.addEventListener('click', (e)=>{
 window.addEventListener('scroll', ()=>{ if (stickyToken && stickyAnchor) positionHover(stickyAnchor); else hideHover(); });
 window.addEventListener('resize', ()=>{ if (stickyToken && stickyAnchor) positionHover(stickyAnchor); else hideHover(); });
 
-/* ---------- Create list + blocked articles ---------- */
-createBtn.addEventListener('click', ()=>{
+/* ---------- Recompute blocked metrics (Unique URLs + Total metric) ---------- */
+function recomputeBlocked(){
   const list = state.includedOrder.slice();
-  csvOut.value = list.join(',');
+  const urlImpact = new Map(); // canonical URL -> summed metric
+  let total = 0;
 
-  // Tally per-URL impact
-  const urlImpact = new Map(); // url -> summed impact
-  let totalImpact = 0;
-  const blockedRows = new Set();
+  const metricName =
+    state.metricLabel ||
+    (impactCol && impactCol.value !== '' ? (impactCol.options[impactCol.selectedIndex]?.text?.trim() || 'Impact') : 'Impact');
 
   for (let i=0;i<state.rows.length;i++){
-    const row = state.rows[i];
-    // does any included term appear in this row?
+    // any included term in this row?
     let hits = false;
     for (const tok of list){
       const rec = state.tokens.get(tok);
@@ -1080,76 +1433,128 @@ createBtn.addEventListener('click', ()=>{
     }
     if (!hits) continue;
 
-    blockedRows.add(i);
-    const imp = Number(row.impact||0);
-    totalImpact += imp;
+    const row = state.rows[i];
+    const val = Number(row.impact||0);
+    total += val;
 
-    // use primary URL (first in row)
-    const u = row.urls[0];
-    urlImpact.set(u, (urlImpact.get(u)||0) + imp);
+    const u = canonicalUrl(row.urls[0]);      // dedupe by canonical URL
+    urlImpact.set(u, (urlImpact.get(u)||0) + val);
   }
 
-  // Update metrics
-  blockedUrlCount.textContent = String(urlImpact.size);
-  blockedImpact.textContent = String(Math.round(totalImpact));
+  // Metrics
+  blockedUrlCount.textContent = String(urlImpact.size);            // Unique URLs blocked
+  blockedImpact.textContent   = String(Math.round(total));         // Total metric
+  const lbl = document.getElementById('blockedImpactLabel');
+  if (lbl) lbl.textContent = `Total ${metricName} blocked:`;       // dynamic label
 
-  // Render blocked list sorted by impact desc
+  // Sorted list by metric
   const sorted = Array.from(urlImpact.entries()).sort((a,b)=>b[1]-a[1]);
-  blockedList.innerHTML = sorted.map(([u,imp])=>{
-    const impTxt = isFinite(imp) ? Math.round(imp) : 0;
+  blockedList.innerHTML = sorted.map(([u,val])=>{
+    const v = isFinite(val) ? Math.round(val) : 0;
     return `<div class="row">
-      <span class="pill small">Imps.&nbsp;<b>${impTxt}</b></span>
+      <span class="pill small">${metricName}&nbsp;<b>${v}</b></span>
       <a href="${u}" target="_blank" rel="noopener">${u}</a>
     </div>`;
   }).join('') || '<div class="muted small">None</div>';
+}
 
-  // Show panel and scroll into view
+
+/* ---------- Copy/Export handler ---------- */
+createBtn.addEventListener('click', ()=>{
+  csvOut.value = state.includedOrder.join(',');
   outputPanel.style.display = 'block';
   outputPanel.scrollIntoView({behavior:'smooth', block:'start'});
 });
 
-
 // Dropzone + file UI
 function updateFileUI(){
+  // ensure the compact row exists
+  let fileRow = document.getElementById('fileNameRow');
+  if (!fileRow){
+    fileRow = document.createElement('div');
+    fileRow.id = 'fileNameRow';
+    fileRow.className = 'filechip';
+    fileRow.style.display = 'none';
+    dropZone.parentElement.insertBefore(fileRow, dropZone.nextSibling);
+  }
+
   const f = fileInput.files && fileInput.files[0];
-  if (!dzTitle) return;
-  if (!f){ dzTitle.innerHTML = '<b>Browse or drop CSV/XLSX here</b>'; return; }
+
+  if (!f){
+    dropZone.style.display = '';                          // show dropzone
+    if (dzTitle) dzTitle.innerHTML = '<b>Browse or drop CSV/XLSX here</b>';
+    fileRow.style.display = 'none';
+    return;
+  }
+
   const size = (f.size/1024/1024).toFixed(2)+' MB';
-  dzTitle.innerHTML = `<b>${f.name}</b> <span class="muted small">(${size})</span>`;
+  dropZone.style.display = 'none';                        // hide dropzone
+  fileRow.innerHTML =
+  `<span class="name">${f.name}</span>
+   <span class="size">(${size})</span>
+   <button class="btn small" id="changeFileBtn">Change</button>`;
+  fileRow.style.display = '';
 }
+
+// browse + click to open
 if (browseBtn) browseBtn.addEventListener('click', (e)=>{ e.stopPropagation(); fileInput.click(); });
 if (dropZone) dropZone.addEventListener('click', ()=> fileInput.click());
 if (fileInput) fileInput.addEventListener('change', updateFileUI);
 
-['dragenter','dragover'].forEach(ev=>{
-  dropZone && dropZone.addEventListener(ev, e=>{
-    e.preventDefault();
-    e.dataTransfer.dropEffect='copy';
-    dropZone.classList.add('dragover');
+// drag & drop (single authoritative handler)
+if (dropZone){
+  ['dragenter','dragover'].forEach(ev=>{
+    dropZone.addEventListener(ev, e=>{
+      e.preventDefault();
+      e.dataTransfer.dropEffect='copy';
+      dropZone.classList.add('dragover');
+    });
   });
-});
-['dragleave','drop'].forEach(ev=>{
-  dropZone && dropZone.addEventListener(ev, e=>{
-    e.preventDefault();
-    dropZone.classList.remove('dragover');
+  ['dragleave','drop'].forEach(ev=>{
+    dropZone.addEventListener(ev, e=>{
+      e.preventDefault();
+      dropZone.classList.remove('dragover');
+    });
   });
-});
-dropZone && dropZone.addEventListener('drop', e=>{
-  const dt = e.dataTransfer;
-  if (!dt) return;
-  const f = [...(dt.files||[])][0];
-  if (f) {
-    // populate the hidden input so change events fire
-    const dT = new DataTransfer();
-    dT.items.add(f);
-    fileInput.files = dT.files;
-    updateFileUI();
-  } else {
+  dropZone.addEventListener('drop', e=>{
+    const dt = e.dataTransfer;
+    if (!dt) return;
+
+    if (dt.files && dt.files.length){
+      // assign via DataTransfer so 'change' is honored across browsers
+      const dT = new DataTransfer();
+      dT.items.add(dt.files[0]);
+      fileInput.files = dT.files;
+      updateFileUI();
+      return;
+    }
+
+    // support dropping text/URLs
     const text = dt.getData('text') || dt.getData('text/plain');
     if (text) pasteInput.value = (pasteInput.value?pasteInput.value+'\n':'') + text.trim();
+  });
+}
+
+// delegate the "Change" button
+document.addEventListener('click', (e)=>{
+  if (e.target && e.target.id === 'clearFileBtn'){
+    fileInput.value = '';
+    updateFileUI();
+    // full reset, same as old Clear
+    if (typeof resetAll === 'function') resetAll();
   }
 });
 
+
+(function syncBarHeight(){
+  const bar = document.querySelector('.appbar');
+  if (!bar) return;
+  const set = ()=> document.documentElement
+    .style.setProperty('--bar-h', bar.offsetHeight + 'px');
+  set();
+  new ResizeObserver(set).observe(bar);
+  window.addEventListener('resize', set);
+})();
 
     function resetAll(){
     // clear UI inputs
@@ -1157,6 +1562,9 @@ dropZone && dropZone.addEventListener('drop', e=>{
     const pasteEl = document.getElementById('paste');
     if (fileInputEl) fileInputEl.value = '';
     if (pasteEl) pasteEl.value = '';
+
+    createBtn.disabled = true;
+    createBtn.title = 'Upload data first';
 
     // clear computed state
     state.rows = [];
@@ -1201,6 +1609,14 @@ dropZone && dropZone.addEventListener('drop', e=>{
     backTop.addEventListener('click', ()=> window.scrollTo({top:0, behavior:'smooth'}));
     });
 
+    (function adjustBarOffset(){
+  const h = document.querySelector('header');
+  if (!h) return;
+  const set = ()=> document.documentElement.style.setProperty('--bar-h', h.offsetHeight+'px');
+  set();
+  window.addEventListener('resize', set, {passive:true});
+})();
+
     // button hover -> parent chip intent class
     includedBox.addEventListener('mouseover', e=>{
     const btn = e.target.closest('button[data-act]');
@@ -1229,5 +1645,12 @@ dropZone && dropZone.addEventListener('drop', e=>{
 /* ---------- Ready ---------- */
 </script>
 <button id="backTop" aria-label="Back to top" title="Back to top">↑ Top</button>
+<footer class="footer">
+    <div class="bar">
+      <span>© <span id="year"></span> Colin Bingham</span>
+      <a class="link" href="https://colinbing.com" target="_blank" rel="noopener">Back to site</a>
+    </div>
+    <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+  </footer>  
 </body>
 </html>
