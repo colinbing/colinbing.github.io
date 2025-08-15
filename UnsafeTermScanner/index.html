@@ -406,7 +406,7 @@ html[data-theme="dark"] #blockedList a{ color:#e6f8f2; text-decoration:none }
                   <div class="hint small">Set to 1 to see all.</div>
                 </div>
                 <div>
-                  <label>Sort “Included” by</label>
+                  <label>Sort “Blocked” by</label>
                   <select id="sortIncluded">
                     <option value="impact">Impact</option>
                     <option value="alpha" selected>Alphabetical</option>
@@ -440,7 +440,7 @@ html[data-theme="dark"] #blockedList a{ color:#e6f8f2; text-decoration:none }
             </div>
       
             <div class="toolbar" style="margin-top:14px; justify-content:flex-start">
-                <button id="createBtn" class="btn primary">Copy/Export</button>
+                <button id="createBtn" class="btn primary">Generate List</button>
               </div>              
           </div>
         </div>
@@ -454,21 +454,25 @@ html[data-theme="dark"] #blockedList a{ color:#e6f8f2; text-decoration:none }
               </p>          
               <div class="sticky-scope">
                 <div class="section-header sticky hdr-included">
-                  <b>Included (<span id="includedCount">0</span>)</b>
+                  <b>Blocked (<span id="includedCount">0</span>)</b>
                   <span id="includedSortLabel" class="hint small">Alphabetical ↓</span>
-                  <div class="row"></div>
+                  <span id="includedImpactTotal" class="hint small" style="margin-left:auto">Impact: 0</span>
                 </div>
                 <div id="included" class="chips" aria-live="polite"></div>
-              </div>
+              </div>              
               
               <div class="section-header sticky hdr-available">
                 <b>Available (<span id="availableCount">0</span>)</b>
                 <span id="availFilters" class="hint small"></span>
                 <span id="availSort" class="hint small"></span>
-                <div class="row">
+                <div class="row" style="margin-left:auto;align-items:center;gap:8px">
                   <button id="showAllAvail" class="btn ghost small">Show all</button>
-                </div>
-              </div>              
+                  <button id="addAllAvail" class="btn small" style="background:#5d1f1f1a;border:1px solid #a44; color:#a44">
+                    Add All
+                  </button>
+                  <span id="availableImpactTotal" class="hint small">Impact: 0</span>
+                </div>                
+              </div>                          
                             
             <div id="available" class="chips" aria-live="polite"></div>
       
@@ -538,6 +542,7 @@ async function ensureXLSX(){
   return false; // CSV-only fallback
 }
 
+
 function toggleEmptyState(){
   const hasData = state.rows.length>0;
   const empty = document.getElementById('emptyState');
@@ -553,13 +558,46 @@ function toggleEmptyState(){
 /* ---------- Lexicon load (with fallback) ---------- */
 let LEX = null;
 const FALLBACK_UNSAFE = {
-  disasters:["wildfire","fire","earthquake","hurricane","tornado","flood","evacuation","smoke","eruption","tsunami","landslide","avalanche","blizzard","outage","blackout","collapse","explosion","derailment","crash","collision","spill","leak"],
-  crime_violence:["shooting","stabbing","homicide","murder","assault","kidnapping","arson","riot","terrorism","bomb","hostage","threat"],
-  legal:["subpoena","indictment","arrest","charges","lawsuit","litigation","conviction","trial","sentencing","appeal","fraud","bribery","corruption","money-laundering","racketeering","rico","misconduct","impeachment"],
-  health_safety:["outbreak","pandemic","quarantine","contamination","recall","poisoning","toxin","radiation","hazmat","biohazard","overdose","opioid","fentanyl"],
-  finance_instability:["bankruptcy","insolvency","default","foreclosure","eviction","layoff","strike","boycott"],
-  politics_risk:["coup","insurrection","sedition","treason","crackdown","curfew","martial-law","ban","banned","protest","unrest"]
+  disasters:[
+    "wildfire","fire","earthquake","hurricane","tornado","flood","evacuation",
+    "smoke","eruption","tsunami","landslide","avalanche","blizzard","outage",
+    "blackout","collapse","explosion","derailment","crash","collision","spill","leak"
+  ],
+  crime_violence:[
+    "shooting","stabbing","homicide","murder","assault","kidnapping","arson",
+    "riot","terrorism","bomb","hostage","threat"
+  ],
+  legal:[
+    "subpoena","indictment","arrest","charges","lawsuit","litigation","conviction",
+    "trial","sentencing","appeal","fraud","bribery","corruption","money-laundering",
+    "racketeering","rico","misconduct","impeachment"
+  ],
+  health_safety:[
+    "outbreak","pandemic","quarantine","contamination","recall","poisoning",
+    "toxin","radiation","hazmat","biohazard","overdose","opioid","fentanyl"
+  ],
+  finance_instability:[
+    "bankruptcy","insolvency","default","foreclosure","eviction","layoff","strike","boycott"
+  ],
+  politics_risk:[
+    "coup","insurrection","sedition","treason","crackdown","curfew","martial-law",
+    "ban","banned","protest","unrest"
+  ],
+  violence_shooting:[
+    "shooting","gunman","attack","assassination","mass shooting","spree shooting",
+    "politically motivated","gunshots","killed","injured","hospital","suicide",
+    "gunfire","weapon","vehicle ramming","truck attack"
+  ],
+  protests_unrest:[
+    "protest","demonstration","shooting during protest","dispersal order","chaotic scene",
+    "unrest","riots","manhunt","curfew","state of emergency","looting","cover-up","abductions"
+  ],
+  safety_hazards:[
+    "unsafe","hazardous","cladding","contamination","unsafe drinking water",
+    "hazardous chemicals","toxin","biohazard","roof collapse","gas explosion","boat capsized"
+  ]
 };
+
 const NEUTRAL_SECTIONS_DEFAULT = new Set(["news","latest","live","update","story","video","photo","photos","gallery","podcast","column","opinion","analysis","feature","weather","nation","politics","business","sports","technology","tech","style","travel","food","health","science","world","local","metro","arts","entertainment","maps","data","interactive"]);
 const STOP_DEFAULT = new Set(["the","and","for","but","nor","with","that","this","from","into","onto","about","over","under","after","before","since","until","while","when","what","how","why","are","were","was","been","being","have","has","had","do","does","did","on","in","to","of","by","at","as","per","via","a","an","is","it","its","their","our","your"]);
 const MONTHS = new Set(["january","february","march","april","may","june","july","august","september","october","november","december"]);
@@ -569,7 +607,7 @@ const VOWELS = new Set(["a","e","i","o","u","y"]);
 
 async function loadLexicon(){
   try{
-    const r = await fetch('unsafe_lexicon_v1.json', {cache:'no-store'});
+    const r = await fetch(`unsafe_lexicon_v1.json?v=1.1.0`, { cache: 'no-store' });
     if (!r.ok) throw new Error('no lex json');
     const j = await r.json();
     LEX = {
@@ -606,6 +644,8 @@ const state = {
   metricLabel: 'Impact',
   ignoreParams: new Set(["gclid","fbclid","mc_cid","mc_eid","utm_source","utm_medium","utm_campaign","utm_term","utm_content","utm_id","source","ref"])
 };
+
+state.urlImpact = new Map();
 
 /* ---------- DOM ---------- */
 const el = (s)=>document.querySelector(s);
@@ -655,6 +695,7 @@ function rebuildAvailable(){
   sortAndRenderAvailable();
   updateStats();
   updateAvailFilters();
+  updateSectionTotals();
 }
 
 
@@ -690,21 +731,85 @@ function applyMetricLabel(){
   if (el) el.textContent = `Total ${lab} blocked:`;
 }
 
+function rebuildUrlImpact(){
+  const m = new Map();
+  for (const r of state.rows){
+    const u = canonicalUrl(r.urls?.[0] || '');
+    const v = Number(r.impact||0);
+    if (!u) continue;
+    m.set(u, (m.get(u)||0) + v);
+  }
+  state.urlImpact = m;
+}
+
+
+// --- Totals shown in headers ---
+function updateSectionTotals(){
+  const incEl = document.getElementById('includedImpactTotal');
+  const availEl = document.getElementById('availableImpactTotal');
+  if (!incEl && !availEl) return;
+
+  // Build URL sets from tokens
+  const incURLs = new Set();
+  for (const tok of state.includedSet){
+    const rec = state.tokens.get(tok);
+    if (!rec || !rec.urls) continue;
+    for (const u of rec.urls) incURLs.add(u);
+  }
+  const availURLsRaw = new Set();
+  for (const tok of state.availableSet){
+    const rec = state.tokens.get(tok);
+    if (!rec || !rec.urls) continue;
+    for (const u of rec.urls) availURLsRaw.add(u);
+  }
+  // Available = URLs hit by any available token, excluding ones already blocked by Included
+  const availURLs = new Set();
+  for (const u of availURLsRaw){ if (!incURLs.has(u)) availURLs.add(u); }
+
+  // Sum impact once per URL using cache
+  let incTotal = 0, availTotal = 0;
+  for (const u of incURLs)     incTotal  += (state.urlImpact.get(u) || 0);
+  for (const u of availURLs)   availTotal+= (state.urlImpact.get(u) || 0);
+
+  const lab = state.metricLabel || 'Impact';
+  if (incEl)   incEl.textContent   = `${lab}: ${incTotal.toLocaleString()}`;
+  if (availEl) availEl.textContent = `${lab}: ${availTotal.toLocaleString()}`;
+}
+
+
+// --- Strict whole‑word matcher for blocked list ---
+const _esc = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+function _buildIncludedWordRegex(){
+  const terms = [...state.includedSet];
+  if (!terms.length) return null;
+  return new RegExp(`\\b(?:${terms.map(_esc).join('|')})\\b`, 'i');
+}
+function _rowText(row){
+  const u = row?.urls?.[0] || '';
+  try {
+    const p = new URL(u).pathname || '';
+    // treat -, _, / as word separators
+    return p.toLowerCase().replace(/[-_/]+/g, ' ');
+  } catch { return String(u).toLowerCase(); }
+}
+
 
 
 /* ---------- Utilities ---------- */
 function asciiFold(s){
   return s.normalize ? s.normalize('NFKD').replace(/[\u0300-\u036f]/g,'') : s;
 }
+const NO_SINGULARIZE = new Set(['texas','news','us']); // extend as needed
 function baseForm(tok){
-  // crude lemmatization
   if (tok.endsWith('ies')) return tok.slice(0,-3)+'y';
   if (tok.endsWith('ves')) return tok.slice(0,-3)+'f';
   if (tok.endsWith('ing') && tok.length>5) return tok.slice(0,-3);
-  if (tok.endsWith('ed') && tok.length>4) return tok.slice(0,-2);
-  if (tok.endsWith('s') && tok.length>3) return tok.slice(0,-1);
+  if (tok.endsWith('ed')  && tok.length>4) return tok.slice(0,-2);
+  // do NOT drop 's' for known exceptions or 'ss' endings
+  if (tok.endsWith('s') && tok.length>3 && !tok.endsWith('ss') && !NO_SINGULARIZE.has(tok)) return tok.slice(0,-1);
   return tok;
 }
+
 function isAllHex(s){
   return /^[a-f]+$/.test(s);
 }
@@ -1143,6 +1248,7 @@ function normalizeTokensFromUrl(u, opts){
     }
     }
     // sort Included by current setting, then build Available
+    rebuildUrlImpact();  
     sortAndRenderIncluded();
     rebuildAvailable();
     updateStats();
@@ -1184,6 +1290,7 @@ function sortAndRenderIncluded(){
   state.includedOrder = list;
   render();
   updateIncludedSortLabel();
+  updateSectionTotals();
 }
 
 sortIncluded.addEventListener('change', sortAndRenderIncluded);
@@ -1232,6 +1339,7 @@ function render(){
   availableBox.innerHTML = nodes.join('');
   availableCount.textContent = String(state.availableOrder.length);
   updateOutputMetrics();
+  updateSectionTotals();
 }
 
 /* ---------- Interactions ---------- */
@@ -1242,6 +1350,20 @@ sortAvailable.addEventListener('change', ()=>{
   sortAndRenderAvailable();
   updateAvailFilters();
 });
+
+const addAllAvailBtn = document.getElementById('addAllAvail');
+addAllAvailBtn?.addEventListener('click', ()=>{
+  // move every available token into Included
+  for (const tok of Array.from(state.availableSet)){
+    state.availableSet.delete(tok);
+    if (!state.includedSet.has(tok)) state.includedSet.add(tok);
+  }
+  sortAndRenderIncluded();
+  sortAndRenderAvailable();   // refresh list now empty or reduced
+  render();
+  recomputeBlocked();
+});
+
 
 impactCol.addEventListener('change', parseInput);
 // Show all / Collapse without touching Included
@@ -1416,46 +1538,50 @@ window.addEventListener('resize', ()=>{ if (stickyToken && stickyAnchor) positio
 
 /* ---------- Recompute blocked metrics (Unique URLs + Total metric) ---------- */
 function recomputeBlocked(){
-  const list = state.includedOrder.slice();
-  const urlImpact = new Map(); // canonical URL -> summed metric
+  const rx = _buildIncludedWordRegex();
+  const urlImpact = new Map();
   let total = 0;
 
   const metricName =
     state.metricLabel ||
     (impactCol && impactCol.value !== '' ? (impactCol.options[impactCol.selectedIndex]?.text?.trim() || 'Impact') : 'Impact');
 
-  for (let i=0;i<state.rows.length;i++){
-    // any included term in this row?
-    let hits = false;
-    for (const tok of list){
-      const rec = state.tokens.get(tok);
-      if (rec && rec.rows.has(i)){ hits = true; break; }
-    }
-    if (!hits) continue;
+  if (!rx || !state.rows.length){
+    blockedUrlCount.textContent = '0';
+    blockedImpact.textContent = '0';
+    const lbl = document.getElementById('blockedImpactLabel');
+    if (lbl) lbl.textContent = `Total ${metricName} blocked:`;
+    blockedList.innerHTML = '<div class="muted small">None</div>';
+    updateSectionTotals();
+    return;
+  }
 
+  for (let i=0; i<state.rows.length; i++){
     const row = state.rows[i];
+    const text = _rowText(row);
+    if (!rx.test(text)) continue;
+
     const val = Number(row.impact||0);
     total += val;
 
-    const u = canonicalUrl(row.urls[0]);      // dedupe by canonical URL
+    const u = canonicalUrl(row.urls[0]);
     urlImpact.set(u, (urlImpact.get(u)||0) + val);
   }
 
-  // Metrics
-  blockedUrlCount.textContent = String(urlImpact.size);            // Unique URLs blocked
-  blockedImpact.textContent   = String(Math.round(total));         // Total metric
+  blockedUrlCount.textContent = String(urlImpact.size);
+  blockedImpact.textContent   = String(Math.round(total));
   const lbl = document.getElementById('blockedImpactLabel');
-  if (lbl) lbl.textContent = `Total ${metricName} blocked:`;       // dynamic label
+  if (lbl) lbl.textContent = `Total ${metricName} blocked:`;
 
-  // Sorted list by metric
   const sorted = Array.from(urlImpact.entries()).sort((a,b)=>b[1]-a[1]);
-  blockedList.innerHTML = sorted.map(([u,val])=>{
-    const v = isFinite(val) ? Math.round(val) : 0;
-    return `<div class="row">
-      <span class="pill small">${metricName}&nbsp;<b>${v}</b></span>
+  blockedList.innerHTML = sorted.map(([u,val])=>`
+    <div class="row">
+      <span class="pill small">${metricName}&nbsp;<b>${Math.round(val)||0}</b></span>
       <a href="${u}" target="_blank" rel="noopener">${u}</a>
-    </div>`;
-  }).join('') || '<div class="muted small">None</div>';
+    </div>
+  `).join('') || '<div class="muted small">None</div>';
+
+  updateSectionTotals();
 }
 
 
@@ -1492,9 +1618,15 @@ function updateFileUI(){
   fileRow.innerHTML =
   `<span class="name">${f.name}</span>
    <span class="size">(${size})</span>
-   <button class="btn small" id="changeFileBtn">Change</button>`;
+   <button class="btn small" id="clearFileBtn">Clear</button>`;
   fileRow.style.display = '';
 }
+
+document.addEventListener('click', (e)=>{
+  if (e.target && e.target.id === 'changeFileBtn'){
+    fileInput.click();
+  }
+});
 
 // browse + click to open
 if (browseBtn) browseBtn.addEventListener('click', (e)=>{ e.stopPropagation(); fileInput.click(); });
@@ -1540,11 +1672,10 @@ document.addEventListener('click', (e)=>{
   if (e.target && e.target.id === 'clearFileBtn'){
     fileInput.value = '';
     updateFileUI();
-    // full reset, same as old Clear
+    if (csvOut) csvOut.value = '';     // <- add
     if (typeof resetAll === 'function') resetAll();
   }
 });
-
 
 (function syncBarHeight(){
   const bar = document.querySelector('.appbar');
@@ -1556,6 +1687,14 @@ document.addEventListener('click', (e)=>{
   window.addEventListener('resize', set);
 })();
 
+/*************  ✨ Windsurf Command ⭐  *************/
+
+/**
+ * Resets all UI inputs, computed state, and control inputs.
+ *
+ * @returns {void}
+ */
+/*******  99f8e8b1-c770-4c25-b935-0f7ae631e2bf  *******/
     function resetAll(){
     // clear UI inputs
     const fileInputEl = document.getElementById('file');
@@ -1585,10 +1724,19 @@ document.addEventListener('click', (e)=>{
     tokenCount.textContent = '0';
     included.innerHTML = '';
     available.innerHTML = '';
+    if (includedCount)  includedCount.textContent = '0';
+    if (availableCount) availableCount.textContent = '0';
+    if (csvOut) csvOut.value = '';
+    blockedUrlCount.textContent = '0';
+    blockedImpact.textContent   = '0';
+    const lbl = document.getElementById('blockedImpactLabel');
+    if (lbl) lbl.textContent = `Total ${(state.metricLabel||'Impact')} blocked:`;
     outputPanel.style.display = 'none';
 
     updateFileUI && updateFileUI();
     toggleEmptyState();
+    state.urlImpact = new Map();
+    updateSectionTotals?.();
     }
 
 // run on initial load and BFCache restores

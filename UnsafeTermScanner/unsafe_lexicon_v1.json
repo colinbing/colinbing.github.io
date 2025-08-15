@@ -1,0 +1,53 @@
+{
+    "version": "1.1.0",
+    "unsafe": {
+      "disasters": [
+        "wildfire","fire","earthquake","hurricane","tornado","flood","evacuation",
+        "smoke","eruption","tsunami","landslide","avalanche","blizzard","outage",
+        "blackout","collapse","explosion","derailment","crash","collision","spill","leak"
+      ],
+      "crime_violence": [
+        "shooting","stabbing","homicide","murder","assault","kidnapping","arson",
+        "riot","terrorism","bomb","hostage","threat"
+      ],
+      "legal": [
+        "subpoena","indictment","arrest","charges","lawsuit","litigation","conviction",
+        "trial","sentencing","appeal","fraud","bribery","corruption","money-laundering",
+        "racketeering","rico","misconduct","impeachment"
+      ],
+      "health_safety": [
+        "outbreak","pandemic","quarantine","contamination","recall","poisoning",
+        "toxin","radiation","hazmat","biohazard","overdose","opioid","fentanyl"
+      ],
+      "finance_instability": [
+        "bankruptcy","insolvency","default","foreclosure","eviction","layoff","strike","boycott"
+      ],
+      "politics_risk": [
+        "coup","insurrection","sedition","treason","crackdown","curfew","martial-law",
+        "ban","banned","protest","unrest"
+      ],
+      "violence_shooting": [
+        "shooting","gunman","attack","assassination","mass shooting","spree shooting",
+        "politically motivated","gunshots","killed","injured","hospital","suicide",
+        "gunfire","weapon","vehicle ramming","truck attack"
+      ],
+      "protests_unrest": [
+        "protest","demonstration","shooting during protest","dispersal order","chaotic scene",
+        "unrest","riots","manhunt","curfew","state of emergency","looting","cover-up","abductions"
+      ],
+      "safety_hazards": [
+        "unsafe","hazardous","cladding","contamination","unsafe drinking water",
+        "hazardous chemicals","toxin","biohazard","roof collapse","gas explosion","boat capsized"
+      ]
+    },
+    "neutral_sections": ["news","latest","live","update","story","video","photo","photos","gallery","podcast","column","opinion","analysis","feature","weather","nation","politics","business","sports","technology","tech","style","travel","food","health","science","world","local","metro","arts","entertainment","maps","data","interactive"],
+    "stopwords": ["the","and","for","but","nor","with","that","this","from","into","onto","about","over","under","after","before","since","until","while","when","what","how","why","are","were","was","been","being","have","has","had","do","does","did","on","in","to","of","by","at","as","per","via","a","an","is","it","its","their","our","your"],
+    "allowlist_brands": [],
+    "allowlist_locations": [],
+    "morphology": {
+      "split_delimiters": ["/","-","_","."],
+      "scan_hostname": false,
+      "include_query": false
+    }
+  }
+  
