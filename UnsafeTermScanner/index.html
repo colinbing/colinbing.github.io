@@ -578,6 +578,51 @@ html[data-theme="light"] .chip.chip-active .btn{
   text-shadow:none;
 }
 
+/* Available search box */
+#availSearch{
+  height:28px;
+  padding:4px 8px;
+  border:1px solid var(--border);
+  border-radius:8px;
+  background:var(--bg);
+  color:var(--text);
+  box-sizing:border-box;
+  width:180px;
+}
+#availSearch::placeholder{ color:var(--muted); }
+@media (max-width:1100px){ #availSearch{ width:150px; } }
+
+/* === Chips spacing without sticky jump or seams === */
+:root { --chip-gap: 12px; }
+
+/* space inside chip areas */
+#included { padding-bottom: var(--chip-gap); }
+#available{ padding-bottom: var(--chip-gap); }
+
+/* Sticky headers: keep borders visible when stacked */
+.panel.results .section-header.sticky{
+  background: var(--panel);
+  box-shadow: none;             /* replace earlier inset border */
+}
+
+/* Blocked (Included) bar stays above and draws its bottom line on top */
+.hdr-included{ z-index: 8; }    /* higher than Available (7) */
+.hdr-included::after{
+  content:"";
+  position:absolute; left:0; right:0; bottom:-1px;
+  height:1px; background: var(--border);
+}
+
+/* Available bar stays below; keep the negative pull-up */
+.hdr-available{
+  z-index: 7;
+  margin-top: calc(-1 * var(--chip-gap));  /* keep previous pull-up */
+}
+
+div.section-header:nth-child(3){
+  margin-top:1px;
+}
+
 
   </style>
   
@@ -702,11 +747,12 @@ html[data-theme="light"] .chip.chip-active .btn{
                 <span id="availFilters" class="hint small"></span>
                 <span id="availSort" class="hint small"></span>
                 <div class="row" style="margin-left:auto;align-items:center;gap:8px">
+                  <input id="availSearch" type="search" placeholder="Search terms…" hidden>
                   <button id="showAllAvail" class="btn ghost small">Show all</button>
                   <button id="addAllAvail" class="btn small">Add All</button>
                   <span id="availableImpactTotal" class="hint small">Impact: 0</span>
-                </div>                
-              </div>                          
+                </div>
+              </div>                                 
                             
             <div id="available" class="chips" aria-live="polite"></div>
       
@@ -878,6 +924,7 @@ const state = {
   autoIncluded: new Set(),  // from UNSAFE lexicon
   urlRegex: /https?:\/\/[^\s"']+/ig,
   metricLabel: 'Impact',
+  searchAvail: '', 
   ignoreParams: new Set(["gclid","fbclid","mc_cid","mc_eid","utm_source","utm_medium","utm_campaign","utm_term","utm_content","utm_id","source","ref"])
 };
 
@@ -911,6 +958,7 @@ const showAllAvail = el('#showAllAvail');
 const availFilters = el('#availFilters');
 const customKey = el('#customKey');
 const addCustom = el('#addCustom');
+const availSearch = document.getElementById('availSearch');
 
 const dropZone = el('#dropZone');
 const browseBtn = el('#browseBtn');
@@ -1533,20 +1581,34 @@ function normalizeTokensFromUrl(u, opts){
     updateOutputMetrics();
     createBtn.disabled = state.rows.length === 0;
     createBtn.title = state.rows.length ? '' : 'Upload data first';
+    // show search only if a real XLSX/XLS file is loaded
+    const f = fileInput.files && fileInput.files[0];
+    const isXlsx = !!(f && /\.(xlsx|xls)$/i.test(f.name||''));
+    if (availSearch){
+      availSearch.hidden = !isXlsx;
+      if (!isXlsx){ availSearch.value=''; state.searchAvail=''; }
+    }
+    rebuildUrlImpact();  // keep this call if you added it earlier
     recomputeBlocked();
     }
 
-function sortAndRenderAvailable(){
-  const criterion = sortAvailable.value; // 'alpha' | 'freq' | 'impact'
-  const list = Array.from(state.availableSet);
-  list.sort((a,b)=>{
-    if (criterion==='alpha') return byAlpha(a,b);
-    if (criterion==='freq') return (state.tokens.get(b).freq - state.tokens.get(a).freq) || byAlpha(a,b);
-    return (state.tokens.get(b).impact - state.tokens.get(a).impact) || byAlpha(a,b);
-  });
-  state.availableOrder = list;
-  render();
-}
+    function sortAndRenderAvailable(){
+    const criterion = sortAvailable.value; // 'alpha' | 'freq' | 'impact'
+    const q = (state.searchAvail||'').toLowerCase();
+
+    let list = Array.from(state.availableSet);
+    if (q) list = list.filter(t => t.toLowerCase().includes(q));
+
+    list.sort((a,b)=>{
+      if (criterion==='alpha') return a.localeCompare(b);
+      if (criterion==='freq')  return (state.tokens.get(b).freq - state.tokens.get(a).freq) || a.localeCompare(b);
+      return (state.tokens.get(b).impact - state.tokens.get(a).impact) || a.localeCompare(b);
+    });
+
+    state.availableOrder = list;
+    render();
+  }
+
 
 function sortAndRenderIncluded(){
   const criterion = sortIncluded.value; // 'alpha' | 'impact' | 'freq'
@@ -1642,19 +1704,30 @@ sortAvailable.addEventListener('change', ()=>{
   updateAvailFilters();
 });
 
+availSearch?.addEventListener('input', ()=>{
+  state.searchAvail = availSearch.value.trim().toLowerCase();
+  sortAndRenderAvailable();
+});
+
 const addAllAvailBtn = document.getElementById('addAllAvail');
 addAllAvailBtn?.addEventListener('click', ()=>{
-  // move every available token into Included
-  closeHoverSticky();
-  for (const tok of Array.from(state.availableSet)){
-    state.availableSet.delete(tok);
-    if (!state.includedSet.has(tok)) state.includedSet.add(tok);
+  closeHoverSticky?.();
+
+  const target = state.searchAvail
+    ? state.availableOrder.slice()                 // filtered subset
+    : Array.from(state.availableSet);              // all available
+
+  for (const tok of target){
+    if (state.availableSet.delete(tok)){
+      state.includedSet.add(tok);
+    }
   }
   sortAndRenderIncluded();
-  sortAndRenderAvailable();   // refresh list now empty or reduced
+  sortAndRenderAvailable();
   render();
   recomputeBlocked();
 });
+
 
 window.addEventListener('scroll', ()=>{
   if (stickyToken && stickyAnchor && document.body.contains(stickyAnchor)){
@@ -2007,6 +2080,8 @@ document.addEventListener('click', (e)=>{
     const pasteEl = document.getElementById('paste');
     if (fileInputEl) fileInputEl.value = '';
     if (pasteEl) pasteEl.value = '';
+    if (availSearch){ availSearch.hidden = true; availSearch.value=''; }
+    state.searchAvail = '';
 
     createBtn.disabled = true;
     createBtn.title = 'Upload data first';
