@@ -252,6 +252,11 @@ p, li {
     height:auto;
 }
 
+[data-theme="dark"] .blocklist-logo{
+    content:url('/images/logos/blocklist-logo-white.png');
+    height:auto;
+}
+
 [data-theme="dark"] .cert-row a{
     color: #eee;
 }
