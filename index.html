@@ -144,43 +144,106 @@
             </div>
         </section>
 
-        <section id="skills-section" class="skills-section  text-center">
-            <div class="row justify-content-center">
-                <div class="col-md-12 text-center">
-                    <h2>Skills</h2>
+        <section id="skills-section" class="skills-section">
+            <div class="skills-wrap">
+                <h2>Tools & Skills</h2>
+
+                <!-- Row 1: Technical -->
+                <div class="rowcard">
+                <div class="rowhead">Technical</div>
+                <div class="chips">
+                    <span class="chip chip--gray">HTML5</span>
+                    <span class="chip chip--gray">CSS</span>
+                    <span class="chip chip--gray">JavaScript</span>
+                    <span class="chip chip--gray">WordPress</span>
+                    <span class="chip chip--blue"
+                        data-tip="AI-assisted dev. Built internal tools: TagSafe (validate 3P tags), AdBuilder (generate multi-size creatives + tags), Vast2MP4 (extract media + trackers), Outline (quick image borders), BlockList (keyword blocklists).">
+                    AI-assisted dev
+                    </span>
                 </div>
-                
-                <div class="col-md-3 text-center skill-card skill-card-1 mx-3">
-                        <img class="skill-img .img-fluid" src="/images/icons/web-icon.png">
-                        <h3>Web</h3>
-                        <p>WordPress</p>
-                        <p>On-Page SEO</p>
-                        <p>HTML5, CSS</p>
-                        <p>JavaScript</p>
                 </div>
-                <div class="col-md-3 text-center skill-card skill-card-2 mx-3">
-                        <img class="skill-img .img-fluid" src="/images/icons/analytics-icon.png">
-                        <h3>Marketing Platforms</h3>
-                        <p>Google Analytics</p>
-                        <p>Google Tag Manager</p>
-                        <p>Google Ads, Ad Manager</p>
-                        <p>Google Search Console</p>
-                        <p>The Trade Desk</p>
-                        <p>Email (MailChimp, SendGrid)</p>
+
+                <!-- Row 2: Ad Tech & Platforms -->
+                <div class="rowcard">
+                <div class="rowhead">Ad Tech & Platforms</div>
+
+                <div class="group">
+                    <span class="glabel">Ad server</span>
+                    <span class="chip chip--blue" data-tip="Google Ad Manager SME. Direct + programmatic setup, AdX/Open Bidding, targeting, QA, escalations.">
+                    Google Ad Manager <span class="badge-sme">SME</span>
+                    </span>
                 </div>
-                <div class="col-md-3 text-center skill-card skill-card-3 mx-3">
-                        <img class="skill-img .img-fluid. max-width: 100%;" src="/images/icons/soccer-icon.png">
-                        <h3>Other (& Hobbies)</h3>
-                        <p>Adobe Photoshop & Illustrator</p>
-                        <p>Canva, GIMP</p>
-                        <p>Building Tools/Projects with AI</p>
-                        <p>Rock Climbing & Bouldering (V6)</p>
-                        <p>Soccer</p>
-                        <p>Flag Football</p>
+
+                <div class="group">
+                    <span class="glabel">Buying</span>
+                    <span class="chip chip--gray" data-tip="Google Ads Search buying workflows and QA.">Google Ads — Search</span>
+                    <span class="chip chip--gray" data-tip="Google Ads Display buying workflows and QA.">Google Ads — Display</span>
                 </div>
+
+                <div class="group">
+                    <span class="glabel">DSPs</span>
+                    <span class="chip chip--violet" data-tip="The Trade Desk trafficking, troubleshooting, and campaign QA.">The Trade Desk</span>
+                    <span class="chip chip--violet" data-tip="Beeswax experience: past programmatic setup and QA.">Beeswax</span>
+                </div>
+
+                <div class="group">
+                    <span class="glabel">Publisher/Network</span>
+                    <span class="chip chip--gold" data-tip="Apple News SME. Platform specs, inventory mapping, trafficking nuances, triage.">
+                        Apple News <span class="badge-sme">SME</span>
+                    </span>
+                    <span class="chip chip--gold" data-tip="LiveIntent SME. Newsletter inventory, audience nuances, trafficking and QA.">
+                    LiveIntent <span class="badge-sme">SME</span>
+                    </span>
+                </div>
+
+                <div class="group">
+                    <span class="glabel">Self-serve</span>
+                    <span class="chip chip--gray" data-tip="DanAds self-serve workflows and QA.">DanAds</span>
+                </div>
+
+                <div class="group">
+                    <span class="glabel">Email</span>
+                    <span class="chip chip--pink" data-tip="Mailchimp campaigns and integration basics.">Mailchimp</span>
+                    <span class="chip chip--pink" data-tip="SendGrid setup and deliverability basics.">SendGrid</span>
+                </div>
+                </div>
+
+                <!-- Row 3: Analytics, QA & Workflow -->
+                <div class="rowcard">
+                <div class="rowhead">Analytics, QA & Workflow</div>
+
+                <div class="group">
+                    <span class="glabel">Analytics</span>
+                    <span class="chip chip--gray" data-tip="Google Analytics for reporting and troubleshooting signals.">GA</span>
+                    <span class="chip chip--gray" data-tip="Google Tag Manager for tag deployment and debugging.">GTM</span>
+                    <span class="chip chip--gray" data-tip="Google Search Console for site health and indexing checks.">GSC</span>
+                </div>
+
+                <div class="group">
+                    <span class="glabel">Brand safety</span>
+                    <span class="chip chip--gold" data-tip="GARM categories applied for suitability enforcement.">GARM</span>
+                    <span class="chip chip--gold" data-tip="Interpret IAS reports and tighten controls post-launch.">IAS reports</span>
+                    <span class="chip chip--gold" data-tip="Custom key-value term/URL blocklists to stop unsafe pages.">KV blocklists</span>
+                </div>
+
+                <div class="group">
+                    <span class="glabel">QA</span>
+                    <span class="chip chip--violet" data-tip="Spec checks: size, weight, file type, duration.">Spec checks</span>
+                    <span class="chip chip--violet" data-tip="Implement and verify 1×1 impression/click trackers.">1×1 trackers</span>
+                    <span class="chip chip--violet" data-tip="VAST parsing, media extraction, and tracker verification.">VAST validation</span>
+                </div>
+
+                <div class="group">
+                    <span class="glabel">Ops</span>
+                    <span class="chip chip--gray" data-tip="Jira for tickets and workflow tracking.">Jira</span>
+                    <span class="chip chip--gray" data-tip="Notion for internal docs and playbooks.">Notion</span>
+                </div>
+                </div>
+
             </div>
-            <div id="certification-section" class="col-md-12 text-center" style="padding-top:40px;margin-top:-40px;"></div>
-        </section>
+            </section>
+
+
 
         <section class="certification-section">
             <div class="row justify-content-center">

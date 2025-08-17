@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Stacked Chips – POC</title>
+<style>
+  :root{--bg:#0f1115;--text:#eaf0ff;--muted:#9fb0c9;--card:#fff;--ink:#1e2430}
+  body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
+  .wrap{max-width:980px;margin:48px auto;padding:0 16px}
+  h2{margin:0 0 20px;text-align:center;font-size:28px}
+  .rowcard{background:var(--card);color:var(--ink);border-radius:16px;padding:18px 16px;margin:14px 0;
+           box-shadow:0 8px 24px rgba(0,0,0,.15)}
+  .rowhead{display:flex;align-items:center;gap:10px;margin:0 0 8px;font-size:18px;font-weight:700}
+  .chips{display:flex;flex-wrap:wrap;gap:10px}
+  .chip{padding:6px 12px;border-radius:999px;font-weight:600;font-size:.9rem;white-space:nowrap;border:1px solid transparent}
+  /* colored chips */
+  .chip--pink{background:#eeb1c3;border-color:#e19ab0;color:#553043}
+  .chip--gold{background:#f6d28a;border-color:#edc46c;color:#4a3b18}
+  .chip--violet{background:#c9b4f0;border-color:#b69ae8;color:#3b2e57}
+  .chip--blue{background:#b9d3ff;border-color:#9cbcf7;color:#20375d}
+  .chip--gray{background:#e9edf3;border-color:#d6dbe4;color:#2b3442}
+  .chip--label{background:#f2f4f8;border-color:#dbe1ea;color:#313c4d}
+  .chip--sme{position:relative}
+  .chip--sme::after{content:"SME";margin-left:8px;font-size:.72em;padding:2px 6px;border-radius:999px;
+                    background:rgba(80,140,255,.18);border:1px solid rgba(80,140,255,.35)}
+  /* accessibility */
+  .chip:focus{outline:2px solid #3b5bd9;outline-offset:2px}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <h2>Tools & Skills</h2>
+
+    <!-- Row 1 -->
+    <div class="rowcard">
+      <div class="rowhead">Technical</div>
+      <div class="chips">
+        <span class="chip chip--gray">HTML5</span>
+        <span class="chip chip--gray">CSS</span>
+        <span class="chip chip--gray">JavaScript</span>
+        <span class="chip chip--gray">WordPress</span>
+        <span class="chip chip--blue" title="Built: TagSafe, AdBuilder, Vast2MP4, Outline, BlockList">AI-assisted dev</span>
+      </div>
+    </div>
+
+    <!-- Row 2 -->
+    <div class="rowcard">
+      <div class="rowhead">Ad Tech & Platforms</div>
+      <div class="chips">
+        <span class="chip chip--label">Ad server</span>
+        <span class="chip chip--blue chip--sme">Google Ad Manager</span>
+
+        <span class="chip chip--label">Buying</span>
+        <span class="chip chip--gray">Google Ads — Search</span>
+        <span class="chip chip--gray">Google Ads — Display</span>
+
+        <span class="chip chip--label">DSPs</span>
+        <span class="chip chip--violet">The Trade Desk</span>
+        <span class="chip chip--violet">Beeswax</span>
+
+        <span class="chip chip--label">Publisher/Network</span>
+        <span class="chip chip--gold chip--sme">Apple News</span>
+        <span class="chip chip--gold chip--sme">LiveIntent</span>
+
+        <span class="chip chip--label">Self-serve</span>
+        <span class="chip chip--gray">DanAds</span>
+
+        <span class="chip chip--label">Email</span>
+        <span class="chip chip--pink">Mailchimp</span>
+        <span class="chip chip--pink">SendGrid</span>
+      </div>
+    </div>
+
+    <!-- Row 3 -->
+    <div class="rowcard">
+      <div class="rowhead">Analytics, QA & Workflow</div>
+      <div class="chips">
+        <span class="chip chip--label">Analytics</span>
+        <span class="chip chip--gray">GA</span>
+        <span class="chip chip--gray">GTM</span>
+        <span class="chip chip--gray">GSC</span>
+
+        <span class="chip chip--label">Brand safety</span>
+        <span class="chip chip--gold">GARM</span>
+        <span class="chip chip--gold">IAS reports</span>
+        <span class="chip chip--gold">KV blocklists</span>
+
+        <span class="chip chip--label">QA</span>
+        <span class="chip chip--violet">Spec checks</span>
+        <span class="chip chip--violet">1×1 trackers</span>
+        <span class="chip chip--violet">VAST validation</span>
+
+        <span class="chip chip--label">Ops</span>
+        <span class="chip chip--gray">Jira</span>
+        <span class="chip chip--gray">Notion</span>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
