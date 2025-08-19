@@ -815,8 +815,7 @@
               <p>&copy;2025 Colin Bingham | Built in GitHub Pages</p>
             </div>
           </footer>
-    </main>
-    
+    </main>    
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="/homescripts/bootstrap.min.js"></script>
     <script src="homescripts/dynamic-height.js"></script>
@@ -826,5 +825,28 @@
     <script src="homescripts/gallery-script.js"></script>
     <script src="https://unpkg.com/typeit@8.7.1/dist/index.umd.js"></script>
     <script src="homescripts/typer.js"></script>
+    <script>
+        (() => {
+          const pad = 12;
+          const chips = document.querySelectorAll('#skills-section .chip[data-tip]');
+        
+          const update = (chip) => {
+            chip.classList.remove('tip-left','tip-right');
+            const r = chip.getBoundingClientRect();
+            if (r.left < pad*2) chip.classList.add('tip-left');
+            else if (window.innerWidth - r.right < pad*2) chip.classList.add('tip-right');
+          };
+        
+          chips.forEach(chip => {
+            if (!chip.hasAttribute('tabindex')) chip.tabIndex = 0;         // focusable <span>
+            chip.addEventListener('pointerenter', () => update(chip), {passive:true});
+            chip.addEventListener('pointerdown',  () => update(chip), {passive:true}); // touch
+            chip.addEventListener('focusin',      () => update(chip));
+            chip.addEventListener('blur',         () => chip.classList.remove('tip-left','tip-right'));
+          });
+        
+          window.addEventListener('resize', () => chips.forEach(update), {passive:true});
+        })();
+        </script>        
 </body>
 </html>
