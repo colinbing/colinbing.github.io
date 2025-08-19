@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Keyword Joiner • XLSX → Comma‑Separated</title>
+  <!-- SheetJS -->
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+  <style>
+    :root{
+      --bg:#0f1115; --panel:#151922; --text:#e6e6e6; --muted:#a9b0be;
+      --accent:#5b9cff; --border:#2a2f3a; --ok:#29c36a; --warn:#e0a72b;
+      --focus: #8ab4ff;
+    }
+    :root.light{
+      --bg:#f6f7fb; --panel:#ffffff; --text:#101319; --muted:#5a657a;
+      --accent:#1f6bff; --border:#e5e8f0; --ok:#0a8f4b; --warn:#a86c0a;
+      --focus:#4c8dff;
+    }
+    *{box-sizing:border-box}
+    body{margin:0; background:var(--bg); color:var(--text);
+      font:14px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif}
+    .wrap{max-width:1100px; margin:0 auto; padding:24px}
+    header{display:flex; align-items:center; gap:12px; margin-bottom:16px}
+    h1{font-size:18px; margin:0; font-weight:650}
+    .spacer{flex:1}
+    .card{background:var(--panel); border:1px solid var(--border);
+      border-radius:14px; padding:16px}
+    .grid{display:grid; grid-template-columns:1.2fr 1fr; gap:16px}
+    @media (max-width:960px){.grid{grid-template-columns:1fr}}
+    .row{display:flex; gap:16px; flex-wrap:wrap; align-items:center}
+
+    /* Switch */
+    .switch{position:relative; width:46px; height:26px; background:#6b7280;
+      border-radius:999px; cursor:pointer; transition:background .2s}
+    .switch .knob{position:absolute; top:3px; left:3px; width:20px; height:20px;
+      background:#fff; border-radius:50%; transition:left .2s}
+    .switch.on{background:var(--accent)}
+    .switch.on .knob{left:23px}
+
+    /* Drag & drop field */
+    .drop{
+      border:2px dashed var(--border);
+      border-radius:12px;
+      padding:22px;
+      text-align:center;
+      color:var(--muted);
+      background:color-mix(in srgb, var(--panel) 85%, transparent);
+      transition:border-color .15s, background .15s, box-shadow .15s;
+      outline:none;
+    }
+    .drop strong{color:var(--text)}
+    .drop:hover{border-color:var(--accent)}
+    .drop:focus-visible{
+      border-color:var(--focus);
+      box-shadow:0 0 0 3px color-mix(in srgb, var(--focus) 30%, transparent);
+    }
+    .drop.drag{
+      border-color:var(--accent);
+      background:color-mix(in srgb, var(--accent) 10%, transparent);
+    }
+
+    /* Output */
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+    .output-container{position:relative; cursor:pointer;}
+    textarea{
+    width:100%;
+    min-height:260px;
+    resize:vertical;
+    background:#0c0f14;
+    color:#e8eefc;
+    border:1px solid var(--border);
+    border-radius:10px;
+    /* top | right | bottom | left */
+    padding:22px 52px 12px 12px; /* extra top + right space */
+    outline:none;
+    overflow:auto;
+    user-select:none;
+    pointer-events:none; /* keep non-interactive */
+    }
+    :root.light textarea{background:#f5f8ff; color:#0c1426}
+
+    /* Subtle copy indicator (text only) */
+    .copy-indicator{position:absolute; top:8px; right:16px; font-size:12px; color:var(--muted); cursor:pointer; transition:color .2s, transform .2s}
+    .output-container:hover .copy-indicator{color:var(--accent);}
+
+
+    .copy-indicator:hover{color:var(--accent)}
+    .copy-indicator.copied{color:var(--ok)}
+    .copy-indicator:active{transform:scale(0.98)}
+
+    .hint{font-size:12px; color:var(--muted)}
+
+    /* Metric bubbles with tiny intra-row spacing */
+    .metrics{display:flex; flex-direction:column; gap:8px; margin-top:16px}
+    .metric-group{padding:8px; border-radius:8px; border:1px solid var(--border)}
+    .metric-title{font-size:13px; font-weight:600; margin-bottom:6px; color:var(--muted)}
+    .metric-line{display:flex; flex-wrap:wrap; gap:4px 6px} /* tiny gaps */
+    .badge{
+      display:inline-flex; align-items:center; gap:6px;
+      font-size:13px; padding:6px 10px; border-radius:8px;
+      border:1px solid var(--border); background:transparent;
+    }
+    .badge.ok{color:var(--ok)}
+    .badge.warn{color:var(--warn)}
+
+    /* Buttons */
+    .btn{appearance:none; border:1px solid var(--border); background:transparent;
+      color:var(--text); padding:10px 14px; border-radius:10px; cursor:pointer; font-weight:600}
+    .btn:hover{border-color:var(--accent)}
+    .btn[disabled]{opacity:.5; cursor:not-allowed}
+
+    .footer{margin-top:18px; color:var(--muted); font-size:12px}
+    .toast{position:fixed; right:16px; bottom:16px; background:var(--panel);
+      border:1px solid var(--border); color:var(--text); padding:10px 12px;
+      border-radius:10px; opacity:0; transform:translateY(8px);
+      transition:opacity .15s, transform .15s}
+    .toast.show{opacity:1; transform:translateY(0)}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Keyword Joiner</h1>
+    <span class="hint mono">XLSX → comma‑separated list</span>
+    <div class="spacer"></div>
+    <label class="row" title="Toggle light/dark">
+      <span class="hint">Light</span>
+      <div id="modeSwitch" class="switch"><div class="knob"></div></div>
+      <span class="hint">Dark</span>
+    </label>
+  </header>
+
+  <div class="grid">
+    <section class="card">
+      <div class="row" style="justify-content:space-between; margin-bottom:12px">
+        <div class="row">
+          <label><input id="hasHeader" type="checkbox" checked /> My list has a header</label>
+        </div>
+        <div class="row">
+          <button id="copyBtn" class="btn" disabled>Copy list</button>
+          <button id="downloadBtn" class="btn" disabled>Download .txt</button>
+        </div>
+      </div>
+
+      <div id="drop" class="drop" tabindex="0" aria-label="Upload XLSX by dropping or choosing a file">
+        <div><strong>Drop XLSX here</strong> or
+          <label style="text-decoration:underline; cursor:pointer">
+            choose a file
+            <input id="file" type="file" accept=".xlsx,.xls" hidden>
+          </label>
+        </div>
+        <div class="hint">Auto‑parses on upload. Up to 50k+ rows.</div>
+      </div>
+
+      <div class="metrics" id="metrics"></div>
+    </section>
+
+    <section class="card">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px">
+        <strong>Comma‑Separated Output</strong>
+      </div>
+      <div class="output-container">
+        <textarea id="out" class="mono" readonly></textarea>
+        <div id="copyIndicator" class="copy-indicator" title="Copy output">Copy</div>
+      </div>
+      <div class="hint" style="margin-top:8px">
+        Cleaning: trims edges, removes quotes and unsupported punctuation, keeps hyphens, de‑dupes, sorts A→Z.
+      </div>
+    </section>
+  </div>
+
+  <div class="footer">Built with vanilla HTML/CSS/JS. Processes locally. No server.</div>
+</div>
+
+<div id="toast" class="toast">Copied</div>
+
+<script>
+  // Theme
+  const root=document.documentElement;const modeSwitch=document.getElementById('modeSwitch');
+  function setMode(mode){const light=mode==='light';root.classList.toggle('light',light);modeSwitch.classList.toggle('on',!light);localStorage.setItem('kj_mode',light?'light':'dark')}
+  setMode(localStorage.getItem('kj_mode')||'dark');
+  modeSwitch.addEventListener('click',()=>setMode(root.classList.contains('light')?'dark':'light'));
+
+  // Elements
+  const drop=document.getElementById('drop');
+  const fileInput=document.getElementById('file');
+  const out=document.getElementById('out');
+  const copyBtn=document.getElementById('copyBtn');
+  const downloadBtn=document.getElementById('downloadBtn');
+  const metricsEl=document.getElementById('metrics');
+  const hasHeader=document.getElementById('hasHeader');
+  const toast=document.getElementById('toast');
+  const copyIndicator=document.getElementById('copyIndicator');
+  const outBox = document.querySelector('.output-container');
+    outBox.addEventListener('click', copyOutput);
+
+  // Fresh state on load/refresh
+  window.addEventListener('load',()=>{fileInput.value='';out.value='';window.__lastSheetArr=null;renderMetricsEmpty();});
+  // Output: allow scrolling but block click/select focus
+  out.setAttribute('tabindex','-1');
+  out.addEventListener('mousedown',e=>{e.preventDefault()}); // blocks selection/focus but wheel scroll still works
+
+  // Drag & drop behavior
+  ['dragenter','dragover'].forEach(evt =>
+    drop.addEventListener(evt,e=>{e.preventDefault();drop.classList.add('drag');})
+  );
+  ['dragleave','drop'].forEach(evt =>
+    drop.addEventListener(evt,e=>{e.preventDefault();drop.classList.remove('drag');})
+  );
+  drop.addEventListener('drop', e => { const f=e.dataTransfer.files?.[0]; if(f) handleFile(f); });
+  drop.addEventListener('click', ()=> fileInput.click());
+  drop.addEventListener('keydown', e => { if(e.key==='Enter' || e.key===' ') { e.preventDefault(); fileInput.click(); }});
+  fileInput.addEventListener('change', e => { const f=e.target.files?.[0]; if(f) handleFile(f); });
+
+  // Header toggle reprocess
+  hasHeader.addEventListener('change', ()=>{ if(window.__lastSheetArr) processSheetArray(window.__lastSheetArr); });
+
+  // File handling
+  async function handleFile(file){
+    const t0=performance.now();
+    const data=await file.arrayBuffer();
+    const wb=XLSX.read(data,{type:'array'});
+    const ws=wb.Sheets[wb.SheetNames[0]];
+    const arr=XLSX.utils.sheet_to_json(ws,{header:1,raw:true,defval:''});
+    window.__lastSheetArr=arr;
+    processSheetArray(arr,t0,file.name);
+  }
+
+  function processSheetArray(arr,t0=performance.now(),filename=''){
+    const startRow=hasHeader.checked?1:0;
+    // Auto-pick densest column
+    const colCount=Math.max(0,...arr.map(r=>r.length));
+    const counts=new Array(colCount).fill(0);
+    for(let r=startRow;r<arr.length;r++){
+      const row=arr[r]||[];
+      for(let c=0;c<colCount;c++){
+        const v=String(row[c]??'').trim();
+        if(v) counts[c]++;
+      }
+    }
+    const colIndex=counts.indexOf(Math.max(...counts));
+
+    const raw=[];
+    for(let r=startRow;r<arr.length;r++){
+      const row=arr[r]||[];
+      const v=row[colIndex];
+      if(v==null) continue;
+      const s=String(v);
+      if(s.trim().length===0) continue;
+      raw.push(s);
+    }
+
+    const t1=performance.now();
+    const {kept,joined}=cleanAndJoin(raw);
+    out.value=joined;
+    const enabled=joined.length>0;
+    copyBtn.disabled=!enabled;
+    downloadBtn.disabled=!enabled;
+    copyIndicator.style.display=enabled?'block':'none';
+
+    const t2=performance.now();
+    renderMetrics({
+      file:filename,
+      rows:arr.length,
+      considered:raw.length,
+      uniqueCount:kept.length,
+      bytes:new Blob([joined]).size,
+      prepMs:(t1-t0)|0,
+      cleanMs:(t2-t1)|0
+    });
+  }
+
+  // Cleaning
+  function cleanAndJoin(values){
+    const seen=new Set(); const kept=[];
+    for(const orig of values){
+      let s=String(orig);
+      s=s.replace(/[\u2018\u2019\u201C\u201D]/g,'');      // smart quotes
+      s=s.replace(/[\u2012-\u2015]/g,'-');             // normalize dashes
+      s=s.replace(/[^A-Za-z0-9\- ]+/g,'');             // keep letters, numbers, space, hyphen
+      s=s.replace(/\s+/g,' ').trim();                  // collapse/trim
+      if(!s) continue;
+      if(!seen.has(s)){ seen.add(s); kept.push(s); }
+    }
+    kept.sort((a,b)=>a.localeCompare(b,undefined,{sensitivity:'base',numeric:true}));
+    const joined=kept.join(',');
+    return {kept,joined};
+  }
+
+  // Metrics
+  function metricLine(items, okIndex=null, warnIndex=null){
+    const line=document.createElement('div'); line.className='metric-line';
+    items.forEach((txt,i)=>{
+      const b=document.createElement('div'); b.className='badge';
+      if(i===okIndex) b.classList.add('ok');
+      if(i===warnIndex) b.classList.add('warn');
+      b.textContent=txt; line.appendChild(b);
+    });
+    return line;
+  }
+  function renderMetricsEmpty(){
+    metricsEl.innerHTML='';
+    const g=document.createElement('div'); g.className='metric-group';
+    const t=document.createElement('div'); t.className='metric-title'; t.textContent='Status';
+    g.append(t, metricLine(['No file']));
+    metricsEl.appendChild(g);
+  }
+  function renderMetrics({file,rows,considered,uniqueCount,bytes,prepMs,cleanMs}){
+    metricsEl.innerHTML='';
+    const kb=(bytes/1024).toFixed(1);
+
+    const g1=document.createElement('div'); g1.className='metric-group';
+    g1.append(
+      Object.assign(document.createElement('div'),{className:'metric-title',textContent:'File'}),
+      metricLine([file?`Name: ${file}`:'Name: n/a', `Rows: ${rows}`])
+    );
+
+    const g2=document.createElement('div'); g2.className='metric-group';
+    g2.append(
+      Object.assign(document.createElement('div'),{className:'metric-title',textContent:'Counts'}),
+      metricLine([`Parsed: ${considered}`, `Cleaned unique: ${uniqueCount}`], 1)
+    );
+
+    const g3=document.createElement('div'); g3.className='metric-group';
+    g3.append(
+      Object.assign(document.createElement('div'),{className:'metric-title',textContent:'Performance'}),
+      metricLine([`Parse: ${prepMs} ms`, `Clean: ${cleanMs} ms`, `Output: ${kb} KB`])
+    );
+
+    metricsEl.append(g1,g2,g3);
+  }
+
+  // Clipboard
+  function showToast(msg='Copied'){toast.textContent=msg;toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),1200)}
+  async function copyOutput(){
+    if(!out.value) return;
+    try{
+      await navigator.clipboard.writeText(out.value);
+      showToast('Copied to clipboard');
+      copyIndicator.textContent='Copied';
+      copyIndicator.classList.add('copied');
+      setTimeout(()=>{copyIndicator.textContent='Copy';copyIndicator.classList.remove('copied')},1500);
+    }catch{
+      showToast('Copied');
+    }
+  }
+  copyBtn.addEventListener('click',copyOutput);
+  copyIndicator.addEventListener('click',copyOutput);
+
+  // Download
+  downloadBtn.addEventListener('click',()=>{
+    if(!out.value) return;
+    const blob=new Blob([out.value],{type:'text/plain;charset=utf-8'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a'); a.href=url; a.download='keywords.csv.txt';
+    document.body.appendChild(a); a.click();
+    setTimeout(()=>{URL.revokeObjectURL(url); a.remove();},0);
+  });
+</script>
+</body>
+</html>
