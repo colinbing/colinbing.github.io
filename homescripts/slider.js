@@ -53,3 +53,14 @@ function carousel_itemsPerSlide($carousel){
 	
 	return Math.floor(innerW/itemW);
 }
+
+document.querySelectorAll('#skills-section .chip[data-tip]').forEach(chip=>{
+  const update=()=>{
+    chip.classList.remove('tip-left','tip-right');
+    const r = chip.getBoundingClientRect(), pad = 12;
+    if (r.left < pad*2) chip.classList.add('tip-left');
+    else if (window.innerWidth - r.right < pad*2) chip.classList.add('tip-right');
+  };
+  update();
+  window.addEventListener('resize', update);
+});

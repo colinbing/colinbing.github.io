@@ -745,3 +745,19 @@ footer .row {
   #skills-section .chip[data-tip]::after{ max-width:80vw; }
 }
 
+#skills-section .chip.tip-left[data-tip]::after{
+    left: 0; transform: translateX(0) translateY(6px);
+    max-width: calc(100vw - 24px);
+  }
+  #skills-section .chip.tip-left[data-tip]::before{
+    left: 12px; transform: none;
+  }
+  
+  /* snap to right edge */
+  #skills-section .chip.tip-right[data-tip]::after{
+    left: auto; right: 0; transform: translateX(0) translateY(6px);
+    max-width: calc(100vw - 24px);
+  }
+  #skills-section .chip.tip-right[data-tip]::before{
+    left: auto; right: 12px; transform: none;
+  }
