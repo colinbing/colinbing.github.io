@@ -70,7 +70,7 @@ p,li{ font-size:.9rem; color:var(--text) }
 .dropdown-item:hover{ background-color:#495057; color:#fff }
 
 /* ========= INTRO / GENERAL ========= */
-#intro-section .row{ border-radius:20px; padding:20px 0 }
+#intro-section .row{ border-radius:20px; padding:20px 50px;max-width: 1320px;margin: 0 auto;}
 .intro-section{ padding-bottom:40px }
 .experience-section hr{ max-width:80% }
 
@@ -306,7 +306,7 @@ footer .row{ left:0; right:0 }
 :root{ --nav-h: 64px }             /* adjust if your navbar is taller */
 
 /* --- fix intro spacing under navbar + anchor offset --- */
-.intro-section{ padding-top: calc(var(--nav-h) + 32px) }  /* more space above */
+.intro-section{ padding-top: calc(var(--nav-h)) }  /* more space above */
 #intro-section{ scroll-margin-top: calc(var(--nav-h) + 8px) }
 
 /* --- enforce skills grid gap at all widths --- */
