@@ -160,8 +160,11 @@ p,li{ font-size:.9rem; color:var(--text) }
   -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
   -webkit-mask-composite:xor; mask-composite:exclude; opacity:var(--ringOpacity); transition:opacity .18s ease
 }
-.cert-link{ display:block; height:100%; text-decoration:none; color:inherit; outline:none }
+.cert-link{ display:block; height:100%; text-decoration:none!important; color:inherit; outline:none }
 .cert-link:focus-visible{ outline:3px solid var(--link); outline-offset:3px; border-radius:14px }
+.cert-link:hover .cert-cta {
+  text-decoration: underline!important; /* only underline the "View credential" text */
+}
 
 .cert-figure{ display:flex; align-items:center; gap:14px; padding:16px }
 .cert-avatar{ width:72px; height:72px; display:block; border-radius:9999px; overflow:hidden; background:var(--logoBg); box-shadow:inset 0 0 0 1px var(--border) }
@@ -171,7 +174,7 @@ p,li{ font-size:.9rem; color:var(--text) }
 .cert-issuer{ margin:0; font-size:14px; color:var(--muted) }
 .cert-cta{ margin-top:8px; font-weight:600; font-size:14px; color:var(--link) }
 .cert-link:hover .cert-cta,
-.cert-link:focus .cert-cta{ text-decoration:underline }
+.cert-link:focus .cert-cta{ text-decoration:none; }
 .cert-link:hover .cert-name,
 .cert-link:hover .cert-issuer{ text-decoration:none }
 
@@ -333,7 +336,8 @@ footer .row{ left:0; right:0 }
 
 .cert-card{ position:relative; isolation:isolate; } /* new stacking context */
 .cert-card::before{ pointer-events:none; z-index:0; }
-.cert-link{ position:relative; z-index:1; pointer-events:auto; display:block; }
+.cert-link{ position:relative; z-index:1; pointer-events:auto; display:block; text-decoration:none;}
+
 
 /* === Infinite Carousel (ix-) === */
 .ix-carousel{--per-view:1; --gap:0; position:relative; width:100%; overflow:hidden; user-select:none}
