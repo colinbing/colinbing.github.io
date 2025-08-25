@@ -819,28 +819,84 @@
     <script src="homescripts/gallery-script.js"></script>
     <script src="https://unpkg.com/typeit@8.7.1/dist/index.umd.js"></script>
     <script src="homescripts/typer.js"></script>
-    <script>
-        (() => {
-          const pad = 12;
-          const chips = document.querySelectorAll('#skills-section .chip[data-tip]');
-        
-          const update = (chip) => {
-            chip.classList.remove('tip-left','tip-right');
-            const r = chip.getBoundingClientRect();
-            if (r.left < pad*2) chip.classList.add('tip-left');
-            else if (window.innerWidth - r.right < pad*2) chip.classList.add('tip-right');
-          };
-        
-          chips.forEach(chip => {
-            if (!chip.hasAttribute('tabindex')) chip.tabIndex = 0;         // focusable <span>
-            chip.addEventListener('pointerenter', () => update(chip), {passive:true});
-            chip.addEventListener('pointerdown',  () => update(chip), {passive:true}); // touch
-            chip.addEventListener('focusin',      () => update(chip));
-            chip.addEventListener('blur',         () => chip.classList.remove('tip-left','tip-right'));
-          });
-        
-          window.addEventListener('resize', () => chips.forEach(update), {passive:true});
-        })();
-        </script>       
+        <script>
+            (() => {
+            const BREAK = 700;   // when to switch to mobile centering
+            const SIDE  = 10;    // side margin in px (so width = 100vw - 2*SIDE)
+
+            const chips = document.querySelectorAll('#skills-section .chip[data-tip]');
+
+            // hidden measurer to get actual tooltip width with wrapping
+            let meas = null;
+            function ensureMeasurer(){
+                if (meas) return meas;
+                meas = document.createElement('div');
+                meas.style.position = 'fixed';
+                meas.style.left = '0';
+                meas.style.top = '-10000px';
+                meas.style.visibility = 'hidden';
+                meas.style.padding = '8px 10px';
+                meas.style.lineHeight = '1.35';
+                meas.style.boxSizing = 'border-box';
+                meas.style.whiteSpace = 'normal';
+                meas.style.width = 'max-content';
+                document.body.appendChild(meas);
+                const cs = getComputedStyle(document.body);
+                meas.style.fontFamily = cs.fontFamily;
+                meas.style.fontSize   = cs.fontSize;
+                meas.style.fontWeight = cs.fontWeight;
+                return meas;
+            }
+            function measureTipWidth(text){
+                const m = ensureMeasurer();
+                m.style.maxWidth = `${window.innerWidth - SIDE*2}px`;
+                m.textContent = text || '';
+                const w = m.getBoundingClientRect().width;
+                return Math.min(w, window.innerWidth - SIDE*2);
+            }
+
+            function applyMobileClamp(chip){
+                const r = chip.getBoundingClientRect();
+                const cx = r.left + r.width/2;
+                const w  = measureTipWidth(chip.getAttribute('data-tip'));
+                const left = cx - w/2;
+                const right = left + w;
+
+                let shift = 0;
+                if (left < SIDE) shift = SIDE - left; // push right
+                else if (right > window.innerWidth - SIDE) shift = (window.innerWidth - SIDE) - right; // push left (negative)
+                chip.style.setProperty('--tip-shift', `${Math.round(shift)}px`);
+            }
+
+            function snapOrCenter(chip){
+                chip.classList.remove('tip-left','tip-right');
+                if (window.innerWidth <= BREAK){
+                applyMobileClamp(chip);        // center + clamp with arrow centered
+                return;
+                }
+                // desktop: snap near edges using expected max width
+                const r = chip.getBoundingClientRect(), GUTTER = 12;
+                const cx = r.left + r.width/2;
+                const maxTip = Math.min(window.innerWidth * 0.80, 560);
+                const half = maxTip / 2;
+                if (cx - half < GUTTER) chip.classList.add('tip-left');
+                else if ((window.innerWidth - cx) - half < GUTTER) chip.classList.add('tip-right');
+                chip.style.removeProperty('--tip-shift');
+            }
+
+            chips.forEach(chip => {
+                if (!chip.hasAttribute('tabindex')) chip.tabIndex = 0;
+                chip.addEventListener('pointerenter', () => snapOrCenter(chip), {passive:true});
+                chip.addEventListener('pointerdown',  () => snapOrCenter(chip), {passive:true});
+                chip.addEventListener('focusin',      () => snapOrCenter(chip));
+                chip.addEventListener('blur',         () => {
+                chip.classList.remove('tip-left','tip-right');
+                chip.style.removeProperty('--tip-shift');
+                });
+            });
+
+            window.addEventListener('resize', () => chips.forEach(snapOrCenter), {passive:true});
+            })();
+            </script>
 </body>
 </html>

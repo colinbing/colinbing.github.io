@@ -70,7 +70,7 @@ p,li{ font-size:.9rem; color:var(--text) }
 .dropdown-item:hover{ background-color:#495057; color:#fff }
 
 /* ========= INTRO / GENERAL ========= */
-#intro-section .row{ border-radius:20px; padding:20px 50px;max-width: 1320px;margin: 0 auto;}
+#intro-section .row{ border-radius:20px; padding:20px 10px;margin: 0 auto;}
 .intro-section{ padding-bottom:40px }
 .experience-section hr{ max-width:80% }
 
@@ -94,8 +94,8 @@ p,li{ font-size:.9rem; color:var(--text) }
 #skills-section{ padding:40px 16px }
 #skills-section .skills-wrap{ max-width:clamp(960px,92vw,1120px); margin:0 auto }
 #skills-section h2{ margin:0 0 16px; text-align:center; font-size:28px }
-#skills-section .rowgrid{ display:grid; grid-template-columns:1fr; gap:16px }
-@media (min-width:1100px){ #skills-section .rowgrid{ grid-template-columns:1fr 1fr } }
+#skills-section .rowgrid{ display:grid; grid-template-columns:1fr; gap:28px }
+@media (min-width:1100px){ #skills-section .rowgrid{ grid-template-columns:1fr 1fr; gap:28px } }
 
 #skills-section .rowcard{
   background:#fff; color:#1e2430; border-radius:16px; padding:16px 14px;
@@ -122,25 +122,73 @@ p,li{ font-size:.9rem; color:var(--text) }
 }
 
 /* tooltips */
+/* ===== Tooltips ===== */
+
+/* base: centered above chip */
 #skills-section .chip[data-tip]::after{
-  content:attr(data-tip); position:absolute; left:50%; bottom:calc(100% + 10px); transform:translateX(-50%) translateY(6px);
-  width:max-content; max-width:44ch; white-space:normal; word-break:normal; overflow-wrap:break-word; text-wrap:auto;
-  background:rgba(25,30,45,.96); color:#eaf0ff; padding:8px 10px; border-radius:8px; border:1px solid rgba(255,255,255,.15);
-  line-height:1.35; box-shadow:0 10px 24px rgba(0,0,0,.25); opacity:0; visibility:hidden; transition:opacity .15s ease, transform .15s ease; z-index:50; pointer-events:none
+  content:attr(data-tip);
+  position:absolute;
+  left:50%; bottom:calc(100% + 10px);
+  transform:translate(-50%, 6px);
+  width:max-content; max-width:44ch;
+  white-space:normal; word-break:normal; overflow-wrap:break-word; text-wrap:auto;
+  background:rgba(25,30,45,.96); color:#eaf0ff;
+  padding:8px 10px; border-radius:8px; border:1px solid rgba(255,255,255,.15);
+  line-height:1.35; box-shadow:0 10px 24px rgba(0,0,0,.25);
+  opacity:0; visibility:hidden; transition:opacity .15s ease, transform .15s ease;
+  z-index:50; pointer-events:none;
 }
 #skills-section .chip[data-tip]::before{
-  content:""; position:absolute; left:50%; bottom:100%; transform:translateX(-50%); border:6px solid transparent;
-  border-top:none; border-bottom-color:rgba(25,30,45,.96); opacity:0; transition:opacity .15s ease; z-index:49; pointer-events:none
+  content:""; position:absolute; left:50%; bottom:100%;
+  transform:translateX(-50%);
+  border:6px solid transparent; border-top:none; border-bottom-color:rgba(25,30,45,.96);
+  opacity:0; transition:opacity .15s ease; z-index:49; pointer-events:none;
 }
+
+/* show state (centered) */
 #skills-section .chip[data-tip]:hover::after,
+#skills-section .chip[data-tip]:focus-visible::after{ opacity:1; visibility:visible; transform:translate(-50%, 0) }
 #skills-section .chip[data-tip]:hover::before,
-#skills-section .chip[data-tip]:focus-visible::after,
-#skills-section .chip[data-tip]:focus-visible::before{ opacity:1; visibility:visible; transform:translateX(-50%) translateY(0) }
-@media (max-width:520px){ #skills-section .chip[data-tip]::after{ max-width:80vw } }
+#skills-section .chip[data-tip]:focus-visible::before{ opacity:1 }
+
+/* snap left/right for wide screens */
 #skills-section .chip.tip-left[data-tip]::after{ left:0; right:auto; transform:translateY(6px); max-width:calc(100vw - 24px) }
 #skills-section .chip.tip-left[data-tip]::before{ left:12px; right:auto; transform:none }
 #skills-section .chip.tip-right[data-tip]::after{ left:auto; right:0; transform:translateY(6px); max-width:calc(100vw - 24px) }
 #skills-section .chip.tip-right[data-tip]::before{ left:auto; right:12px; transform:none }
+/* show when snapped */
+#skills-section .chip.tip-left[data-tip]:hover::after,
+#skills-section .chip.tip-left[data-tip]:focus-visible::after,
+#skills-section .chip.tip-right[data-tip]:hover::after,
+#skills-section .chip.tip-right[data-tip]:focus-visible::after{ transform:translateY(0) }
+
+/* mobile ≤700px: center + clamp to viewport; arrow stays centered on chip */
+@media (max-width:700px){
+  #skills-section .chip[data-tip]::after{
+    left:50%; right:auto; bottom:calc(100% + 10px);
+    transform: translate(calc(-50% + var(--tip-shift, 0px)), 6px);
+    max-width: calc(100vw - 20px);   /* viewport minus 20px total */
+  }
+  #skills-section .chip[data-tip]:hover::after,
+  #skills-section .chip[data-tip]:focus-visible::after{
+    transform: translate(calc(-50% + var(--tip-shift, 0px)), 0);
+  }
+  #skills-section .chip[data-tip]::before{
+    left:50%; right:auto; transform: translateX(-50%);
+  }
+  /* ignore snap classes on mobile; still use the same shift */
+  #skills-section .chip.tip-left[data-tip]::after,
+  #skills-section .chip.tip-right[data-tip]::after{
+    left:50%; right:auto;
+    transform: translate(calc(-50% + var(--tip-shift, 0px)), 6px);
+    max-width: calc(100vw - 20px);
+  }
+  #skills-section .chip.tip-left[data-tip]::before,
+  #skills-section .chip.tip-right[data-tip]::before{
+    left:50%; right:auto; transform: translateX(-50%);
+  }
+}
+
 
 /* ========= CERTIFICATIONS (new) ========= */
 .certification-section{ background:var(--surface-2); padding:36px 0 28px }
@@ -234,6 +282,10 @@ footer .row{ left:0; right:0 }
   .row{ padding-top:0 !important }
 }
 
+@media (min-width:845px){
+  #intro-section .row{ border-radius:20px; padding:20px 50px;max-width: 1320px;margin: 0 auto;}
+}
+
 /* ========= THEME-SPECIFIC SECTIONS ========= */
 /* Use your alternation only in dark theme as before */
 [data-theme="dark"] .skills-section{ background-color:var(--sec-blue) !important }
@@ -286,41 +338,12 @@ footer .row{ left:0; right:0 }
   object-fit:contain; display:block;
 }
 
-/* If you keep the wrapper on some cards, leave it. This rule only
-   targets logos that are direct children of .cert-figure. */
-
-/* --- Ensure spacing between skill cards at all widths --- */
-#skills-section .rowgrid{
-  display:grid;
-  grid-template-columns:1fr;
-  gap:24px;                /* adds row + column spacing */
-}
-@media (min-width:1100px){
-  #skills-section .rowgrid{
-    grid-template-columns:1fr 1fr;
-    gap:24px;
-  }
-}
-
-/* Safety: kill any stray margins that collapse the gap */
-#skills-section .rowcard{ margin:0; margin-bottom:20px;}
-
 /* --- spacing scale + navbar height --- */
 :root{ --nav-h: 64px }             /* adjust if your navbar is taller */
 
 /* --- fix intro spacing under navbar + anchor offset --- */
 .intro-section{ padding-top: calc(var(--nav-h)) }  /* more space above */
 #intro-section{ scroll-margin-top: calc(var(--nav-h) + 8px) }
-
-/* --- enforce skills grid gap at all widths --- */
-#skills-section .rowgrid{
-  display:grid !important;
-  grid-template-columns:1fr;
-  gap:28px;                         /* increase vertical and column spacing */
-}
-@media (min-width:1100px){
-  #skills-section .rowgrid{ grid-template-columns:1fr 1fr; gap:28px }
-}
 
 /* fallback if some browsers ignore grid gap */
 @supports not (gap: 1rem){
