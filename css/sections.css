@@ -92,14 +92,21 @@ p,li{ font-size:.9rem; color:var(--text) }
 
 /* cards in skills matrix */
 #skills-section{ padding:40px 16px }
-#skills-section .skills-wrap{ max-width:clamp(960px,92vw,1120px); margin:0 auto }
+#skills-section .skills-wrap{
+  max-width:clamp(960px,92vw,1120px);
+  margin:0 auto;
+  display:grid;          /* adds spacing between the top card and the 2-card grid */
+  gap:24px;              /* single source of vertical spacing */
+}
+
 #skills-section h2{ margin:0 0 16px; text-align:center; font-size:28px }
-#skills-section .rowgrid{ display:grid; grid-template-columns:1fr; gap:28px }
-@media (min-width:1100px){ #skills-section .rowgrid{ grid-template-columns:1fr 1fr; gap:28px } }
+#skills-section .rowgrid{ display:grid; grid-template-columns:1fr; gap:24px }
+@media (min-width:1100px){ #skills-section .rowgrid{ grid-template-columns:1fr 1fr } }
+
 
 #skills-section .rowcard{
   background:#fff; color:#1e2430; border-radius:16px; padding:16px 14px;
-  box-shadow:0 8px 24px rgba(0,0,0,.12)
+  box-shadow:0 8px 24px rgba(0,0,0,.12); margin:0;
 }
 #skills-section .rowhead{ font-weight:700; font-size:18px; margin:0 0 8px }
 
@@ -130,6 +137,8 @@ p,li{ font-size:.9rem; color:var(--text) }
   position:absolute;
   left:50%; bottom:calc(100% + 10px);
   transform:translate(-50%, 6px);
+  box-sizing:border-box;
+  display:inline-block; 
   width:max-content; max-width:44ch;
   white-space:normal; word-break:normal; overflow-wrap:break-word; text-wrap:auto;
   background:rgba(25,30,45,.96); color:#eaf0ff;
@@ -152,9 +161,11 @@ p,li{ font-size:.9rem; color:var(--text) }
 #skills-section .chip[data-tip]:focus-visible::before{ opacity:1 }
 
 /* snap left/right for wide screens */
-#skills-section .chip.tip-left[data-tip]::after{ left:0; right:auto; transform:translateY(6px); max-width:calc(100vw - 24px) }
+#skills-section .chip.tip-left[data-tip]::after{ left:0; right:auto; transform:translateY(6px); max-width:min(44ch, calc(100vw - 24px))
+ }
 #skills-section .chip.tip-left[data-tip]::before{ left:12px; right:auto; transform:none }
-#skills-section .chip.tip-right[data-tip]::after{ left:auto; right:0; transform:translateY(6px); max-width:calc(100vw - 24px) }
+#skills-section .chip.tip-right[data-tip]::after{ left:auto; right:0; transform:translateY(6px); max-width:min(44ch, calc(100vw - 24px))
+ }
 #skills-section .chip.tip-right[data-tip]::before{ left:auto; right:12px; transform:none }
 /* show when snapped */
 #skills-section .chip.tip-left[data-tip]:hover::after,
