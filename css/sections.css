@@ -403,3 +403,105 @@ section {
     padding-top: 100px; /* Matches navbar height */
     margin-top: -100px; /* Counteracts the padding to avoid shifting content */
 }
+
+/* ===== Experience: canonical styles ===== */
+
+/* employer column */
+.experience-section .employer{ align-items:stretch; margin-bottom:2rem; }
+.experience-section .employer-header{ padding-bottom:.5rem; text-align:center; }
+.experience-section .employer-logo{ width:130px; height:auto; display:inline-block; }
+.experience-section .employer-dates{ color:#6b7280; }
+.experience-section hr{ margin:2rem 0; }
+
+/* stacked roles */
+.role-stack{ display:flex; flex-direction:column; gap:1.25rem; }
+
+/* role block with exact-height vertical rule */
+.role{
+  position:relative;
+  display:flow-root;          /* prevents margin collapse */
+  padding-left:.9rem;         /* space between rule and content */
+  padding-block:.2rem;        /* small top/bottom breathing room */
+}
+.role::before{
+  content:"";
+  position:absolute;
+  left:0; top:3px; bottom:18px;    /* match block height exactly */
+  width:2px; background:#e5e7eb; border-radius:2px;
+}
+
+/* headers and lists */
+.role-header{ display:flex; flex-wrap:wrap; align-items:baseline; gap:.5rem .75rem; margin:0 0 .7rem; }
+.role-title{ margin:0; font-weight:600; }
+.role-dates{ color:#6b7280; font-size:.95rem; }
+.role-list{ margin:0; padding-left:1.1rem; }
+.role-list>li{ margin:0 0 .4rem; }
+.role-list>li:last-child{ margin-bottom:0; }
+
+/* single-role employers: hide duplicate dates in header */
+.employer.single-role .role-dates{ display:none; }
+
+/* ===== Mobile ===== */
+@media (max-width:767.98px){
+  .experience-section .employer-header{ margin-bottom:1rem; }
+
+  /* remove left rule on mobile; avoid double lines with <hr> */
+  .role{ padding-left:0; }
+  .role::before{ display:none; }
+
+  /* add a thin separator only between stacked roles */
+  .role + .role{ position:relative; padding-top:.75rem; }
+  .role + .role::before{
+    content:""; display:block;
+    position:absolute; left:0; right:0; top:0; height:2px;
+    background:#e5e7eb; border-radius:2px;
+  }
+
+  .role-dates{ font-size:.9rem; display:inline; }
+}
+
+/* Move rule closer to company, add more gap before bullets */
+:root{
+  --role-gap: 1.25rem;        /* space between rule and bullets */
+  --role-rule-shift: -10px;   /* push rule left toward company */
+}
+.role{ padding-left: var(--role-gap); }
+.role::before{ left: var(--role-rule-shift); }
+
+/* Slightly stronger shift on wide screens (optional) */
+@media (min-width:1200px){
+  :root{ --role-gap: 1.35rem; --role-rule-shift: -12px; }
+}
+
+/* Center the role header on mobile; keep bullets left-aligned */
+@media (max-width:767.98px){
+  .role-header{
+    justify-content: center;
+    text-align: center;
+  }
+  .role-title{ width:100%; }          /* title on its own centered line */
+  .role-dates{ margin:0 auto; }       /* dates centered next to/under title */
+  /* bullets stay left by default */
+}
+
+/* Desktop/tablet only: keep the rule closer to the company */
+@media (min-width: 768px){
+  .role{ padding-left: 1.25rem; }   /* gap before bullets */
+  .role::before{ left: -10px; }     /* shift rule toward company */
+}
+
+/* Mobile fix: restore left-aligned bullets and avoid double bars */
+@media (max-width: 767.98px){
+  .role{ padding-left: 0 !important; }        /* remove indent */
+  .role::before{ display: none !important; }  /* no left rule */
+  .role + .role{ position: relative; padding-top: .75rem; }
+  .role + .role::before{
+    content: ""; position: absolute; left: 0; right: 0; top: 0; height: 2px;
+    background: #e5e7eb; border-radius: 2px;
+  }
+
+  /* center only the header */
+  .role-header{ justify-content: center; text-align: center; }
+  .role-title{ width: 100%; }
+  .role-dates{ margin: 0 auto; }
+}
