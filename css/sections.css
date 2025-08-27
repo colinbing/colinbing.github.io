@@ -411,7 +411,7 @@ section {
 .experience-section .employer-header{ padding-bottom:.5rem; text-align:center; }
 .experience-section .employer-logo{ width:130px; height:auto; display:inline-block; }
 .experience-section .employer-dates{ color:#6b7280; }
-.experience-section hr{ margin:2rem 0; }
+.experience-section hr{ margin:2rem auto; }
 
 /* stacked roles */
 .role-stack{ display:flex; flex-direction:column; gap:1.25rem; }
@@ -517,4 +517,8 @@ section {
 /* Slight trim on larger screens too (optional) */
 @media (min-width:768px){
   .role{ padding-block:.12rem; }                /* was .2rem */
+}
+
+.pushable {
+      margin-top: 20px;
 }
