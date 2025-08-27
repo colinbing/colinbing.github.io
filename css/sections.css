@@ -505,3 +505,16 @@ section {
   .role-title{ width: 100%; }
   .role-dates{ margin: 0 auto; }
 }
+
+/* Tighten stacked-role spacing on mobile */
+@media (max-width:767.98px){
+  .role{ padding-block:0 !important; }          /* remove extra top/bottom pad */
+  .role + .role{ padding-top:.4rem !important; }/* was .75rem */
+  .role + .role::before{ top:0; }               /* keep the separator snug */
+  .experience-section hr{ margin:1.25rem 0; }   /* optional: smaller company gap */
+}
+
+/* Slight trim on larger screens too (optional) */
+@media (min-width:768px){
+  .role{ padding-block:.12rem; }                /* was .2rem */
+}
