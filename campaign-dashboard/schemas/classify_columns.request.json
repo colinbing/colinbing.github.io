@@ -1,0 +1,13 @@
+{
+"$schema": "https://json-schema.org/draft/2020-12/schema",
+"title": "classify_columns.request",
+"type": "object",
+"required": ["dataset_id", "sheet_names", "headers", "locale", "app_version"],
+"properties": {
+"dataset_id": { "type": "string", "description": "Local salted SHA-256 of file bytes" },
+"sheet_names": { "type": "array", "items": { "type": "string" }, "maxItems": 5 },
+"headers": { "type": "array", "items": { "type": "string", "maxLength": 128 }, "minItems": 1, "maxItems": 200 },
+"locale": { "type": "string", "pattern": "^[a-z]{2}-[A-Z]{2}$" },
+"app_version": { "type": "string" }
+}
+}

@@ -1,0 +1,26 @@
+{
+"$schema": "https://json-schema.org/draft/2020-12/schema",
+"title": "classify_columns.response",
+"type": "object",
+"required": ["mapping"],
+"properties": {
+"mapping": {
+"type": "object",
+"additionalProperties": {
+"type": "object",
+"required": ["role"],
+"properties": {
+"role": {
+"type": "string",
+"enum": [
+"dimension.campaign","dimension.placement","dimension.creative",
+"dimension.channel","dimension.date","metric.impressions","metric.clicks",
+"metric.spend","metric.conversions","metric.views","ignore"
+]
+},
+"notes": { "type": "string" }
+}
+}
+}
+}
+}

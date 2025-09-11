@@ -1,0 +1,78 @@
+{
+"$schema": "https://json-schema.org/draft/2020-12/schema",
+"title": "summarize_facts.request",
+"type": "object",
+"required": [
+"dataset_id","time_range","granularity","totals","top_n","anomalies","privacy"
+],
+"properties": {
+"dataset_id": { "type": "string" },
+"time_range": {
+"type": "object",
+"required": ["start","end"],
+"properties": {
+"start": { "type": "string", "format": "date" },
+"end": { "type": "string", "format": "date" }
+}
+},
+"granularity": { "type": "string", "enum": ["daily","weekly","monthly"] },
+"totals": {
+"type": "object",
+"required": ["impressions","clicks","spend","conversions","ctr","cpc","cpa"],
+"properties": {
+"impressions": { "type": "integer" },
+"clicks": { "type": "integer" },
+"spend": { "type": "number" },
+"conversions": { "type": "integer" },
+"ctr": { "type": "number" },
+"cpc": { "type": "number" },
+"cpa": { "type": "number" }
+}
+},
+"top_n": {
+"type": "array",
+"maxItems": 10,
+"items": {
+"type": "object",
+"required": ["entity_hash","n","spend","impressions","clicks","conversions"],
+"properties": {
+"entity_hash": { "type": "string", "description": "Salted SHA-256 of dimension value" },
+"n": { "type": "integer", "description": "Row count in cohort (k>=5 enforced locally)" },
+"spend": { "type": "number" },
+"impressions": { "type": "integer" },
+"clicks": { "type": "integer" },
+"conversions": { "type": "integer" }
+}
+}
+},
+"anomalies": {
+"type": "array",
+"items": {
+"type": "object",
+"required": ["date","signal","zscore"],
+"properties": {
+"date": { "type": "string", "format": "date" },
+"signal": { "type": "string", "enum": ["spike","drop","spend_efficiency","tracking_gap"] },
+"zscore": { "type": "number" }
+}
+}
+},
+"privacy": {
+"type": "object",
+"required": ["k_min","rounding"],
+"properties": {
+"k_min": { "type": "integer", "const": 5 },
+"rounding": {
+"type": "object",
+"required": ["impressions","clicks","conversions","spend"],
+"properties": {
+"impressions": { "type": "integer", "const": 10 },
+"clicks": { "type": "integer", "const": 10 },
+"conversions": { "type": "integer", "const": 10 },
+"spend": { "type": "integer", "const": 1 }
+}
+}
+}
+}
+}
+}

@@ -1,0 +1,171 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "cpv.synonyms",
+  "version": "1.0",
+  "description": "Header → canonical field mapping via exact/regex synonyms; no AI.",
+  "fields": {
+    "date": {
+      "type": "date",
+      "exact": ["date", "day", "report date"],
+      "regex": ["^(date|day)(?:\\s*\\(.*\\))?$", "^report\\s*date$", "^(?:ga:)?date$"],
+      "notes": "Accepts timestamp columns; will be truncated to local day per dataset policy."
+    },
+    "channel": {
+      "type": "string",
+      "exact": ["channel"],
+      "regex": ["^channel$", "^traffic\\s*channel$", "^ad\\s*type$"],
+      "enum": ["display","video","social","search","audio","native","email","other"]
+    },
+
+    "campaign_id": {
+      "type": "string",
+      "exact": ["campaign id", "campaign_id"],
+      "regex": ["^campaign\\s*id$", "^(?:cm|dv|dcm|cm360|dv360)?:?campaign\\s*id$"]
+    },
+    "campaign_name": {
+      "type": "string",
+      "exact": ["campaign", "campaign name"],
+      "regex": ["^campaign(\\s*name)?$", "^(?:ga:)?campaign$", "^campaign_ref$" ]
+    },
+
+    "adgroup_id": {
+      "type": "string",
+      "exact": ["ad group id", "adgroup id", "line item id", "ad set id", "placement id"],
+      "regex": ["^(ad\\s*group|adgroup|ad\\s*set|line\\s*item|placement)\\s*id$"]
+    },
+    "adgroup_name": {
+      "type": "string",
+      "exact": ["ad group", "adgroup", "ad set", "line item", "placement"],
+      "regex": ["^(ad\\s*group|adgroup|ad\\s*set|line\\s*item|placement)(\\s*name)?$"]
+    },
+
+    "creative_id": {
+      "type": "string",
+      "exact": ["creative id", "ad id"],
+      "regex": ["^(creative|ad)\\s*id$"]
+    },
+    "creative_name": {
+      "type": "string",
+      "exact": ["creative", "creative name", "ad name"],
+      "regex": ["^(creative|ad)(\\s*name)?$"]
+    },
+    "creative_size": {
+      "type": "string",
+      "exact": ["size", "creative size", "ad size", "dimensions"],
+      "regex": ["^(size|dimensions|creative\\s*size|ad\\s*size)$", "^\\d{2,4}x\\d{2,4}$" ]
+    },
+
+    "site_domain": {
+      "type": "string",
+      "exact": ["site (domain)", "site", "domain", "publisher domain"],
+      "regex": ["^(site|domain|site\\s*domain|publisher\\s*domain)$"]
+    },
+    "app_bundle": {
+      "type": "string",
+      "exact": ["app bundle", "bundle id", "app id"],
+      "regex": ["^(app|bundle)\\s*(bundle|id)$"]
+    },
+
+    "device_type": {
+      "type": "string",
+      "exact": ["device", "device type"],
+      "regex": ["^device(\\s*type)?$"],
+      "enum": ["desktop","mobile","tablet","ctv"]
+    },
+    "os": {
+      "type": "string",
+      "exact": ["os", "operating system"],
+      "regex": ["^(os|operating\\s*system)$"],
+      "enum": ["iOS","Android","Windows","macOS","Other"]
+    },
+    "country": {
+      "type": "string",
+      "exact": ["country", "country code"],
+      "regex": ["^country(\\s*code)?$", "^geo$" ]
+    },
+    "region": { "type": "string", "exact": ["region", "state", "province"], "regex": ["^(region|state|province)$"] },
+    "dma":    { "type": "string", "exact": ["dma"], "regex": ["^dma$"] },
+
+    "impressions": {
+      "type": "integer",
+      "exact": ["impressions", "imps", "impr.", "served impressions", "total impressions"],
+      "regex": ["\\bimpr", "^served$"],
+      "platform_hints": { "gam": ["total impressions"], "dv360": ["impressions"], "meta": ["impressions"] }
+    },
+    "clicks": {
+      "type": "integer",
+      "exact": ["clicks", "total clicks"],
+      "regex": ["^click(s)?$", "^total\\s*clicks$"]
+    },
+    "link_clicks": {
+      "type": "integer",
+      "exact": ["link clicks"],
+      "regex": ["^link\\s*clicks$"],
+      "notes": "Social platforms may expose both Clicks (all) and Link Clicks. See mapping policy."
+    },
+    "interactions": {
+      "type": "integer",
+      "exact": ["interactions"],
+      "regex": ["^interactions?$"],
+      "notes": "Google Ads may report Interactions instead of Clicks for some objectives."
+    },
+
+    "spend": {
+      "type": "currency",
+      "exact": ["spend", "cost", "media cost", "amount spent", "ad cost"],
+      "regex": ["^(cost|spend|media\\s*cost|amount\\s*spent|ad\\s*cost)$"],
+      "notes": "Normalized to dataset currency before KPI math."
+    },
+
+    "revenue": {
+      "type": "currency",
+      "exact": ["revenue", "purchase value", "sales"],
+      "regex": ["^(revenue|sales|purchase\\s*value)$"]
+    },
+
+    "conversions": {
+      "type": "integer",
+      "exact": ["conversions", "total conversions", "all conv."],
+      "regex": ["^conversions?$", "^total\\s*conversions$", "^all\\s*conv\\.?$"]
+    },
+    "view_through_conversions": {
+      "type": "integer",
+      "exact": ["view-through conversions", "vTC"],
+      "regex": ["^view[- ]through\\s*conversions$", "^vtc$"]
+    },
+
+    "video_starts": {
+      "type": "integer",
+      "exact": ["video starts", "quartile 0%", "plays (start)"],
+      "regex": ["^(video\\s*starts?|quartile\\s*0%|starts?)$", "^video\\s*views$"],
+      "notes": "On social, 'Video Views' may represent starts; confirm objective."
+    },
+    "video_25": { "type": "integer", "exact": ["quartile 25%", "video 25%"], "regex": ["^(quartile\\s*25%|video\\s*25%)$"] },
+    "video_50": { "type": "integer", "exact": ["quartile 50%", "video 50%"], "regex": ["^(quartile\\s*50%|video\\s*50%)$"] },
+    "video_75": { "type": "integer", "exact": ["quartile 75%", "video 75%"], "regex": ["^(quartile\\s*75%|video\\s*75%)$"] },
+    "video_100": {
+      "type": "integer",
+      "exact": ["video completes", "video 100%", "quartile 100%", "video plays to end", "video completions"],
+      "regex": ["^(video\\s*(?:100%|complet(e|ion)s?|plays?\\s*to\\s*end)|quartile\\s*100%)$"]
+    },
+
+    "measurable_impressions": {
+      "type": "integer",
+      "exact": ["active view: measurable impressions", "measurable impressions", "av measurable"],
+      "regex": ["^(active\\s*view:)?\\s*measurable\\s*impressions$", "^av\\s*measurable$"]
+    },
+    "viewable_impressions": {
+      "type": "integer",
+      "exact": ["active view: viewable impressions", "viewable impressions", "av viewable"],
+      "regex": ["^(active\\s*view:)?\\s*viewable\\s*impressions$", "^av\\s*viewable$"]
+    }
+  },
+  "mapping_policies": {
+    "clicks": {
+      "decision": "If platform in ['meta','tiktok'] and 'link_clicks' present, map link_clicks → clicks and set click_type='link'; else if 'interactions' present and platform='google_ads' with interaction objective, map interactions → clicks and set click_type='interaction'; otherwise map 'clicks'."
+    },
+    "viewability": {
+      "decision": "Prefer measurable/viewable pairs when available. If measurable=0 and viewable>0, fallback to impressions as denominator and set viewability_denominator='served'."
+    }
+  }
+}
