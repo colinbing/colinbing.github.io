@@ -63,29 +63,39 @@
     /* Output */
     .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
     .output-container{position:relative; cursor:pointer;}
-    textarea{
-    width:100%;
-    min-height:260px;
-    resize:vertical;
-    background:#0c0f14;
-    color:#e8eefc;
-    border:1px solid var(--border);
-    border-radius:10px;
-    /* top | right | bottom | left */
-    padding:22px 52px 12px 12px; /* extra top + right space */
-    outline:none;
-    overflow:auto;
-    user-select:none;
-    pointer-events:none; /* keep non-interactive */
+    textarea {
+      width:100%;
+      min-height:260px;
+      resize:vertical;
+      background:#0c0f14;
+      color:#e8eefc;
+      border:1px solid var(--border);
+      border-radius:10px;
+      padding:12px 52px 12px 12px;
+      outline:none;
+      overflow:auto;
+      user-select:none;
+      caret-color:transparent;
+      white-space: pre-wrap;
+      overflow-wrap: normal;
+      word-break: normal;
+      cursor:pointer;
     }
     :root.light textarea{background:#f5f8ff; color:#0c1426}
 
     /* Subtle copy indicator (text only) */
     .copy-indicator{position:absolute; top:8px; right:16px; font-size:12px; color:var(--muted); cursor:pointer; transition:color .2s, transform .2s}
-    .output-container:hover .copy-indicator{color:var(--accent);}
+    /* hover accent ONLY when not copied */
+    .output-container:hover .copy-indicator:not(.copied),
+    .copy-indicator:hover:not(.copied){
+      color:var(--accent);
+    }
 
+    /* copied state always wins */
+    .copy-indicator.copied{
+      color:var(--ok);
+    }
 
-    .copy-indicator:hover{color:var(--accent)}
     .copy-indicator.copied{color:var(--ok)}
     .copy-indicator:active{transform:scale(0.98)}
 
@@ -116,6 +126,16 @@
       border-radius:10px; opacity:0; transform:translateY(8px);
       transition:opacity .15s, transform .15s}
     .toast.show{opacity:1; transform:translateY(0)}
+
+    .output-header{
+      display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;
+    }
+    .toggle-inline{
+      display:inline-flex; align-items:center; gap:8px; font-size:12px; color:var(--muted);
+      cursor:pointer; user-select:none;
+    }
+    .toggle-inline input{ accent-color: var(--accent); cursor:pointer; }
+
   </style>
 </head>
 <body>
@@ -157,17 +177,23 @@
     </section>
 
     <section class="card">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px">
-        <strong>Comma‑Separated Output</strong>
+      <div class="output-header">
+        <strong>Comma-Separated Output</strong>
+        <label class="toggle-inline">
+          <input id="quotesMode" type="checkbox" />
+          <span>Quotations</span>
+        </label>
       </div>
+    
       <div class="output-container">
         <textarea id="out" class="mono" readonly></textarea>
         <div id="copyIndicator" class="copy-indicator" title="Copy output">Copy</div>
       </div>
+    
       <div class="hint" style="margin-top:8px">
-        Cleaning: trims edges, removes quotes and unsupported punctuation, keeps hyphens, de‑dupes, sorts A→Z.
+        Cleaning: trims edges, removes quotes and unsupported punctuation, keeps hyphens, de-dupes, sorts A→Z.
       </div>
-    </section>
+    </section>    
   </div>
 
   <div class="footer">Built with vanilla HTML/CSS/JS. Processes locally. No server.</div>
@@ -193,6 +219,11 @@
   const toast=document.getElementById('toast');
   const copyIndicator=document.getElementById('copyIndicator');
   const outBox = document.querySelector('.output-container');
+  const quotesMode = document.getElementById('quotesMode');
+  quotesMode.addEventListener('change', ()=> {
+  if (window.__lastSheetArr) processSheetArray(window.__lastSheetArr);
+    });
+
     outBox.addEventListener('click', copyOutput);
 
   // Fresh state on load/refresh
@@ -252,12 +283,19 @@
     }
 
     const t1=performance.now();
-    const {kept,joined}=cleanAndJoin(raw);
-    out.value=joined;
-    const enabled=joined.length>0;
-    copyBtn.disabled=!enabled;
-    downloadBtn.disabled=!enabled;
-    copyIndicator.style.display=enabled?'block':'none';
+    const { kept, joined } = cleanAndJoin(raw);
+
+    const displayJoined = quotesMode.checked
+      ? kept.map(s => `"${s}"`).join(', ')
+      : kept.join(', ');
+
+    out.value = displayJoined;
+
+    const enabled = displayJoined.length > 0;
+    copyBtn.disabled = !enabled;
+    downloadBtn.disabled = !enabled;
+    copyIndicator.style.display = enabled ? 'block' : 'none';
+
 
     const t2=performance.now();
     renderMetrics({
@@ -284,7 +322,7 @@
       if(!seen.has(s)){ seen.add(s); kept.push(s); }
     }
     kept.sort((a,b)=>a.localeCompare(b,undefined,{sensitivity:'base',numeric:true}));
-    const joined=kept.join(',');
+    const joined = kept.join(', ');
     return {kept,joined};
   }
 
@@ -335,16 +373,23 @@
   function showToast(msg='Copied'){toast.textContent=msg;toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),1200)}
   async function copyOutput(){
     if(!out.value) return;
-    try{
-      await navigator.clipboard.writeText(out.value);
-      showToast('Copied to clipboard');
-      copyIndicator.textContent='Copied';
-      copyIndicator.classList.add('copied');
-      setTimeout(()=>{copyIndicator.textContent='Copy';copyIndicator.classList.remove('copied')},1500);
-    }catch{
-      showToast('Copied');
+    let toCopy = out.value;
+
+    if (quotesMode.checked) {
+      // "a", "b" -> "a","b"
+      toCopy = toCopy.replace(/",\s+"/g, '","');
+    } else {
+      // optional: tighten commas if you prefer no spaces in non-quotes mode
+      // toCopy = toCopy.replace(/,\s+/g, ',');
     }
+
+    await navigator.clipboard.writeText(toCopy);
+    showToast('Copied to clipboard');
+    copyIndicator.textContent='Copied';
+    copyIndicator.classList.add('copied');
+    setTimeout(()=>{copyIndicator.textContent='Copy';copyIndicator.classList.remove('copied')},1500);
   }
+
   copyBtn.addEventListener('click',copyOutput);
   copyIndicator.addEventListener('click',copyOutput);
 
