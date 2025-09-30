@@ -472,31 +472,39 @@ function viewFlash(){
 
   const el = document.createElement('div'); el.className = 'grid';
   el.innerHTML = `
-    <div class="card flash">
-      ${!s.flipped ? `
-        <div class="front">${frontLang === 'EN' ? card.en : jp(card.jp)}</div>
+  <div class="card flash">
+    <!-- SUBJECT stays the same on front/back -->
+        <div class="front" style="text-align:center;width:100%">
+        ${frontLang === 'EN' ? card.en : jp(card.jp)}
+        </div>
+
+        ${!s.flipped ? `
+        <!-- FRONT: same-language example + flip -->
         <div class="muted" style="margin-top:6px">
-          ${frontLang === 'EN' ? card.example.en : jp(card.example.jp)}
+            ${frontLang === 'EN' ? card.example.en : jp(card.example.jp)}
         </div>
         <div class="row">
-          <button class="btn" id="flipBtn">Show answer</button>
+            <button class="btn" id="flipBtn">Show answer</button>
         </div>
-      ` : `
-        <div class="back">
-          ${frontLang === 'EN' ? jp(card.jp) : card.en}
-          <div class="muted" style="margin-top:6px">
+        ` : `
+        <!-- BACK: opposite-language example + answer (subject above stays put) -->
+        <div class="muted" style="margin-top:6px">
             ${frontLang === 'EN' ? jp(card.example.jp) : card.example.en}
-          </div>
+        </div>
+        <div style="font-size:26px;line-height:1.2;margin-top:8px;text-align:center">
+            ${frontLang === 'EN' ? jp(card.jp) : card.en}
         </div>
         <div class="row">
-          <button class="btn good" id="knewBtn">I knew it</button>
-          <button class="btn bad" id="missBtn">I missed it</button>
+            <button class="btn good" id="knewBtn">I knew it</button>
+            <button class="btn bad" id="missBtn">I missed it</button>
         </div>
-      `}
+        `}
     </div>
     <div class="hud"><button class="btn bad" id="stopBtn">Stop</button></div>
-  `;
-  app.appendChild(el);
+    `;
+    app.appendChild(el);
+
+
 
   if (!s.flipped){
     document.getElementById('flipBtn').onclick = () => { s.flipped = true; render(); };
