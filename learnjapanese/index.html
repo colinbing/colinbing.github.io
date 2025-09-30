@@ -131,7 +131,7 @@
 
 </style>
 </head>
-<body>
+<body class="light">
   <div class="wrap">
     <div class="topbar">
       <div class="title"><h1>JP Mini Drills</h1><span class="chip" id="modeChip"></span></div>
@@ -181,13 +181,18 @@ let DATA_READY = false;
 
 // ======================= STATE =======================
 const S = {
-  settings: load('settings', { prompt:'MIXED', qtype:'MCQ', category:'MIXED', size:20, theme:'dark', muted:false, furigana:false }),
+  settings: load('settings', { prompt:'MIXED', qtype:'MCQ', category:'MIXED', size:20, theme:'light', muted:false, furigana:false }),
   mastery: load('mastery', {}), // id -> {lvl,lastSeen,lastResult}
   stats: load('stats', { bestStreak:0 }),
   session: null,
   pending: [] // batched mastery updates
 };
-if(S.settings.theme==='light') document.body.classList.add('light');
+// Default is light; only remove if user previously saved dark
+if (S.settings.theme === 'dark') {
+  document.body.classList.remove('light');
+} else {
+  document.body.classList.add('light');
+}
 
 // ======================= HELPERS =======================
 const app = document.getElementById('app');
