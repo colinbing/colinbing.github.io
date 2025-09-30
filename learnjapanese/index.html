@@ -100,25 +100,27 @@
     }
 
     /* ===== Bottom glossary bar (mobile-friendly) ===== */
+    /* ===== Bottom glossary bar (mobile-first) ===== */
     .glossbar{
     position:fixed;
     left:16px; right:16px;
-    bottom: calc(env(safe-area-inset-bottom) + 72px); /* sits above Stop */
+    bottom: calc(env(safe-area-inset-bottom) + 116px); /* sits in that empty space */
     background:var(--panel);
     border:1px solid #2a3141;
     border-radius:14px;
-    padding:8px;
-    box-shadow:0 10px 28px rgba(0,0,0,.28);
+    padding:10px;
+    box-shadow:0 12px 28px rgba(0,0,0,.28);
     display:none;
-    z-index:50;
+    z-index:1000; /* above cards */
     }
     .glossbar .chips{ display:flex; gap:8px; flex-wrap:wrap }
     .glossbar .chip{ background:#1f2633; border:1px solid #2a3141; color:var(--text) }
     body.light .glossbar .chip{ background:#f0f3fa; border-color:#d7deec; color:#0b1220 }
 
-    @media (max-width:600px){
-    .glossbar{ left:12px; right:12px; bottom: calc(env(safe-area-inset-bottom) + 80px) }
+    @media (min-width: 601px){
+    .glossbar{ bottom: 28px; left: 24px; right: 24px; }
     }
+
 
     /* Kill double-tap zoom on tappable controls */
     a, button, .btn, select, input, .options button, .chip {
@@ -536,7 +538,7 @@ function viewQuiz(){
     ${s.kind==='ENDLESS'? `<div class='hud'><button class='btn bad' id='stopBtn'>Stop</button></div>`:''}
   `;
   app.appendChild(el);
-  attachGlossSelection(el);
+  setGlossRoot(el);
 
   const btns = el.querySelectorAll('.options button');
   btns.forEach(btn=>btn.onclick=()=>{
@@ -614,7 +616,7 @@ function viewFlash(){
     </div>
     `;
     app.appendChild(el);
-    attachGlossSelection(el.querySelector('.flash'));
+    setGlossRoot(el.querySelector('.flash'));
 
   if (!s.flipped){
   document.getElementById('flipBtn').onclick = () => { s.flipped = true; render(); };
@@ -707,7 +709,8 @@ function viewRefFull(group){
       </div>
     </div>`;
   app.innerHTML=''; app.appendChild(el);
-  attachGlossSelection(el);
+  setGlossRoot(el);
+
 
   el.querySelector('#backToMenu').onclick = () => {
   delete app.dataset.refGroup;
@@ -769,8 +772,14 @@ function masteryChangeHTML(beforeMap, afterMap){
   </div>`;
 }
 
-// ===== Bottom glossary bar (selection -> chips) =====
-const isIOS = /iP(hone|ad|od)/.test(navigator.userAgent);
+// ===== Bottom glossary bar (global, reliable on iOS) =====
+const _isIOS = /iP(hone|ad|od)/.test(navigator.userAgent);
+let _glossRoot = null;   // current container we care about (set per view)
+
+function setGlossRoot(root){
+  _glossRoot = root || null;
+  if(!_glossRoot) hideGlossbar();
+}
 
 function ensureGlossbar(){
   let gb = document.getElementById('glossbar');
@@ -796,6 +805,55 @@ function showGlossbar(tokens){
   gb.style.display = tokens.length ? 'block' : 'none';
 }
 
+function extractGlossTokens(text){
+  if(!text) return [];
+  const src = [...(window.DECK||[])];
+  const lex = (window.LEXICON||{});
+  for(const k in lex){ src.push({ jp:k, en:lex[k] }); }
+  const uniq = new Map();
+  for(const entry of src){
+    if(!entry.jp) continue;
+    if(text.includes(entry.jp)) uniq.set(entry.jp, { jp: entry.jp, en: entry.en });
+  }
+  return Array.from(uniq.values()).slice(0, 16);
+}
+
+// Aggressive iOS callout dismiss (selection + temporary blur)
+function clearIOSSelection(){
+  if(!_isIOS) return;
+  const nuke = () => {
+    try{ const sel=window.getSelection(); sel && sel.removeAllRanges(); }catch(_){}
+    if(document.activeElement && document.activeElement.blur) document.activeElement.blur();
+  };
+  // try a few frames; Safari can be stubborn
+  requestAnimationFrame(()=>{ nuke(); setTimeout(nuke, 50); setTimeout(nuke, 120); });
+}
+
+// Single global selection handler; only reacts if selection is inside _glossRoot
+function handleSelection(){
+  const sel = window.getSelection();
+  if(!sel || sel.rangeCount === 0){ hideGlossbar(); return; }
+  const node = sel.anchorNode && sel.anchorNode.nodeType === 3 ? sel.anchorNode.parentNode : sel.anchorNode;
+  if(!_glossRoot || !node || !_glossRoot.contains(node)){ hideGlossbar(); return; }
+
+  const raw = sel.toString().trim();
+  if(!raw){ hideGlossbar(); return; }
+
+  const tokens = extractGlossTokens(raw);
+  if(tokens.length === 0){ hideGlossbar(); return; }
+
+  showGlossbar(tokens);
+  clearIOSSelection();
+}
+
+// Install once
+(function initGlossaryListener(){
+  document.addEventListener('selectionchange', handleSelection);
+  // Also catch keyboard/mouse/touch ends
+  ['mouseup','keyup','touchend'].forEach(ev => document.addEventListener(ev, handleSelection, {passive:true}));
+})();
+
+
 // Harvest tokens from selected text using DECK + LEXICON
 function extractGlossTokens(text){
   if(!text) return [];
@@ -811,33 +869,6 @@ function extractGlossTokens(text){
   }
   return Array.from(uniq.values()).slice(0, 12); // keep it compact
 }
-
-// Attach selection listener on a container (flash card, quiz, references)
-function attachGlossSelection(root){
-  if(!root) return;
-  // Avoid double-attaching
-  if(root.__glossAttached) return;
-  root.__glossAttached = true;
-
-  const handler = () => {
-    const sel = window.getSelection();
-    const raw = sel ? sel.toString().trim() : '';
-    if(!raw){ hideGlossbar(); return; }
-    const tokens = extractGlossTokens(raw);
-    if(tokens.length === 0){ hideGlossbar(); return; }
-    showGlossbar(tokens);
-
-    // Dismiss iOS native bubble by clearing selection shortly after
-    if(isIOS){
-      setTimeout(()=>{ try{ window.getSelection().removeAllRanges(); }catch(_){} }, 60);
-    }
-  };
-
-  ['mouseup','keyup','touchend','selectionchange'].forEach(ev=>{
-    root.addEventListener(ev, handler);
-  });
-}
-
 
 // ======================= SFX =======================
 const SFX = { good:new Audio('sfx/correct.mp3'), bad:new Audio('sfx/incorrect.mp3') };
