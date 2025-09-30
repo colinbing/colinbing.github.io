@@ -83,6 +83,22 @@
   .mc-delta.flat{ opacity: .6 }
   ruby{ruby-position:over}
   rt{font-size:.6em;color:var(--muted);line-height:1}
+
+    /* ===== Mobile ===== */
+    @media (max-width: 600px){
+    .wrap{ padding:12px 14px 24px }
+    .topbar{ flex-direction:column; align-items:flex-start; gap:8px }
+    .title h1{ font-size:20px }
+    #topHud{ width:100%; display:flex; flex-wrap:wrap; gap:8px }
+    .chip{ font-size:11px; padding:5px 8px }
+    .btn{ padding:8px 10px; font-size:14px }
+    select, input[type="number"]{ padding:8px; font-size:14px }
+    .grid.cols-3{ grid-template-columns:1fr }   /* menu cards stack */
+    .flash{ font-size:22px }
+    .flash .front{ font-size:28px }
+    .ref table{ display:block; overflow-x:auto; }
+    }
+
 </style>
 </head>
 <body>
@@ -169,8 +185,20 @@ updateSoundBtn();
 
 const furiBtn = document.getElementById('furiBtn');
 function updateFuriBtn(){ furiBtn.classList.toggle('on', !!S.settings.furigana); }
-furiBtn.onclick=()=>{ S.settings.furigana=!S.settings.furigana; save('settings',S.settings); updateFuriBtn(); render(); };
-updateFuriBtn();
+
+furiBtn.onclick = () => {
+  S.settings.furigana = !S.settings.furigana;
+  save('settings', S.settings);
+  updateFuriBtn();
+
+  const grp = app.dataset.refGroup;   
+  if (grp) {                          
+    viewRefFull(grp);                
+  } else {
+    render();                         
+  }
+};
+
 
 function setHud(){
   const s = S.session;
@@ -569,7 +597,9 @@ function viewResults(){
 function viewRefFull(group){
   const starts = {KO:'こ', SO:'そ', A:'あ', DO:'ど'}[group];
   const items = DEMO.filter(x=> x.jp.startsWith(starts));
-  const el = document.createElement('div'); el.className='grid';
+  const el = document.createElement('div'); 
+  app.dataset.refGroup = group;
+  el.className='grid';
   el.innerHTML = `
     <div class='card'>
       <h2>Full Reference — ${starts}＊</h2>
@@ -588,7 +618,12 @@ function viewRefFull(group){
       </div>
     </div>`;
   app.innerHTML=''; app.appendChild(el);
-  el.querySelector('#backToMenu').onclick=()=>{ S.session=null; render(); };
+  el.querySelector('#backToMenu').onclick = () => {
+  delete app.dataset.refGroup;
+  S.session = null;
+  render();
+};
+
 }
 
 // ======================= REFERENCE TABLES =======================
