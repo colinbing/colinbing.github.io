@@ -1,0 +1,866 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>JP Mini Drills — Demonstratives & Particles</title>
+  <style>
+    :root{
+      --bg:#0f1115;--panel:#151922;--text:#e6e6e6;--muted:#a9b0be;--accent:#5b9cff;--ok:#23c26b;--bad:#ff5e7e;--bar:#232838;--chip:#1e2431;--focus:#8ab4ff;
+      --tile0:#FFFFFF;--tile1:#eaf7ee;--tile2:#d5efdd;--tile3:#bde5c8;--tile4:#a6dbb4;--tile5:#8fd1a0;--tile6:#73c488;--tile7:#52b371;--tile8:#319f58;--tile9:#148942;
+    }
+    body.light{
+      --bg:#f7f8fb;--panel:#ffffff;--text:#0b1220;--muted:#55607a;--accent:#356dff;--ok:#1a9c5a;--bad:#e04968;--bar:#e6e9f2;--chip:#eef1f7;--focus:#2c60ff;
+    }
+    html,body{height:100%}
+    body{margin:0;background:var(--bg);color:var(--text);font:16px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial}
+    .wrap{max-width:880px;margin:0 auto;padding:16px 20px 28px}
+    h1{font-size:22px;margin:0}
+    h2{font-size:18px;margin:16px 0 8px;color:var(--muted)}
+    .card{background:var(--panel);border:1px solid #20253422;border-radius:16px;padding:16px;box-shadow:0 8px 24px rgba(0,0,0,.18)}
+    .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+    .grid{display:grid;gap:12px}
+    .grid.cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .grid.cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .btn{background:#1f2633;border:1px solid #2a3141;color:var(--text);padding:10px 14px;border-radius:10px;cursor:pointer}
+    body.light .btn{background:#f0f3fa;border-color:#d7deec;color:#0b1220}
+    .btn:hover{filter:brightness(1.05)}
+    .btn.primary{background:var(--accent);border-color:#4b87e5;color:#0b1220}
+    .btn.good{background:var(--ok);border-color:#1c9a56;color:#042015}
+    .btn.bad{background:var(--bad);border-color:#e24b6a;color:#24050b}
+    select, input[type="number"]{background:#1f2633;border:1px solid #2a3141;color:var(--text);padding:10px;border-radius:10px}
+    body.light select, body.light input[type="number"]{background:#f0f3fa;border-color:#d7deec;color:#0b1220}
+    .bar{height:10px;background:var(--bar);border-radius:999px;overflow:hidden}
+    .bar>span{display:block;height:100%;background:linear-gradient(90deg,#6fa8ff,#8d7dff);width:0%}
+    .q{font-size:28px;letter-spacing:.5px}
+    .options{display:grid;gap:10px;margin-top:12px}
+    .options button{font-size:16px;text-align:left}
+    .option.correct{background:var(--ok)!important;color:#062012}
+    .option.wrong{background:var(--bad)!important;color:#2a0007}
+    .hud{display:flex;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:14px;align-items:center}
+    .feedback{margin-top:10px;font-weight:600}
+    .feedback.good{color:var(--ok)}
+    .feedback.bad{color:var(--bad)}
+    .chips{display:flex;gap:8px;flex-wrap:wrap}
+    .chip{background:var(--chip);border:1px solid #2a3141;border-radius:999px;padding:6px 10px;color:var(--muted);font-size:12px}
+    body.light .chip{background:#eef1f7;border-color:#d7deec;color:#55607a}
+    .muted{color:var(--muted)}
+
+    /* Sticky header + soft fade so shadow isn't hard-cut */
+    .topbar{
+    position:static;
+    background:var(--bg);
+    padding:10px 0 12px;
+    margin-bottom:12px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    border-bottom:1px solid transparent; /* no shadow/line */
+    }
+    .btn.sound{min-width:42px;text-align:center}
+    .btn.sound.muted{background:var(--text);color:var(--bg);border-color:var(--text)}
+
+
+    .title{display:flex;gap:10px;align-items:center}
+    .heat{display:grid;grid-template-columns:repeat(10,1fr);gap:6px}
+    .tile{height:18px;border-radius:6px;border:1px solid #222}
+    .ref{font-size:14px}
+    .ref table{width:100%;border-collapse:collapse}
+    .ref th,.ref td{border:1px solid #233;padding:6px 8px}
+    body.light .ref th, body.light .ref td{border-color:#dbe1ef}
+    .ref th{background:#1b202c;color:#aeb6c8}
+    body.light .ref th{background:#f2f5fb;color:#55607a}
+    .fab{position:fixed;right:18px;bottom:18px}
+    .sr{position:absolute;left:-9999px}
+    .hintbox{margin-top:8px}
+    .flash{min-height:260px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:8px;font-size:26px}
+    .flash .front{font-size:32px}
+    .ref a{ color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+    .ref a:hover{ filter: brightness(1.1); }
+    .subcard{background:#1a2030;border:1px solid #2a3141;border-radius:16px;padding:12px}
+    body.light .subcard{background:#ffffff;border-color:#d7deec}
+    .feedback + #clickToNext{ margin-top:6px }
+
+    /* simple mastery table */
+    .mtable{width:100%;border-collapse:collapse;font-size:14px}
+    .mtable th,.mtable td{border:1px solid #233;padding:6px 8px}
+    body.light .mtable th, body.light .mtable td{border-color:#dbe1ef}
+    .lvlchip{display:inline-block;padding:2px 8px;border-radius:999px;border:1px solid #233}
+
+    .legend{display:flex;align-items:center;gap:8px;margin-top:12px}
+
+    .mc-delta.up{ color: var(--ok) }
+    .mc-delta.down{ color: var(--bad) }
+    .mc-delta.flat{ opacity: .6 }
+
+    .btn.furi.on{background:var(--text);color:var(--bg);border-color:var(--text)}
+    ruby{ruby-position:over}
+    rt{font-size:.6em;color:var(--muted);line-height:1}
+
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="title"><h1>JP Mini Drills</h1><span class="chip" id="modeChip"></span></div>
+      <div class="hud" id="topHud">
+        <span id="scoreHud">Score: 0/0</span>
+        <span id="streakHud">Streak: 0</span>
+        <button class="btn" id="soundBtn">🔊</button>
+        <button class="btn furi" id="furiBtn">ふりがな</button>
+        <button class="btn" id="themeBtn">Dark/Light</button>
+      </div>
+    </div>
+    <div id="app" class="grid"></div>
+  </div>
+
+<script>
+// ======================= DATA =======================
+const DEMO = [
+  D('kore','demonstrative','これ','this (thing near speaker)','near me / thing','これはペンです。','This is a pen.'),
+  D('sore','demonstrative','それ','that (thing near listener)','near you / thing','それはあなたのですか。','Is that yours?'),
+  D('are','demonstrative','あれ','that over there (thing)','far from both / thing','あれは山です。','That (over there) is a mountain.'),
+  D('dore','demonstrative','どれ','which (thing)','question / thing','どれがあなたのですか。','Which one is yours?'),
+  D('kono','demonstrative','この','this (modifier)','near me / modifier','この本は面白い。','This book is interesting.'),
+  D('sono','demonstrative','その','that (modifier near you)','near you / modifier','その映画は長い。','That movie is long.'),
+  D('ano','demonstrative','あの','that (modifier over there)','far / modifier','あの店は高い。','That shop is expensive.'),
+  D('dono','demonstrative','どの','which (modifier)','question / modifier','どの道が近いですか。','Which road is closer?'),
+  D('koko','demonstrative','ここ','here (place)','near me / place','ここに座ってください。','Please sit here.'),
+  D('soko','demonstrative','そこ','there (place near you)','near you / place','そこは暑い。','It is hot there.'),
+  D('asoko','demonstrative','あそこ','over there (place)','far / place','あそこに駅があります。','There is a station over there.'),
+  D('doko','demonstrative','どこ','where','question / place','トイレはどこですか。','Where is the restroom?'),
+  D('kochira','demonstrative','こちら','this way / this person (polite)','near me / direction/person','こちらへどうぞ。','This way, please.'),
+  D('sochira','demonstrative','そちら','that way / that person (polite)','near you / direction/person','そちらは何名様ですか。','How many in your party?'),
+  D('achira','demonstrative','あちら','that way over there (polite)','far / direction/person','あちらの方です。','That person over there.'),
+  D('dochira','demonstrative','どちら','which way / which person (polite)','question / direction/person','ご出身はどちらですか。','Where are you from?'),
+  D('kou','demonstrative','こう','like this','near me / manner','こうやってください。','Do it like this.'),
+  D('sou','demonstrative','そう','like that','near you / manner','そう思います。','I think so.'),
+  D('aa','demonstrative','ああ','like that (over there)','far / manner','ああいう話は苦手です。','I\'m not good with stories like that.'),
+  D('dou','demonstrative','どう','how / in what way','question / manner','どうしますか。','What will you do?'),
+  D('konna','demonstrative','こんな','this kind of','near me / kind','こんな問題は簡単だ。','Problems like this are easy.'),
+  D('sonna','demonstrative','そんな','that kind of (near you)','near you / kind','そんな冗談はやめて。','Cut out jokes like that.'),
+  D('anna','demonstrative','あんな','that kind of (over there)','far / kind','あんな景色を見たい。','I want to see scenery like that.'),
+  D('donna','demonstrative','どんな','what kind of','question / kind','どんな音楽が好きですか。','What kind of music do you like?'),
+  D('konnani','demonstrative','こんなに','this much / to this extent','near me / degree','こんなに安いの？','It\'s this cheap?'),
+  D('sonnani','demonstrative','そんなに','that much (near you)','near you / degree','そんなに急がなくていい。','No need to hurry that much.'),
+  D('annani','demonstrative','あんなに','that much (over there)','far / degree','あんなに混むとは。','Didn\'t expect it to be that crowded.'),
+  D('donnani','demonstrative','どんなに','how much / to what extent','question / degree','どんなに練習しても難しい。','No matter how much I practice, it\'s hard.'),
+];
+
+const PARTICLES = [
+  P('wa','は','topic marker','私は学生です。','As for me, I am a student.'),
+  P('ga','が','subject/new info; likes/abilities','猫が好きです。','I like cats.'),
+  P('wo','を','direct object','本を読みます。','I read a book.'),
+  P('ni','に','time/goal/existence/IO','三時に行く。家にいる。','Go at three. / Be at home.'),
+  P('de','で','location of action; means','学校で勉強する。バスで行く。','Study at school. / Go by bus.'),
+  P('e','へ','direction (softer than に)','東京へ行く。','Go toward Tokyo.'),
+  P('to','と','with; and; quoting','友達と行く。「はい」と言った。','Go with a friend. / Said "yes".'),
+  P('mo','も','also/even','私も行く。','I will go too.'),
+  P('no','の','possessive/attributive','日本の本。','Japanese book.'),
+  P('kara','から','from; since; because','ここから駅まで。雨だから行かない。','From here to the station. / Not going because it\'s raining.'),
+  P('made','まで','until; up to','五時まで働く。','Work until five.'),
+  P('yori','より','than (comparison)','今年は去年より寒い。','This year is colder than last year.'),
+  P('dake','だけ','only','一つだけ。','Only one.'),
+  P('shika','しか(〜ない)','only + negative','一つしかない。','There is only one.'),
+];
+
+// Correct mapping (yours were flipped)
+const SFX = {
+  good: new Audio('sfx/correct.mp3'),
+  bad:  new Audio('sfx/incorrect.mp3')
+};
+function playSfx(ok){
+  if(S.settings.muted) return;
+  try{
+    const a = ok ? SFX.good : SFX.bad;
+    a.currentTime = 0;
+    a.play();
+  }catch(e){}
+}
+
+
+function D(id,cat,jp,en,hint,exjp,exen){return {id,cat,jp,en,hint,example:{jp:exjp,en:exen}}}
+function P(id,jp,en,exjp,exen){return {id,cat:'particle',jp,en,hint:null,example:{jp:exjp,en:exen}}}
+
+// ======================= STATE =======================
+const S = {
+  settings: load('settings', { prompt:'MIXED', qtype:'MCQ', category:'MIXED', size:20, theme:'dark', muted:false, furigana:false }),
+  mastery: load('mastery', {}), // id -> {lvl,lastSeen,lastResult}
+  stats: load('stats', { bestStreak:0 }),
+  session: null,
+  pending: []
+};
+if(S.settings.theme==='light') document.body.classList.add('light');
+
+// ======================= HELPERS =======================
+const app = document.getElementById('app');
+const modeChip = document.getElementById('modeChip');
+const scoreHud = document.getElementById('scoreHud');
+const streakHud = document.getElementById('streakHud');
+
+document.getElementById('themeBtn').onclick=()=>{
+  document.body.classList.toggle('light');
+  S.settings.theme = document.body.classList.contains('light')? 'light':'dark';
+  save('settings', S.settings);
+};
+
+const soundBtn = document.getElementById('soundBtn');
+soundBtn.classList.add('sound');
+function updateSoundBtn(){
+  soundBtn.textContent = S.settings.muted ? '🔇' : '🔊';
+  soundBtn.classList.toggle('muted', S.settings.muted);
+}
+soundBtn.onclick=()=>{
+  S.settings.muted = !S.settings.muted;
+  save('settings', S.settings);
+  updateSoundBtn();
+};
+updateSoundBtn();
+
+// Furigana toggle
+const furiBtn = document.getElementById('furiBtn');
+function updateFuriBtn(){
+  furiBtn.classList.toggle('on', !!S.settings.furigana);
+  furiBtn.textContent = 'ふりがな';
+}
+furiBtn.onclick = () => {
+  S.settings.furigana = !S.settings.furigana;
+  save('settings', S.settings);
+  updateFuriBtn();
+  render(); // re-render to apply
+};
+updateFuriBtn();
+
+
+function setHud(){
+  const s = S.session;
+  modeChip.textContent = s ? `${S.settings.prompt} · ${S.settings.qtype} · ${S.settings.category}` : '';
+  modeChip.style.display = s ? 'inline-flex' : 'none';
+
+    const quizActive = !!s && (s.kind==='FIXED' || s.kind==='ENDLESS');
+
+    scoreHud.style.display = quizActive ? 'inline' : 'none';
+    streakHud.style.display = quizActive ? 'inline' : 'none';
+
+    scoreHud.textContent = s? `Score: ${s.score}/${s.answered}` : '';
+    streakHud.textContent = s? `Streak: ${s.streak}` : '';
+
+}
+
+// ======================= SCHEDULER =======================
+function weightFor(card){
+  const m = S.mastery[card.id];
+  const lvl = m? m.lvl:0;
+  return 1/(1+lvl*lvl);
+}
+function timeBoostFor(card){
+  const m = S.mastery[card.id];
+  if(!m) return 1;
+  const days = (Date.now()-m.lastSeen)/86400000;
+  return 1 + Math.min(Math.max(days,0)/14, 0.5);
+}
+function recentPush(arr,id){ arr.push(id); if(arr.length>8) arr.shift(); }
+function pickCard(pool, recent){
+  const weights = pool.map(c=>({ c, w: weightFor(c) * timeBoostFor(c) }));
+  const recentSet = new Set(recent);
+  weights.forEach(o=>{ if(recentSet.has(o.c.id)) o.w *= 0.01; });
+  const total = weights.reduce((s,o)=>s+o.w,0);
+  let r = Math.random()*total;
+  for(const o of weights){ r -= o.w; if(r<=0) return o.c; }
+  return weights[weights.length-1].c;
+}
+
+// ======================= SESSION =======================
+function startSession(kind){
+  const cat = S.settings.category;
+  const pool = (cat==='DEMONSTRATIVES'?DEMO:cat==='PARTICLES'?PARTICLES:[...DEMO,...PARTICLES]);
+  const size = kind==='ENDLESS'||kind==='FLASH'?Infinity: (S.settings.size||20);
+  const qlist = [];
+  const used = new Set();
+  const recent = [];
+  while(qlist.length < Math.min(size, pool.length)){
+    const c = pickCard(pool, recent);
+    if(!used.has(c.id)) { qlist.push(c); used.add(c.id); recentPush(recent, c.id); }
+  }
+    S.session = { kind, queue: qlist, idx:0, score:0, streak:0, maxStreak:0, mistakes:[], recent:[], started:Date.now(), answered:0, phase:'ASK', hintShown:false, flipped:false, locked:false, baseline: snapshotMastery() };
+  render();
+}
+
+function currentPool(){ return (S.settings.category==='DEMONSTRATIVES'?DEMO:S.settings.category==='PARTICLES'?PARTICLES:[...DEMO,...PARTICLES]); }
+
+function nextQuestion(){
+  const s=S.session; const pool=currentPool();
+  if(s.kind==='ENDLESS'||s.kind==='FLASH'){
+    const c = pickCard(pool, s.recent);
+    s.current = makeQuestion(c);
+    recentPush(s.recent, c.id);
+  } else {
+    if(s.idx >= s.queue.length) return finish();
+    const c = s.queue[s.idx];
+    s.current = makeQuestion(c);
+  }
+  s.phase='ASK'; s.hintShown=false; s.flipped=false; s.locked=false;
+  render();
+}
+
+function makeQuestion(card){
+  const promptLang = S.settings.prompt==='MIXED' ? (Math.random()<0.5?'EN':'JA') : S.settings.prompt;
+  const pool = currentPool();
+  const opts = [card];
+  const candidates = pool.filter(x=>x.id!==card.id);
+  shuffle(candidates);
+  for(const c of candidates){ if(opts.length>=4) break; opts.push(c); }
+  shuffle(opts);
+  return { card, promptLang, qtype:'MCQ', options: opts };
+}
+
+function submitAnswer(choiceIdx){
+  const { card, options } = S.session.current;
+  const correct = options[choiceIdx].id === card.id;
+  grade(correct, choiceIdx);
+}
+
+function grade(correct, chosenIdx){
+  const s=S.session; s.answered++;
+  if(correct){ s.score++; s.streak++; if(s.streak>s.maxStreak) s.maxStreak=s.streak; }
+  else { s.streak=0; s.mistakes.push(s.current.card.id); }
+  queueMasteryUpdate(s.current.card.id, correct);
+  s.phase = correct? 'GOOD':'BAD';
+  s.chosenIdx = chosenIdx;
+}
+
+function goNext(){
+  const s=S.session;
+  if(s.kind==='ENDLESS'){ nextQuestion(); return; }
+  if(s.kind==='FLASH'){ nextQuestion(); return; }
+  s.idx++;
+  if(s.idx>=s.queue.length){ finish(); } else { nextQuestion(); }
+}
+
+function finish(){
+  applyPending();
+  const s = S.session;
+
+    // build before/after maps
+    const before = s.baseline || snapshotMastery();
+    const after = snapshotMastery(true); // uses current S.mastery
+
+    // per-item changes
+    const up = [], down = [];
+    for(const id in after){
+    const b = (before[id]|0), a = (after[id]|0);
+    if(a>b) up.push({id, from:b, to:a});
+    else if(a<b) down.push({id, from:b, to:a});
+    }
+    s.delta = { before, after, up, down };
+
+  s.finished = { total: (s.kind==='ENDLESS'||s.kind==='FLASH'? s.answered : s.queue.length), duration: Date.now()-s.started };
+  s.phase='DONE';
+  render();
+}
+
+// ======================= MASTERY (batched) =======================
+function queueMasteryUpdate(id, ok){
+  S.pending.push({id, ok, ts: Date.now()});
+}
+function applyPending(){
+  for(const u of S.pending){
+    const cur = S.mastery[u.id] || { lvl:0, lastSeen:0, lastResult:'ok' };
+    const lvl = Math.max(0, Math.min(9, cur.lvl + (u.ok? +1 : -1)));
+    S.mastery[u.id] = { lvl, lastSeen: u.ts, lastResult: u.ok?'ok':'ng' };
+  }
+  S.pending = [];
+  saveAll();
+}
+
+// ======================= STORAGE =======================
+function load(key, fallback){ try{ const v = JSON.parse(localStorage.getItem(key)); return v??fallback; }catch(e){ return fallback; } }
+function save(key, val){ localStorage.setItem(key, JSON.stringify(val)); }
+function saveAll(){ save('settings', S.settings); save('mastery', S.mastery); save('stats', S.stats); }
+
+// ======================= VIEWS =======================
+function render(){
+  app.innerHTML=''; setHud();
+  if(!S.session){ return viewMenu(); }
+  if(S.session.phase==='DONE'){ return viewResults(); }
+  if(!S.session.current){ nextQuestion(); return; }
+  if(S.session.kind==='FLASH'){ return viewFlash(); }
+  viewQuiz();
+}
+
+function viewMenu(){
+  const el = document.createElement('div'); el.className='grid';
+  el.innerHTML = `
+    <div class='card grid'>
+      <div class='grid cols-3'>
+        <div>
+          <h2>Prompt</h2>
+          <select id='promptSel'>
+            <option value='EN'>EN → JA</option>
+            <option value='JA'>JA → EN</option>
+            <option value='MIXED'>Mixed</option>
+          </select>
+        </div>
+        <div>
+          <h2>Type</h2>
+          <select id='qtypeSel'>
+            <option value='MCQ'>Multiple Choice</option>
+            <option value='TYPED' disabled>Type In (soon)</option>
+          </select>
+        </div>
+        <div>
+          <h2>Category</h2>
+          <select id='catSel'>
+            <option value='MIXED'>Mixed</option>
+            <option value='DEMONSTRATIVES'>Demonstratives</option>
+            <option value='PARTICLES'>Particles</option>
+          </select>
+        </div>
+      </div>
+
+      <div class='grid cols-3'>
+        <div class='subcard'>
+          <h2>Fixed Quiz</h2>
+          <div class='row'>
+            <label>Questions <input type='number' id='sizeInp' min='10' max='50' step='10' value='${S.settings.size||20}'></label>
+            <button class='btn primary' id='startFixed'>Start</button>
+          </div>
+        </div>
+
+        <div class='subcard'>
+          <h2>Endless Quiz</h2>
+          <p class='muted'>Keep going until you stop.</p>
+          <button class='btn' id='startEndless'>Start Endless</button>
+        </div>
+
+        <div class='subcard'>
+          <h2>Flashcards</h2>
+          <p class='muted'>Tap to reveal, self-grade.</p>
+          <button class='btn' id='startFlash'>Start Flashcards</button>
+        </div>
+      </div>
+    </div>
+
+    <div class='card ref'>
+    <h2>Quick Reference — こ/そ/あ/ど</h2>
+    ${refKoSoADoTable(true)}
+    <h2 style='margin-top:16px'>Particles (14 core)</h2>
+    ${refParticlesList(true)}
+
+    <!-- Mastery legend -->
+    <div class='legend'>
+        <span class='muted'>Proficiency:</span>
+        <div class='heat' style='grid-template-columns:repeat(10,16px);gap:4px'>
+        ${[0,1,2,3,4,5,6,7,8,9].map(l=>`<div class='tile' style='height:12px;border-radius:4px;background:${levelColor(l)}'></div>`).join('')}
+        </div>
+        <span class='muted'>New → Mastered</span>
+    </div>
+    </div>
+
+  `;
+  app.appendChild(el);
+
+  // hook quick ref links
+  el.querySelectorAll('[data-ref]').forEach(a=>{
+    a.onclick=(e)=>{ e.preventDefault(); viewRefFull(a.dataset.ref); };
+  });
+
+  // hydrate core controls
+  const ps = el.querySelector('#promptSel'); ps.value=S.settings.prompt; ps.onchange=()=>{S.settings.prompt=ps.value; save('settings',S.settings)};
+  const qt = el.querySelector('#qtypeSel'); qt.value=S.settings.qtype; qt.onchange=()=>{S.settings.qtype=qt.value; save('settings',S.settings)};
+  const cs = el.querySelector('#catSel'); cs.value=S.settings.category; cs.onchange=()=>{S.settings.category=cs.value; save('settings',S.settings)};
+
+  // quiz starts
+  el.querySelector('#sizeInp').onchange=e=>{ S.settings.size = +e.target.value; save('settings',S.settings) };
+  el.querySelector('#startFixed').onclick=()=>{ startSession('FIXED'); nextQuestion(); };
+  el.querySelector('#startEndless').onclick=()=>{ startSession('ENDLESS'); nextQuestion(); };
+  el.querySelector('#startFlash').onclick=()=>{ startSession('FLASH'); nextQuestion(); };
+}
+
+function viewQuiz(){
+  const s = S.session; const { card, promptLang, options } = s.current;
+  const total = s.kind==='ENDLESS'? null : s.queue.length;
+  const progress = total? Math.round((s.idx/total)*100): 0;
+  const el = document.createElement('div'); el.className='grid';
+  el.innerHTML = `
+    ${total? `<div class='bar'><span style='width:${progress}%'></span></div>`:''}
+    <div class='card'>
+      <div class='q'>${promptLang==='EN' ? card.en : renderJP(card.jp)}</div>
+      <div class='muted' style='margin-top:6px'>${promptLang==='EN' ? 'Pick the Japanese' : 'Pick the English'}</div>
+      <div class='options'>
+        ${options.map((o,i)=>`<button class='btn option' data-i='${i}'>${promptLang==='EN'? renderJP(o.jp) : o.en}</button>`).join('')}
+      </div>
+      <div class='hintbox'>
+        <button class='btn' id='hintBtn'>${s.hintShown? 'Hide hint':'Show hint'}</button>
+        <span id='hintTxt' class='muted' style='margin-left:8px;${s.hintShown? '' : 'display:none;'}'>${hintText(card, promptLang)}</span>
+      </div>
+      <div id='fb' class='feedback' aria-live='polite'></div>
+    </div>
+    <div class='hud'>${s.kind==='ENDLESS'? `<button class='btn bad' id='stopBtn'>Stop</button>`:''}</div>
+  `;
+  app.appendChild(el);
+
+  const btns = el.querySelectorAll('.options button');
+  btns.forEach(btn=>btn.onclick=()=>{
+    if(s.locked) return;
+    s.locked = true;
+
+    const idx = +btn.dataset.i;
+    const correct = s.current.options[idx].id===s.current.card.id;
+
+    // sound
+    playSfx(correct);
+
+    // color + lock buttons
+    btns.forEach((b,i)=>{
+      if(i===idx && !correct) b.classList.add('wrong');
+      if(s.current.options[i].id===s.current.card.id) b.classList.add('correct');
+      b.disabled = true;
+    });
+
+    const fb = el.querySelector('#fb');
+    fb.className='feedback '+(correct?'good':'bad');
+    fb.textContent = correct? 'Correct!' : `Correct: ${s.current.card.jp} = ${s.current.card.en}`;
+
+    grade(correct, idx);
+
+    // click to continue
+    const cardBox = el.querySelector('.card');
+    const cont = document.createElement('div');
+    cont.id = 'clickToNext';
+    cont.className = 'muted';
+    cont.style.marginTop = '10px';
+    cont.textContent = 'Click anywhere in this card to continue';
+    cardBox.appendChild(cont);
+
+    const advance = ()=>{
+      cardBox.removeEventListener('click', advance, true);
+      if(s.kind==='ENDLESS'){ nextQuestion(); }
+      else { s.idx++; if(s.idx>=s.queue.length) finish(); else nextQuestion(); }
+    };
+    setTimeout(()=>cardBox.addEventListener('click', advance, true), 30);
+  });
+
+  const stopBtn = el.querySelector('#stopBtn'); if(stopBtn) stopBtn.onclick=finish;
+  const hintBtn = el.querySelector('#hintBtn'); const hintTxt = el.querySelector('#hintTxt');
+  hintBtn.onclick=()=>{ s.hintShown=!s.hintShown; hintTxt.style.display=s.hintShown?'inline':'none'; hintBtn.textContent=s.hintShown?'Hide hint':'Show hint'; };
+}
+
+function viewFlash(){
+  const s = S.session;
+  const card = s.current.card;
+
+  // Which side (prompt language)?
+  const frontLang = S.settings.prompt==='MIXED'
+    ? (Math.random()<0.5 ? 'EN' : 'JA')
+    : S.settings.prompt;
+
+  const el = document.createElement('div'); el.className='grid';
+  el.innerHTML = `
+    <div class='card flash'>
+      <!-- FRONT: term + example in the SAME language as the prompt -->
+      ${!s.flipped ? `
+        <div class='front'>${frontLang==='EN' ? card.en : card.jp}</div>
+        <div class='muted' style='margin-top:6px'>
+          ${frontLang==='EN' ? card.example.en : card.example.jp}
+        </div>
+      ` : ''}
+
+      <!-- BACK: answer + complementary example -->
+      ${s.flipped ? `
+        <div class='back'>
+          ${frontLang==='EN' ? card.jp : card.en}
+          <div class='muted' style='margin-top:6px'>
+            ${frontLang==='EN' ? card.example.jp : card.example.en}
+          </div>
+        </div>
+      ` : ''}
+
+      <div class='row'>
+        ${
+          !s.flipped
+            ? `<button class='btn' id='flipBtn'>Show answer</button>`
+            : `<button class='btn good' id='knewBtn'>I knew it</button>
+               <button class='btn bad' id='missBtn'>I missed it</button>`
+        }
+      </div>
+    </div>
+
+    <!-- HUD: Stop only (red) -->
+    <div class='hud'>
+      <button class='btn bad' id='stopBtn'>Stop</button>
+    </div>
+  `;
+  app.appendChild(el);
+
+  // Controls
+  if(!s.flipped){
+    document.getElementById('flipBtn').onclick = () => {
+      s.flipped = true;
+      render();
+    };
+  }else{
+    document.getElementById('knewBtn').onclick = () => {
+      playSfx(true);
+      s.answered++; s.score++; s.streak++; if(s.streak>s.maxStreak) s.maxStreak=s.streak;
+      queueMasteryUpdate(card.id, true);
+      nextQuestion();
+    };
+    document.getElementById('missBtn').onclick = () => {
+      playSfx(false);
+      s.answered++; s.streak = 0; s.mistakes.push(card.id);
+      queueMasteryUpdate(card.id, false);
+      nextQuestion();
+    };
+  }
+
+  document.getElementById('stopBtn').onclick = finish;
+}
+
+
+function viewResults(){
+  const s = S.session; const accPct = s.finished.total? Math.round(100*s.score/s.finished.total):0;
+  const el = document.createElement('div'); el.className='grid';
+  el.innerHTML = `
+    <div class='card grid'>
+      <div class='row'><div><b>Accuracy:</b> ${s.score}/${s.finished.total} (${accPct}%)</div><div><b>Longest Streak:</b> ${s.maxStreak}</div><div><b>Mode:</b> ${S.settings.prompt} · ${S.settings.qtype} · ${S.settings.category}</div><div><b>Duration:</b> ${Math.round(s.finished.duration/1000)}s</div></div>
+      <h2>Mastery change</h2>
+        ${S.session.delta ? masteryChangeHTML(S.session.delta.before, S.session.delta.after) : ''}
+    ${ (S.session.delta && S.session.delta.up.length) ? `
+        <h2>Leveled up</h2>
+        <div class='grid'>
+            ${S.session.delta.up.slice(0,8).map(({id,from,to})=>{
+            const c = [...DEMO,...PARTICLES].find(x=>x.id===id);
+            return `<div class='card' style='padding:8px 12px'>
+                <b>${c.jp}</b> — ${c.en}
+                <span class='chip' style='margin-left:8px;background:${levelColor(to)};color:${textColor(to)}'>L${from}→L${to}</span>
+            </div>`;
+            }).join('')}
+        </div>
+        ` : '' }
+
+
+      <h2>Missed items</h2>
+      <div class='grid'>${(s.mistakes.length? Array.from(new Set(s.mistakes)) : ['(none)']).map(id=>{
+        if(id==='(none)') return `<div class='muted'>(none)</div>`;
+        const card = [...DEMO,...PARTICLES].find(x=>x.id===id);
+        return `<div class='card' style='padding:12px'>
+          <div><b>${card.jp}</b> — ${card.en} <span class='chip' style='background:${levelColor((S.mastery[id]||{lvl:0}).lvl)};color:${textColor((S.mastery[id]||{lvl:0}).lvl)}'>L${(S.mastery[id]||{lvl:0}).lvl}</span></div>
+          <div class='muted'>${card.example.jp} / ${card.example.en}</div>
+        </div>`;
+      }).join('')}</div>
+      <div class='row'>
+        <button class='btn primary' id='retryBtn'>Retry mistakes</button>
+        <button class='btn' id='menuBtn'>Back to menu</button>
+        <button class='btn' id='refBtn'>Review reference</button>
+      </div>
+    </div>
+  `;
+  app.appendChild(el);
+  el.querySelector('#menuBtn').onclick=()=>{ S.session=null; render(); };
+  el.querySelector('#refBtn').onclick=()=>{ S.session=null; render(); };
+  el.querySelector('#retryBtn').onclick=()=>{
+    const unique = Array.from(new Set(s.mistakes));
+    if(unique.length===0){ S.session=null; render(); return; }
+    S.session = { kind:'FIXED', queue: unique.map(id=>[...DEMO,...PARTICLES].find(c=>c.id===id)), idx:0, score:0, streak:0, maxStreak:0, mistakes:[], recent:[], started:Date.now(), answered:0, phase:'ASK', hintShown:false, locked:false };
+    nextQuestion();
+  };
+}
+
+function viewMastery(){
+  const el = document.createElement('div'); el.className='grid';
+  el.innerHTML = `
+    <div class='card'>
+      <h2>Mastery</h2>
+      ${masteryTableHTML()}
+      <div class='row' style='margin-top:10px'>
+        <button class='btn primary' id='reviewWeak'>Review weakest (≤3)</button>
+        <button class='btn bad' id='resetMastery'>Reset mastery</button>
+        <button class='btn' id='backBtn'>Back</button>
+      </div>
+    </div>`;
+  app.innerHTML=''; app.appendChild(el);
+  el.querySelector('#backBtn').onclick=()=>{ S.session=null; render(); };
+  el.querySelector('#resetMastery').onclick=()=>{ if(confirm('Reset all mastery?')){ S.mastery={}; save('mastery',S.mastery); viewMastery(); } };
+  el.querySelector('#reviewWeak').onclick=()=>{
+    const all = [...DEMO,...PARTICLES];
+    const weak = all.filter(c=> (S.mastery[c.id]?.lvl||0) <= 3);
+    if(weak.length===0){ alert('No weak items right now.'); return; }
+    S.session = { kind:'FIXED', queue: weak.slice(0,Math.min(20,weak.length)), idx:0, score:0, streak:0, maxStreak:0, mistakes:[], recent:[], started:Date.now(), answered:0, phase:'ASK', hintShown:false, flipped:false, locked:false };
+    nextQuestion();
+  };
+}
+
+function masteryCounts(){
+  const counts = Array(10).fill(0);
+  [...DEMO, ...PARTICLES].forEach(c=>{
+    const lvl = (S.mastery[c.id]?.lvl)|0;
+    counts[Math.max(0, Math.min(9, lvl))]++;
+  });
+  return counts;
+}
+
+
+function viewRefFull(group){
+  const starts = {KO:'こ', SO:'そ', A:'あ', DO:'ど'}[group];
+  const items = DEMO.filter(x=> x.jp.startsWith(starts));
+  const el = document.createElement('div'); el.className='grid';
+  el.innerHTML = `
+    <div class='card'>
+      <h2>Full Reference — ${starts}＊</h2>
+      <div class='grid'>
+        ${items.map(it=>`
+          <div class='card' style='padding:12px'>
+            <div><b>${it.jp}</b> — ${it.en}</div>
+            <div class='muted'>${it.hint||''}</div>
+            <div style='margin-top:6px'>${it.example.jp}</div>
+            <div class='muted'>${it.example.en}</div>
+          </div>
+        `).join('')}
+      </div>
+      <div class='row' style='margin-top:10px'>
+        <button class='btn' id='backToMenu'>Back</button>
+      </div>
+    </div>`;
+  app.innerHTML=''; app.appendChild(el);
+  el.querySelector('#backToMenu').onclick=()=>{ S.session=null; render(); };
+}
+
+function refKoSoADoTable(showMastery){
+  const rows = [
+    ['Thing (–re)', ['これ','それ','あれ','どれ'], ['kore','sore','are','dore']],
+    ['Modifier (–no)', ['この','その','あの','どの'], ['kono','sono','ano','dono']],
+    ['Place (–ko)', ['ここ','そこ','あそこ','どこ'], ['koko','soko','asoko','doko']],
+    ['Direction (–chira)', ['こちら','そちら','あちら','どちら'], ['kochira','sochira','achira','dochira']],
+    ['Manner (–u)', ['こう','そう','ああ','どう'], ['kou','sou','aa','dou']],
+    ['Kind (–nna)', ['こんな','そんな','あんな','どんな'], ['konna','sonna','anna','donna']],
+    ['Degree (–nani)', ['こんなに','そんなに','あんなに','どんなに'], ['konnani','sonnani','annani','donnani']],
+  ];
+  let html = `<table><tr>
+    <th></th>
+    <th><a href="#" data-ref="KO">こ (near me)</a></th>
+    <th><a href="#" data-ref="SO">そ (near you)</a></th>
+    <th><a href="#" data-ref="A">あ (far)</a></th>
+    <th><a href="#" data-ref="DO">ど (which)</a></th>
+  </tr>`;
+  for(const [label, jp, ids] of rows){
+    html += `<tr><th>${label}</th>` + jp.map((s, i)=>{
+      const id = ids[i]; const lvl = (S.mastery[id]?.lvl)||0; const bg = showMastery? ` style='background:${levelColor(lvl)};color:${textColor(lvl)}'` : '';
+      return `<td${bg}>${s}</td>`;
+    }).join('') + `</tr>`;
+  }
+  html += `</table>`; return html;
+}
+
+function refParticlesList(showMastery){
+  return `<table><tr><th>Particle</th><th>Role</th><th>Example</th></tr>` + PARTICLES.map(p=>{
+    const lvl = (S.mastery[p.id]?.lvl)||0; const style = showMastery? ` style='background:${levelColor(lvl)};color:${textColor(lvl)}'` : '';
+    return `<tr${style}><td><b>${p.jp}</b></td><td>${p.en}</td><td>${renderJP(p.example.jp)}</td></tr>`;
+  }).join('') + `</table>`;
+}
+
+    function snapshotMastery(){
+    const map = {};
+    for(const c of [...DEMO, ...PARTICLES]) map[c.id] = (S.mastery[c.id]?.lvl) || 0;
+    return map;
+    }
+    function masteryCountsFrom(map){
+    const counts = Array(10).fill(0);
+    for(const id in map){ counts[Math.max(0, Math.min(9, map[id]|0))]++; }
+    return counts;
+    }
+    function masteryChangeHTML(beforeMap, afterMap){
+    const before = masteryCountsFrom(beforeMap);
+    const after  = masteryCountsFrom(afterMap);
+    return `<div class='heat mc'>
+        ${after.map((n,l)=>{
+        const d = (after[l]||0) - (before[l]||0);
+        const cls = d>0 ? 'up' : d<0 ? 'down' : 'flat';
+        const textWhite = l>=6 ? 'color:#fff' : '';
+        const deltaTxt = d>0 ? '+'+d : d<0 ? String(d) : '±0';
+        return `<div class='tile' style='background:${levelColor(l)};height:28px;display:flex;flex-direction:column;align-items:center;justify-content:center' title='L${l}: ${n} now (${deltaTxt})'>
+            <div style='font-size:12px;${textWhite}'>${n}</div>
+            <div class='mc-delta ${cls}' style='font-size:11px'>${deltaTxt}</div>
+        </div>`;
+        }).join('')}
+    </div>`;
+    }
+
+
+// Menu mastery table
+function masteryTableHTML(){
+  const rows = [...DEMO,...PARTICLES]
+    .map(c=>({c, lvl:(S.mastery[c.id]?.lvl)||0}))
+    .sort((a,b)=>a.lvl-b.lvl || a.c.jp.localeCompare(b.c.jp));
+  if(rows.length===0) return `<div class='muted'>(no items)</div>`;
+  return `<table class='mtable'>
+    <tr><th>Term</th><th>Meaning</th><th>Lvl</th></tr>
+    ${rows.map(({c,lvl})=>`<tr>
+      <td><b>${c.jp}</b></td>
+      <td>${c.en}</td>
+      <td><span class='lvlchip' style='background:${levelColor(lvl)};color:${textColor(lvl)}'>L${lvl}</span></td>
+    </tr>`).join('')}
+  </table>`;
+}
+
+// ----------------- Furigana -----------------
+const FURIGANA = {
+  '今年':'ことし','去年':'きょねん','寒い':'さむい','暑い':'あつい','安い':'やすい','高い':'たかい','近い':'ちかい',
+  '山':'やま','道':'みち','駅':'えき','店':'みせ','家':'いえ','雨':'あめ','方':'かた',
+  '映画':'えいが','音楽':'おんがく','問題':'もんだい','冗談':'じょうだん','景色':'けしき','練習':'れんしゅう','難しい':'むずかしい',
+  '勉強':'べんきょう','学校':'がっこう','東京':'とうきょう','友達':'ともだち','日本':'にほん','出身':'しゅっしん',
+  '私':'わたし','学生':'がくせい','猫':'ねこ','本':'ほん','読む':'よむ','読みます':'よみます','言った':'いった','思います':'おもいます',
+  '長い':'ながい','座って':'すわって','何':'なに','名':'めい','様':'さま','簡単':'かんたん','好き':'すき','見たい':'みたい',
+  '急がなくて':'いそがなくて','混む':'こむ','三時':'さんじ','五時':'ごじ','行く':'いく','行かない':'いかない','いる':'いる','一つ':'ひとつ'
+};
+// longest-first replacement to avoid partial overlaps
+const _FURI_KEYS = Object.keys(FURIGANA).sort((a,b)=>b.length-a.length);
+
+function furiganaize(text){
+  let out = text;
+  for(const k of _FURI_KEYS){
+    const r = FURIGANA[k];
+    out = out.split(k).join(`<ruby>${k}<rt>${r}</rt></ruby>`);
+  }
+  return out;
+}
+
+function renderJP(s){
+  return S.settings.furigana ? furiganaize(s) : s;
+}
+
+
+// ======================= UTIL =======================
+function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function levelColor(l){
+  const colors = ['#FFFFFF','#eaf7ee','#d5efdd','#bde5c8','#a6dbb4','#8fd1a0','#73c488','#52b371','#319f58','#148942'];
+  return colors[Math.max(0,Math.min(9, l|0))];
+}
+function textColor(l){ return (l>=6)? '#ffffff' : '#0b1220'; }
+function hintText(card, promptLang){
+  if(promptLang==='EN'){
+    return `<b>${card.en}</b> — e.g., ${card.example.en}`;
+  } else {
+    return `例: ${renderJP(card.example.jp)}`;
+  }
+}
+
+
+// Title → back to menu (with commit)
+const titleEl = document.querySelector('.title h1');
+titleEl.style.cursor='pointer';
+titleEl.onclick=()=>{
+  if(S.session){
+    const ok = confirm('End current session and return to the main menu?');
+    if(!ok) return;
+    applyPending();
+    S.session = null;
+  }
+  render();
+};
+
+// ======================= BOOT =======================
+render();
+</script>
+</body>
+</html>
