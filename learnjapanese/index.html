@@ -120,6 +120,12 @@
     .glossbar{ left:12px; right:12px; bottom: calc(env(safe-area-inset-bottom) + 80px) }
     }
 
+    /* Kill double-tap zoom on tappable controls */
+    a, button, .btn, select, input, .options button, .chip {
+    touch-action: manipulation;
+    }
+
+
 
 </style>
 </head>
@@ -267,6 +273,24 @@ function setHud(){
   scoreHud.textContent = s? `Score: ${s.score}/${s.answered}` : '';
   streakHud.textContent = s? `Streak: ${s.streak}` : '';
 }
+
+/* Prevent double-tap zoom on iOS without killing pinch */
+(function(){
+  const isIOS = /iP(hone|ad|od)/.test(navigator.userAgent);
+  if(!isIOS) return;
+
+  // iOS fires zoom on dblclick; cancel it.
+  document.addEventListener('dblclick', e => e.preventDefault(), { passive:false });
+
+  // Extra guard: swallow the second tap if it lands within 300ms
+  let lastTouch = 0;
+  document.addEventListener('touchend', e => {
+    const now = Date.now();
+    if (now - lastTouch <= 300) { e.preventDefault(); }
+    lastTouch = now;
+  }, { passive:false });
+})();
+
 
 // ======================= SCHEDULER =======================
 function weightFor(card){ const m=S.mastery[card.id]; const lvl=m?m.lvl:0; return 1/(1+lvl*lvl); }
