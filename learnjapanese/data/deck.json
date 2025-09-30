@@ -1,0 +1,51 @@
+[
+  { "id": "kore",    "cat": "demonstrative", "jp": "これ",    "en": "this (thing near speaker)",          "hint": "near me / thing",                 "example": { "jp": "これはペンです。",           "en": "This is a pen." } },
+  { "id": "sore",    "cat": "demonstrative", "jp": "それ",    "en": "that (thing near listener)",         "hint": "near you / thing",                "example": { "jp": "それはあなたのですか。",     "en": "Is that yours?" } },
+  { "id": "are",     "cat": "demonstrative", "jp": "あれ",    "en": "that (over there) (thing)",          "hint": "far from both / thing",           "example": { "jp": "あれは山です。",             "en": "That (over there) is a mountain." } },
+  { "id": "dore",    "cat": "demonstrative", "jp": "どれ",    "en": "which (thing)",                       "hint": "question / thing",                "example": { "jp": "どれがあなたのですか。",     "en": "Which one is yours?" } },
+
+  { "id": "kono",    "cat": "demonstrative", "jp": "この",    "en": "this (modifier)",                     "hint": "near me / modifier",              "example": { "jp": "この本は面白い。",           "en": "This book is interesting." } },
+  { "id": "sono",    "cat": "demonstrative", "jp": "その",    "en": "that (modifier near you)",            "hint": "near you / modifier",             "example": { "jp": "その映画は長い。",           "en": "That movie is long." } },
+  { "id": "ano",     "cat": "demonstrative", "jp": "あの",    "en": "that (modifier over there)",          "hint": "far / modifier",                  "example": { "jp": "あの店は高い。",             "en": "That shop is expensive." } },
+  { "id": "dono",    "cat": "demonstrative", "jp": "どの",    "en": "which (modifier)",                    "hint": "question / modifier",             "example": { "jp": "どの道が近いですか。",       "en": "Which road is closer?" } },
+
+  { "id": "koko",    "cat": "demonstrative", "jp": "ここ",    "en": "here (place)",                        "hint": "near me / place",                 "example": { "jp": "ここに座ってください。",       "en": "Please sit here." } },
+  { "id": "soko",    "cat": "demonstrative", "jp": "そこ",    "en": "there (place near you)",              "hint": "near you / place",                "example": { "jp": "そこは暑い。",               "en": "It is hot there." } },
+  { "id": "asoko",   "cat": "demonstrative", "jp": "あそこ",  "en": "over there (place)",                  "hint": "far / place",                     "example": { "jp": "あそこに駅があります。",       "en": "There is a station over there." } },
+  { "id": "doko",    "cat": "demonstrative", "jp": "どこ",    "en": "where",                               "hint": "question / place",                "example": { "jp": "トイレはどこですか。",       "en": "Where is the restroom?" } },
+
+  { "id": "kochira", "cat": "demonstrative", "jp": "こちら",  "en": "this way / this person (polite)",     "hint": "near me / direction/person",      "example": { "jp": "こちらへどうぞ。",           "en": "This way, please." } },
+  { "id": "sochira", "cat": "demonstrative", "jp": "そちら",  "en": "that way / that person (polite)",     "hint": "near you / direction/person",     "example": { "jp": "そちらは何名様ですか。",     "en": "How many in your party?" } },
+  { "id": "achira",  "cat": "demonstrative", "jp": "あちら",  "en": "that way over there (polite)",        "hint": "far / direction/person",          "example": { "jp": "あちらの方です。",           "en": "That person over there." } },
+  { "id": "dochira", "cat": "demonstrative", "jp": "どちら",  "en": "which way / which person (polite)",   "hint": "question / direction/person",     "example": { "jp": "ご出身はどちらですか。",     "en": "Where are you from?" } },
+
+  { "id": "kou",     "cat": "demonstrative", "jp": "こう",    "en": "like this",                           "hint": "near me / manner",                "example": { "jp": "こうやってください。",       "en": "Do it like this." } },
+  { "id": "sou",     "cat": "demonstrative", "jp": "そう",    "en": "like that",                           "hint": "near you / manner",               "example": { "jp": "そう思います。",             "en": "I think so." } },
+  { "id": "aa",      "cat": "demonstrative", "jp": "ああ",    "en": "like that (over there)",              "hint": "far / manner",                    "example": { "jp": "ああいう話は苦手です。",       "en": "I'm not good with stories like that." } },
+  { "id": "dou",     "cat": "demonstrative", "jp": "どう",    "en": "how / in what way",                   "hint": "question / manner",               "example": { "jp": "どうしますか。",             "en": "What will you do?" } },
+
+  { "id": "konna",   "cat": "demonstrative", "jp": "こんな",  "en": "this kind of",                        "hint": "near me / kind",                  "example": { "jp": "こんな問題は簡単だ。",       "en": "Problems like this are easy." } },
+  { "id": "sonna",   "cat": "demonstrative", "jp": "そんな",  "en": "that kind of (near you)",             "hint": "near you / kind",                 "example": { "jp": "そんな冗談はやめて。",         "en": "Cut out jokes like that." } },
+  { "id": "anna",    "cat": "demonstrative", "jp": "あんな",  "en": "that kind of (over there)",           "hint": "far / kind",                      "example": { "jp": "あんな景色を見たい。",         "en": "I want to see scenery like that." } },
+  { "id": "donna",   "cat": "demonstrative", "jp": "どんな",  "en": "what kind of",                        "hint": "question / kind",                 "example": { "jp": "どんな音楽が好きですか。",     "en": "What kind of music do you like?" } },
+
+  { "id": "konnani", "cat": "demonstrative", "jp": "こんなに","en": "this much / to this extent",          "hint": "near me / degree",                "example": { "jp": "こんなに安いの？",             "en": "It's this cheap?" } },
+  { "id": "sonnani", "cat": "demonstrative", "jp": "そんなに","en": "that much (near you)",                "hint": "near you / degree",               "example": { "jp": "そんなに急がなくていい。",     "en": "No need to hurry that much." } },
+  { "id": "annani",  "cat": "demonstrative", "jp": "あんなに","en": "that much (over there)",              "hint": "far / degree",                    "example": { "jp": "あんなに混むとは。",           "en": "Didn't expect it to be that crowded." } },
+  { "id": "donnani", "cat": "demonstrative", "jp": "どんなに","en": "how much / to what extent",           "hint": "question / degree",               "example": { "jp": "どんなに練習しても難しい。",   "en": "No matter how much I practice, it's hard." } },
+
+  { "id": "wa",     "cat": "particle", "jp": "は",          "en": "topic marker",                         "hint": null, "example": { "jp": "私は学生です。",                 "en": "As for me, I am a student." } },
+  { "id": "ga",     "cat": "particle", "jp": "が",          "en": "subject/new info; likes/abilities",    "hint": null, "example": { "jp": "猫が好きです。",                   "en": "I like cats." } },
+  { "id": "wo",     "cat": "particle", "jp": "を",          "en": "direct object",                        "hint": null, "example": { "jp": "本を読みます。",                   "en": "I read a book." } },
+  { "id": "ni",     "cat": "particle", "jp": "に",          "en": "time/goal/existence/IO",               "hint": null, "example": { "jp": "三時に行く。家にいる。",           "en": "Go at three. / Be at home." } },
+  { "id": "de",     "cat": "particle", "jp": "で",          "en": "location of action; means",            "hint": null, "example": { "jp": "学校で勉強する。バスで行く。",     "en": "Study at school. / Go by bus." } },
+  { "id": "e",      "cat": "particle", "jp": "へ",          "en": "direction (softer than に)",            "hint": null, "example": { "jp": "東京へ行く。",                     "en": "Go toward Tokyo." } },
+  { "id": "to",     "cat": "particle", "jp": "と",          "en": "with; and; quoting",                    "hint": null, "example": { "jp": "友達と行く。「はい」と言った。",   "en": "Go with a friend. / Said \"yes\"." } },
+  { "id": "mo",     "cat": "particle", "jp": "も",          "en": "also/even",                             "hint": null, "example": { "jp": "私も行く。",                       "en": "I will go too." } },
+  { "id": "no",     "cat": "particle", "jp": "の",          "en": "possessive/attributive",                "hint": null, "example": { "jp": "日本の本。",                       "en": "Japanese book." } },
+  { "id": "kara",   "cat": "particle", "jp": "から",        "en": "from; since; because",                  "hint": null, "example": { "jp": "ここから駅まで。雨だから行かない。", "en": "From here to the station. / Not going because it's raining." } },
+  { "id": "made",   "cat": "particle", "jp": "まで",        "en": "until; up to",                          "hint": null, "example": { "jp": "五時まで働く。",                   "en": "Work until five." } },
+  { "id": "yori",   "cat": "particle", "jp": "より",        "en": "than (comparison)",                     "hint": null, "example": { "jp": "今年は去年より寒い。",               "en": "This year is colder than last year." } },
+  { "id": "dake",   "cat": "particle", "jp": "だけ",        "en": "only",                                  "hint": null, "example": { "jp": "一つだけ。",                       "en": "Only one." } },
+  { "id": "shika",  "cat": "particle", "jp": "しか(〜ない)", "en": "only + negative",                      "hint": null, "example": { "jp": "一つしかない。",                     "en": "There is only one." } }
+]

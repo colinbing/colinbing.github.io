@@ -1,0 +1,64 @@
+{
+  "私": "I; me",
+  "あなた": "you",
+  "学生": "student",
+  "学校": "school",
+  "本": "book",
+  "猫": "cat",
+  "東京": "Tokyo",
+  "映画": "movie",
+  "音楽": "music",
+  "問題": "problem",
+  "景色": "scenery",
+  "冗談": "joke",
+  "雨": "rain",
+  "山": "mountain",
+  "道": "road",
+  "駅": "station",
+  "店": "shop",
+  "ペン": "pen",
+
+  "座る": "to sit",
+  "座って": "sit (te-form / imperative polite via ください)",
+  "どうぞ": "please; go ahead",
+
+  "何": "what",
+  "名": "people (counter)",
+  "様": "honorific suffix",
+  "何名様": "party size (how many people?)",
+  "方": "person (polite)",
+  "出身": "hometown; origin",
+
+  "思います": "think",
+  "言った": "said",
+  "読みます": "read (polite)",
+  "好き": "like; fond of",
+
+  "行く": "to go",
+  "行かない": "not go",
+  "いる": "to be; exist",
+
+  "三時": "three o’clock",
+  "五時": "five o’clock",
+
+  "近い": "near; close",
+  "暑い": "hot",
+  "長い": "long",
+  "高い": "expensive; tall",
+  "安い": "cheap",
+
+  "急ぐ": "to hurry",
+  "急がなくて": "no need to hurry (neg. te-form + いい)",
+
+  "混む": "to be crowded",
+  "練習": "practice",
+  "難しい": "difficult",
+
+  "やめる": "to stop; quit",
+  "やめて": "stop it (please)",
+
+  "ください": "please (do)",
+  "です": "copula (polite)",
+  "ですか": "copula + question",
+  "ます": "polite verb ending"
+}
