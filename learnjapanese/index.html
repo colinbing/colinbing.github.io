@@ -97,6 +97,26 @@
     ruby{ruby-position:over}
     rt{font-size:.6em;color:var(--muted);line-height:1}
 
+    /* make sure Stop is red in light mode too */
+    body.light .btn.bad{
+    background: var(--bad) !important;
+    border-color: #e24b6a !important;
+    color: #24050b !important;
+    }
+
+    .selpop{
+        position:fixed; z-index:9999;
+        background:var(--panel); color:var(--text);
+        border:1px solid #2a3141; border-radius:10px;
+        box-shadow:0 10px 30px rgba(0,0,0,.25);
+        padding:10px 12px; max-width:300px;
+        }
+        .selpop .tt{font-weight:700; margin-bottom:4px}
+        .selpop .ex{color:var(--muted); margin-top:6px}
+
+    .selpop .ex{ color: var(--muted); margin-top: 2px }
+
+
   </style>
 </head>
 <body>
@@ -550,59 +570,58 @@ function viewFlash(){
   const s = S.session;
   const card = s.current.card;
 
-  // Which side (prompt language)?
-  const frontLang = S.settings.prompt==='MIXED'
-    ? (Math.random()<0.5 ? 'EN' : 'JA')
+  // Use the current prompt setting to decide the front language
+  const frontLang = (S.settings.prompt === 'MIXED')
+    ? (Math.random() < 0.5 ? 'EN' : 'JA')
     : S.settings.prompt;
 
-  const el = document.createElement('div'); el.className='grid';
-  el.innerHTML = `
-    <div class='card flash'>
-      <!-- FRONT: term + example in the SAME language as the prompt -->
-      ${!s.flipped ? `
-        <div class='front'>${frontLang==='EN' ? card.en : card.jp}</div>
-        <div class='muted' style='margin-top:6px'>
-          ${frontLang==='EN' ? card.example.en : card.example.jp}
-        </div>
-      ` : ''}
+  // Safe wrapper: if renderJP() exists (furigana on), use it; else pass-through
+  const jp = (str)=> (typeof renderJP === 'function' ? renderJP(str) : str);
 
-      <!-- BACK: answer + complementary example -->
-      ${s.flipped ? `
-        <div class='back'>
-          ${frontLang==='EN' ? card.jp : card.en}
-          <div class='muted' style='margin-top:6px'>
-            ${frontLang==='EN' ? card.example.jp : card.example.en}
+  const el = document.createElement('div'); el.className = 'grid';
+  el.innerHTML = `
+    <div class="card flash">
+      ${!s.flipped ? `
+        <!-- FRONT: term + simple example in the SAME language as the prompt -->
+        <div class="front">${frontLang === 'EN' ? card.en : jp(card.jp)}</div>
+        <div class="muted" style="margin-top:6px">
+          ${frontLang === 'EN' ? card.example.en : jp(card.example.jp)}
+        </div>
+        <div class="row">
+          <button class="btn" id="flipBtn">Show answer</button>
+        </div>
+      ` : `
+        <!-- BACK: answer + complementary example -->
+        <div class="back">
+          ${frontLang === 'EN' ? jp(card.jp) : card.en}
+          <div class="muted" style="margin-top:6px">
+            ${frontLang === 'EN' ? jp(card.example.jp) : card.example.en}
           </div>
         </div>
-      ` : ''}
-
-      <div class='row'>
-        ${
-          !s.flipped
-            ? `<button class='btn' id='flipBtn'>Show answer</button>`
-            : `<button class='btn good' id='knewBtn'>I knew it</button>
-               <button class='btn bad' id='missBtn'>I missed it</button>`
-        }
-      </div>
+        <div class="row">
+          <button class="btn good" id="knewBtn">I knew it</button>
+          <button class="btn bad" id="missBtn">I missed it</button>
+        </div>
+      `}
     </div>
 
-    <!-- HUD: Stop only (red) -->
-    <div class='hud'>
-      <button class='btn bad' id='stopBtn'>Stop</button>
+    <!-- HUD: Stop only -->
+    <div class="hud">
+      <button class="btn bad" id="stopBtn">Stop</button>
     </div>
   `;
   app.appendChild(el);
 
   // Controls
-  if(!s.flipped){
+  if (!s.flipped){
     document.getElementById('flipBtn').onclick = () => {
       s.flipped = true;
       render();
     };
-  }else{
+  } else {
     document.getElementById('knewBtn').onclick = () => {
       playSfx(true);
-      s.answered++; s.score++; s.streak++; if(s.streak>s.maxStreak) s.maxStreak=s.streak;
+      s.answered++; s.score++; s.streak++; if (s.streak > s.maxStreak) s.maxStreak = s.streak;
       queueMasteryUpdate(card.id, true);
       nextQuestion();
     };
@@ -616,6 +635,7 @@ function viewFlash(){
 
   document.getElementById('stopBtn').onclick = finish;
 }
+
 
 
 function viewResults(){
@@ -829,6 +849,151 @@ function renderJP(s){
   return S.settings.furigana ? furiganaize(s) : s;
 }
 
+// ---------- Selection Gloss: minimal dictionary + greedy segmenter ----------
+// Expand this over time. Start with deck terms + high-frequency words.
+const LEX = {
+  '私': 'I; me',
+  'あなた': 'you',
+  '学生': 'student',
+  '学校': 'school',
+  '本': 'book',
+  '猫': 'cat',
+  '東京': 'Tokyo',
+  '映画': 'movie',
+  '音楽': 'music',
+  '問題': 'problem',
+  '景色': 'scenery',
+  '雨': 'rain',
+  '山': 'mountain',
+  '道': 'road',
+  '駅': 'station',
+  '店': 'shop',
+  // particles / function words
+  'は': 'topic marker',
+  'が': 'subject (new info)/likes',
+  'を': 'direct object',
+  'に': 'time/goal/existence/IO',
+  'で': 'location of action; by (means)',
+  'へ': 'toward',
+  'と': 'with; and; quoting',
+  'も': 'also; even',
+  'の': 'possessive/attributive',
+  'から': 'from; since; because',
+  'まで': 'until; up to',
+  'より': 'than (comparison)',
+  'だけ': 'only',
+  'しか': 'only (with neg.)',
+  // common grammar
+  'です': 'copula (polite)',
+  'です。': 'copula (polite)',
+  'ですか': 'copula + question',
+  'ます': 'polite verb ending',
+  'です。': 'copula (polite)',
+  'ください': 'please (do)',
+};
+
+// (optional) per-kanji fallback when we can’t find a word match
+const KANJILEX = {
+  '私': 'I; private',
+  '学': 'study; learning',
+  '校': 'school',
+  '生': 'life; student',
+  '山': 'mountain',
+  '雨': 'rain',
+  '道': 'road',
+  '駅': 'station',
+  '店': 'shop',
+};
+
+// precompute longest-first keys for greedy matching
+const LEX_KEYS = Object.keys(LEX).sort((a,b)=>b.length-a.length);
+
+function isJP(text){
+  return /[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9faf]/.test(text);
+}
+
+// Greedy longest-match segmentation across the selected substring.
+// Returns array of {jp, en|null}
+function segmentJP(sel){
+  const txt = sel.trim();
+  const out = [];
+  let i = 0;
+  while(i < txt.length){
+    // try dictionary keys at this position
+    let hit = null, hitLen = 0;
+    for(const k of LEX_KEYS){
+      if(txt.startsWith(k, i)){ hit = k; hitLen = k.length; break; }
+    }
+    if(hit){
+      out.push({ jp: hit, en: LEX[hit] || null });
+      i += hitLen;
+      continue;
+    }
+    const ch = txt[i];
+    if(KANJILEX[ch]) out.push({ jp: ch, en: KANJILEX[ch] });
+    else out.push({ jp: ch, en: null });
+    i += 1;
+  }
+  return out;
+}
+
+// ---------- Selection Popup UI ----------
+let _selPop = null;
+function showSelPop(x,y,html){
+  if(!_selPop){
+    _selPop = document.createElement('div');
+    _selPop.className = 'selpop';
+    document.body.appendChild(_selPop);
+  }
+  _selPop.innerHTML = html;
+  const vw = innerWidth, vh = innerHeight;
+  _selPop.style.left = Math.min(vw-10, Math.max(10, x)) + 'px';
+  _selPop.style.top  = Math.min(vh-10, Math.max(10, y)) + 'px';
+  _selPop.style.transform = 'translate(-50%, 0)';
+  _selPop.style.display = 'block';
+}
+function hideSelPop(){ if(_selPop) _selPop.style.display='none'; }
+
+function handleSelection(){
+  setTimeout(()=>{
+    const sel = getSelection();
+    if(!sel || sel.isCollapsed){ hideSelPop(); return; }
+    const txt = sel.toString().trim();
+    if(!txt || !isJP(txt)){ hideSelPop(); return; }
+
+    const rng = sel.getRangeAt(0);
+    const rect = rng.getBoundingClientRect();
+
+    const tokens = segmentJP(txt);
+    // If everything is unknown, bail quietly
+    const hasInfo = tokens.some(t=>t.en);
+    if(!hasInfo){ hideSelPop(); return; }
+
+    const jp = (s)=> (typeof renderJP==='function' ? renderJP(s) : s);
+
+    const html = `
+      <div class="tt">${jp(txt)}</div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px">
+        ${tokens.map(t=>`
+          <div style="border:1px solid #2a3141;border-radius:8px;padding:6px 8px;background:var(--chip)">
+            <div>${jp(t.jp)}</div>
+            <div class="ex" style="margin-top:2px">${t.en ? t.en : '<span class="muted">—</span>'}</div>
+          </div>
+        `).join('')}
+      </div>
+    `;
+    showSelPop(rect.left + rect.width/2, rect.bottom + 8, html);
+  }, 0);
+}
+
+function initSelectionPopup(){
+  document.addEventListener('mouseup', handleSelection);
+  document.addEventListener('touchend', handleSelection);
+  document.addEventListener('keydown', e=>{ if(e.key==='Escape') hideSelPop(); });
+  document.addEventListener('scroll', hideSelPop, true);
+}
+
+
 
 // ======================= UTIL =======================
 function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
@@ -861,6 +1026,7 @@ titleEl.onclick=()=>{
 
 // ======================= BOOT =======================
 render();
+initSelectionPopup();
 </script>
 </body>
 </html>
