@@ -199,6 +199,40 @@ furiBtn.onclick = () => {
   }
 };
 
+function undoFlash(){
+  const s = S.session;
+  if(!s || s.kind !== 'FLASH' || !s.history || s.history.length === 0) return;
+
+  const h = s.history.pop();
+
+  // remove the last pending mastery update that matches this action
+  for (let i = S.pending.length - 1; i >= 0; i--){
+    const u = S.pending[i];
+    if (u.id === h.cardId && u.ok === h.ok){ S.pending.splice(i,1); break; }
+  }
+
+  // revert stats
+  s.answered = Math.max(0, s.answered - 1);
+  if (h.ok) s.score = Math.max(0, s.score - 1);
+  s.streak = h.prevStreak;
+  s.maxStreak = h.prevMaxStreak;
+
+  if(!h.ok){
+    for(let i = s.mistakes.length - 1; i >= 0; i--){
+      if(s.mistakes[i] === h.cardId){ s.mistakes.splice(i,1); break; }
+    }
+  }
+
+  // show that card again (back side visible so user can re-decide fast)
+  const card = [...DECK].find(c => c.id === h.cardId);
+  s.current = { card, promptLang: h.frontLang, qtype: 'MCQ', options: [] };
+  s.flipped = true;
+  s.locked = false;
+
+  render();
+}
+
+
 
 function setHud(){
   const s = S.session;
@@ -238,7 +272,7 @@ function startSession(kind){
     const c = pickCard(pool, recent);
     if(!used.has(c.id)){ qlist.push(c); used.add(c.id); recentPush(recent,c.id); }
   }
-  S.session = { kind, queue: qlist, idx:0, score:0, streak:0, maxStreak:0, mistakes:[], recent:[], started:Date.now(), answered:0, phase:'ASK', hintShown:false, flipped:false, locked:false, baseline: snapshotMastery() };
+  S.session = { kind, queue: qlist, idx:0, score:0, streak:0, maxStreak:0, mistakes:[], recent:[], started:Date.now(), answered:0, phase:'ASK', hintShown:false, flipped:false, locked:false, baseline: snapshotMastery(),history: [] };
   render();
 }
 
@@ -501,13 +535,12 @@ function viewFlash(){
   const el = document.createElement('div'); el.className = 'grid';
   el.innerHTML = `
   <div class="card flash">
-    <!-- SUBJECT stays the same on front/back -->
+    <!-- SUBJECT stays fixed, centered, same size -->
         <div class="front" style="text-align:center;width:100%">
         ${frontLang === 'EN' ? card.en : jp(card.jp)}
         </div>
 
         ${!s.flipped ? `
-        <!-- FRONT: same-language example + flip -->
         <div class="muted" style="margin-top:6px">
             ${frontLang === 'EN' ? card.example.en : jp(card.example.jp)}
         </div>
@@ -515,7 +548,6 @@ function viewFlash(){
             <button class="btn" id="flipBtn">Show answer</button>
         </div>
         ` : `
-        <!-- BACK: opposite-language example + answer (subject above stays put) -->
         <div class="muted" style="margin-top:6px">
             ${frontLang === 'EN' ? jp(card.example.jp) : card.example.en}
         </div>
@@ -528,27 +560,36 @@ function viewFlash(){
         </div>
         `}
     </div>
-    <div class="hud"><button class="btn bad" id="stopBtn">Stop</button></div>
+
+    <div class="hud">
+        <button class="btn bad" id="stopBtn">Stop</button>
+        <button class="btn" id="undoBtn">Back</button>
+    </div>
     `;
     app.appendChild(el);
 
-
-
   if (!s.flipped){
-    document.getElementById('flipBtn').onclick = () => { s.flipped = true; render(); };
-  } else {
+  document.getElementById('flipBtn').onclick = () => { s.flipped = true; render(); };
+    } else {
     document.getElementById('knewBtn').onclick = () => {
-      playSfx(true);
-      s.answered++; s.score++; s.streak++; if (s.streak > s.maxStreak) s.maxStreak = s.streak;
-      queueMasteryUpdate(card.id, true); nextQuestion();
+        playSfx(true);
+        const prevStreak = s.streak, prevMax = s.maxStreak;
+        s.answered++; s.score++; s.streak++; if (s.streak > s.maxStreak) s.maxStreak = s.streak;
+        queueMasteryUpdate(card.id, true);
+        s.history.push({ cardId: card.id, ok: true, prevStreak, prevMaxStreak: prevMax, frontLang });
+        nextQuestion();
     };
     document.getElementById('missBtn').onclick = () => {
-      playSfx(false);
-      s.answered++; s.streak = 0; s.mistakes.push(card.id);
-      queueMasteryUpdate(card.id, false); nextQuestion();
+        playSfx(false);
+        const prevStreak = s.streak, prevMax = s.maxStreak;
+        s.answered++; s.streak = 0; s.mistakes.push(card.id);
+        queueMasteryUpdate(card.id, false);
+        s.history.push({ cardId: card.id, ok: false, prevStreak, prevMaxStreak: prevMax, frontLang });
+        nextQuestion();
     };
-  }
-  document.getElementById('stopBtn').onclick = finish;
+    }
+    document.getElementById('stopBtn').onclick = finish;
+    document.getElementById('undoBtn').onclick = undoFlash;
 }
 
 function viewResults(){
