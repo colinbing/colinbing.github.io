@@ -127,6 +127,8 @@
     touch-action: manipulation;
     }
 
+    /* make .active look like your .on style */
+    .btn.furi.active{ background:var(--text); color:var(--bg); border-color:var(--text) }
 
 
 </style>
@@ -218,21 +220,20 @@ soundBtn.onclick=()=>{
 };
 updateSoundBtn();
 
+// Top bar ふりがな toggle
 const furiBtn = document.getElementById('furiBtn');
-function updateFuriBtn(){ furiBtn.classList.toggle('on', !!S.settings.furigana); }
-
-furiBtn.onclick = () => {
-  S.settings.furigana = !S.settings.furigana;
-  save('settings', S.settings);
+function updateFuriBtn(){ if (furiBtn) furiBtn.classList.toggle('active', !!S.settings.furigana); }
+if (furiBtn){
+  furiBtn.onclick = () => {
+    S.settings.furigana = !S.settings.furigana;
+    save('settings', S.settings);
+    updateFuriBtn();
+    render(); // frontLang stays locked; this just re-renders JP with/without ruby
+  };
   updateFuriBtn();
+}
 
-  const grp = app.dataset.refGroup;   
-  if (grp) {                          
-    viewRefFull(grp);                
-  } else {
-    render();                         
-  }
-};
+
 
 function undoFlash(){
   const s = S.session;
@@ -344,10 +345,18 @@ function nextQuestion(){
 
 function makeQuestion(card){
   const promptLang = S.settings.prompt==='MIXED' ? (Math.random()<0.5?'EN':'JA') : S.settings.prompt;
-  const opts=[card]; const pool=currentPool(); const candidates=pool.filter(x=>x.id!==card.id); shuffle(candidates);
+  const qtype = S.settings.qtype;
+  const pool = currentPool();
+  const opts = [card];
+  const candidates = pool.filter(x=>x.id!==card.id);
+  shuffle(candidates);
   for(const c of candidates){ if(opts.length>=4) break; opts.push(c); }
   shuffle(opts);
-  return { card, promptLang, qtype:S.settings.qtype, options:opts };
+
+  // NEW: lock the frontLang once, so toggling furigana doesn't flip languages
+  const frontLang = promptLang;
+
+  return { card, promptLang, qtype, options: opts, frontLang: promptLang };
 }
 
 function submitAnswer(choiceIdx){
@@ -582,70 +591,126 @@ function viewQuiz(){
 
 function viewFlash(){
   const s = S.session;
+  if (!s.history) s.history = [];
+
+  // Current card + locked front language (fallback if missing)
   const card = s.current.card;
-  const frontLang = (S.settings.prompt === 'MIXED') ? (Math.random() < 0.5 ? 'EN' : 'JA') : S.settings.prompt;
+  let frontLang = (s.current && s.current.frontLang)
+    ? s.current.frontLang
+    : (S.settings.prompt === 'MIXED' ? 'JA' : S.settings.prompt);
+  if (!s.current.frontLang) s.current.frontLang = frontLang; // lock it
+
   const jp = (str)=> (typeof renderJP === 'function' ? renderJP(str) : str);
 
-  const el = document.createElement('div'); el.className = 'grid';
+  const el = document.createElement('div'); 
+  el.className = 'grid';
   el.innerHTML = `
-  <div class="card flash">
-    <!-- SUBJECT stays fixed, centered, same size -->
-        <div class="front" style="text-align:center;width:100%">
-        ${frontLang === 'EN' ? card.en : jp(card.jp)}
-        </div>
+    <div class="card flash">
+      <!-- stable term line -->
+      <div class="frontTerm" style="font-size:48px; text-align:center; margin-bottom:8px;">
+        ${frontLang === 'EN' ? (card.en) : jp(card.jp)}
+      </div>
 
-        ${!s.flipped ? `
-        <div class="muted" style="margin-top:6px">
-            ${frontLang === 'EN' ? card.example.en : jp(card.example.jp)}
+      ${!s.flipped ? `
+        <div class="muted" style="margin-top:6px; text-align:center; font-size:32px;">
+          ${frontLang === 'EN' ? card.example.en : jp(card.example.jp)}
         </div>
-        <div class="row">
-            <button class="btn" id="flipBtn">Show answer</button>
+        <div class="row" style="justify-content:center; margin-top:16px;">
+          <button class="btn" id="flipBtn">Show answer</button>
         </div>
-        ` : `
-        <div class="muted" style="margin-top:6px">
+      ` : `
+        <div class="back" style="text-align:center; font-size:32px;">
+          ${frontLang === 'EN' ? jp(card.jp) : card.en}
+          <div class="muted" style="margin-top:6px;">
             ${frontLang === 'EN' ? jp(card.example.jp) : card.example.en}
+          </div>
         </div>
-        <div style="font-size:26px;line-height:1.2;margin-top:8px;text-align:center">
-            ${frontLang === 'EN' ? jp(card.jp) : card.en}
+        <div class="row" style="justify-content:center; margin-top:16px;">
+          <button class="btn good" id="knewBtn">I knew it</button>
+          <button class="btn bad" id="missBtn">I missed it</button>
         </div>
-        <div class="row">
-            <button class="btn good" id="knewBtn">I knew it</button>
-            <button class="btn bad" id="missBtn">I missed it</button>
-        </div>
-        `}
+      `}
     </div>
 
+    <!-- HUD -->
     <div class="hud">
-        <button class="btn bad" id="stopBtn">Stop</button>
-        <button class="btn" id="undoBtn">Back</button>
+      <button class="btn bad" id="stopBtn">Stop</button>
+      <button class="btn" id="backBtn">Back</button>
     </div>
-    `;
-    app.appendChild(el);
-    setGlossRoot(el.querySelector('.flash'));
+  `;
+  app.appendChild(el);
 
-  if (!s.flipped){
-  document.getElementById('flipBtn').onclick = () => { s.flipped = true; render(); };
-    } else {
-    document.getElementById('knewBtn').onclick = () => {
-        playSfx(true);
-        const prevStreak = s.streak, prevMax = s.maxStreak;
-        s.answered++; s.score++; s.streak++; if (s.streak > s.maxStreak) s.maxStreak = s.streak;
-        queueMasteryUpdate(card.id, true);
-        s.history.push({ cardId: card.id, ok: true, prevStreak, prevMaxStreak: prevMax, frontLang });
-        nextQuestion();
+  // hook gloss root (safe if function exists)
+  try { setGlossRoot && setGlossRoot(el.querySelector('.flash')); } catch(_) {}
+
+  // ---------- controls (bind within this view + null-guard everything) ----------
+  const flipEl = el.querySelector('#flipBtn');
+  if (flipEl) {
+    flipEl.onclick = () => { s.flipped = true; render(); };
+  }
+
+  const knewEl = el.querySelector('#knewBtn');
+  if (knewEl) {
+    knewEl.onclick = () => {
+      try { playSfx && playSfx(true); } catch(_) {}
+      const prevStreak = s.streak, prevMax = s.maxStreak;
+      s.answered++; s.score++; s.streak++; if (s.streak > s.maxStreak) s.maxStreak = s.streak;
+      queueMasteryUpdate(card.id, true);
+      s.history.push({ cardId: card.id, ok: true, prevStreak, prevMaxStreak: prevMax, frontLang });
+      nextQuestion();
     };
-    document.getElementById('missBtn').onclick = () => {
-        playSfx(false);
-        const prevStreak = s.streak, prevMax = s.maxStreak;
-        s.answered++; s.streak = 0; s.mistakes.push(card.id);
-        queueMasteryUpdate(card.id, false);
-        s.history.push({ cardId: card.id, ok: false, prevStreak, prevMaxStreak: prevMax, frontLang });
-        nextQuestion();
+  }
+
+  const missEl = el.querySelector('#missBtn');
+  if (missEl) {
+    missEl.onclick = () => {
+      try { playSfx && playSfx(false); } catch(_) {}
+      const prevStreak = s.streak, prevMax = s.maxStreak;
+      s.answered++; s.streak = 0; s.mistakes.push(card.id);
+      queueMasteryUpdate(card.id, false);
+      s.history.push({ cardId: card.id, ok: false, prevStreak, prevMaxStreak: prevMax, frontLang });
+      nextQuestion();
     };
-    }
-    document.getElementById('stopBtn').onclick = finish;
-    document.getElementById('undoBtn').onclick = undoFlash;
+  }
+
+  const stopEl = el.querySelector('#stopBtn');
+  if (stopEl) stopEl.onclick = () => { try { hideGlossbar && hideGlossbar(); } catch(_){} finish(); };
+
+  const backEl = el.querySelector('#backBtn');
+  if (backEl) {
+    backEl.onclick = () => {
+      // If you have a dedicated undo function, use it
+      if (typeof undoFlash === 'function') { undoFlash(); return; }
+
+      // Fallback undo: revert last history item and pending mastery
+      const last = s.history && s.history.pop ? s.history.pop() : null;
+      if (!last) { s.flipped = false; nextQuestion(); return; }
+
+      // roll back counters
+      s.answered = Math.max(0, s.answered - 1);
+      s.streak = last.prevStreak;
+      s.maxStreak = last.prevMaxStreak;
+      if (last.ok) {
+        s.score = Math.max(0, s.score - 1);
+      } else {
+        // remove one instance of this card from mistakes
+        const mIdx = s.mistakes ? s.mistakes.lastIndexOf(last.cardId) : -1;
+        if (mIdx >= 0) s.mistakes.splice(mIdx, 1);
+      }
+
+      // remove the last pending mastery update for this card id
+      if (Array.isArray(S.pending)) {
+        for (let j = S.pending.length - 1; j >= 0; j--) {
+          if (S.pending[j].id === last.cardId) { S.pending.splice(j, 1); break; }
+        }
+      }
+
+      s.flipped = false;
+      nextQuestion();
+    };
+  }
 }
+
 
 function viewResults(){
   const s=S.session; const accPct=s.finished.total?Math.round(100*s.score/s.finished.total):0;
