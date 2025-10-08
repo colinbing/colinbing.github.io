@@ -568,6 +568,8 @@ html[data-theme="dark"] .chip.chip-active .btn{
   text-shadow:0 1px 0 rgba(0,0,0,.25);
 }
 
+[data-theme="dark"] .blocklist-logo{ content:url('images/blocklist-logo-white.png') }
+
 /* Light mode keeps normal text color */
 html[data-theme="light"] .chip.chip-active,
 html[data-theme="light"] .chip.chip-active b,
@@ -575,6 +577,12 @@ html[data-theme="light"] .chip.chip-active small,
 html[data-theme="light"] .chip.chip-active .btn{
   color:inherit !important;
   text-shadow:none;
+}
+
+.blocklist-logo {
+  max-height:32px;
+  width:auto;
+  border-radius:6px;
 }
 
 /* Available search box */
@@ -642,7 +650,7 @@ div.section-header:nth-child(3){
 <body>
     <header class="appbar">
       <div class="bar">
-        <div class="title">BlockList</div>
+          <img class="blocklist-logo" src="/images/logos/blocklist-logo.PNG">
         <div class="spacer"></div>
         <button id="infoBtn" class="icon-btn info" type="button"
         aria-label="About this tool"
@@ -2240,7 +2248,7 @@ document.addEventListener('click', (e)=>{
 <footer class="footer">
     <div class="bar">
       <span>© <span id="year"></span> Colin Bingham</span>
-      <a class="link" href="https://colinbing.com" target="_blank" rel="noopener">Back to site</a>
+      <a class="link" href="https://www.colinbing.com" target="_blank" rel="noopener">Back to site</a>
     </div>
     <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
   </footer>  
