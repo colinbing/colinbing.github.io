@@ -49,7 +49,9 @@ if (runSingle && testUrlInput && singleResultBox) {
         <div><strong>URL:</strong> <a href="${esc(url)}" target="_blank" rel="noopener">${esc(url)}</a></div>
         <div><strong>pageId:</strong> ${esc(data.pageId || '(not found)')}</div>
         <div><strong>source:</strong> ${esc(data.source || '')}</div>
-        <div><strong>status:</strong> ${esc(data.status || '')}</div>`;
+        <div><strong>status:</strong> ${esc(data.status || '')}</div>
+        <pre style="margin-top:8px;white-space:pre-wrap">${esc(JSON.stringify(data.debug, null, 2))}</pre>
+      `;
     } catch (err) {
       singleResultBox.textContent = 'Error: ' + err.message;
     }
