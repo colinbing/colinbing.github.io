@@ -145,8 +145,8 @@ const testUrlInput = document.getElementById('testUrl');
 runSingle?.addEventListener('click', async () => {
   const url = testUrlInput.value.trim();
   if (!url) return alert('Enter a valid URL first.');
-  const WORKER_URL = 'https://pageid-proxy.yourname.workers.dev'; // use your actual Worker URL
-  const SECRET = 'my-secret-key'; // same key you set in Worker
+  const WORKER_URL = 'https://pageid-proxy.cmakoto26.workers.dev/'; 
+  const SECRET = 'colin'; 
 
   status.textContent = 'Testing single URL...';
   try {
