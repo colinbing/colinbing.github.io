@@ -140,12 +140,16 @@
     }
     .toggle-inline input{ accent-color: var(--accent); cursor:pointer; }
 
+    .collate-logo {
+      max-height:32px; width:auto; border-radius:6px;
+    }
+
   </style>
 </head>
 <body>
 <div class="wrap">
   <header>
-    <h1>Keyword Joiner</h1>
+    <img class="collate-logo" src="/images/logos/collate-logo.png">
     <span class="hint mono">XLSX → comma‑separated list</span>
     <div class="spacer"></div>
     <label class="row" title="Toggle light/dark">
@@ -211,7 +215,21 @@
 <script>
   // Theme
   const root=document.documentElement;const modeSwitch=document.getElementById('modeSwitch');
-  function setMode(mode){const light=mode==='light';root.classList.toggle('light',light);modeSwitch.classList.toggle('on',!light);localStorage.setItem('kj_mode',light?'light':'dark')}
+  function setMode(mode) {
+  const light = mode === 'light';
+  root.classList.toggle('light', light);
+  modeSwitch.classList.toggle('on', !light);
+  localStorage.setItem('kj_mode', light ? 'light' : 'dark');
+
+  // logo switch
+  const logo = document.querySelector('.collate-logo');
+  if (logo) {
+    logo.src = light
+      ? '/images/logos/collate-logo.png'
+      : '/images/logos/collate-logo-white.png';
+  }
+}
+
   setMode(localStorage.getItem('kj_mode')||'dark');
   modeSwitch.addEventListener('click',()=>setMode(root.classList.contains('light')?'dark':'light'));
 
