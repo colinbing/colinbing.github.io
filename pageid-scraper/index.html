@@ -1,0 +1,61 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width" />
+  <title>PageID Pull Tool</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+</head>
+<body>
+  <header>
+    <h1>PageID Pull Tool</h1>
+    <p>Upload an XLSX/CSV of URLs (+ optional hits/impressions). We’ll dedupe, fetch each page’s <code>wpAdFusion.pageId</code> via a serverless Worker, and build a comma-separated list + CSV.</p>
+  </header>
+
+  <section class="controls">
+    <div class="row">
+      <label>Spreadsheet <input id="file" type="file" accept=".xlsx,.xls,.csv"></label>
+      <label>URL column
+        <select id="urlCol"></select>
+      </label>
+      <label>Hits column (optional)
+        <select id="hitsCol"></select>
+      </label>
+      <button id="start" disabled>Start</button>
+    </div>
+    <div class="row">
+      <label>Worker URL
+        <input id="workerUrl" type="url" placeholder="https://your-worker.workers.dev">
+      </label>
+    </div>
+  </section>
+
+  <section class="progress">
+    <div id="status">Load a file to begin.</div>
+    <progress id="bar" value="0" max="100"></progress>
+  </section>
+
+  <section class="results">
+    <div class="summary-row">
+      <button id="copyList" disabled>Copy PageID List</button>
+      <button id="downloadCSV" disabled>Download CSV</button>
+    </div>
+    <pre id="list"></pre>
+
+    <h3>Aggregated by pageId</h3>
+    <table>
+      <thead><tr><th>pageId</th><th>Total Hits</th><th># URLs</th></tr></thead>
+      <tbody id="agg"></tbody>
+    </table>
+
+    <h3>Per-URL Results</h3>
+    <table>
+      <thead><tr><th>URL</th><th>pageId</th><th>Hits</th><th>Source</th><th>Status</th></tr></thead>
+      <tbody id="detail"></tbody>
+    </table>
+  </section>
+
+  <script src="app.js" type="module"></script>
+</body>
+</html>
