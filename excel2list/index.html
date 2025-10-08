@@ -38,6 +38,10 @@
     .switch.on{background:var(--accent)}
     .switch.on .knob{left:23px}
 
+    .demo-link { color: var(--muted); text-decoration: none; cursor: pointer; }
+    .demo-link:hover { text-decoration: underline; color: var(--accent); }
+
+
     /* Drag & drop field */
     .drop{
       border:2px dashed var(--border);
@@ -196,7 +200,10 @@
     </section>    
   </div>
 
-  <div class="footer">Built with vanilla HTML/CSS/JS. Processes locally. No server.</div>
+  <div class="footer" style="display:flex;justify-content:space-between;align-items:center">
+    <span>Built with vanilla HTML/CSS/JS. Processes locally. No server.</span>
+    <a id="runDemo" class="demo-link" href="#" role="button">run demo</a>
+  </div>  
 </div>
 
 <div id="toast" class="toast">Copied</div>
@@ -220,6 +227,25 @@
   const copyIndicator=document.getElementById('copyIndicator');
   const outBox = document.querySelector('.output-container');
   const quotesMode = document.getElementById('quotesMode');
+  document.getElementById('runDemo').addEventListener('click', async (e) => {
+  e.preventDefault();
+  try {
+    const url = 'assets/demo_NegativeKeyWordList.xlsx'; // place file here
+    const res = await fetch(url, { cache: 'no-store' });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const buf = await res.arrayBuffer();
+    const file = new File(
+      [buf],
+      'demo_NegativeKeyWordList.xlsx',
+      { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }
+    );
+    await handleFile(file); // uses your existing pipeline
+  } catch (err) {
+    console.error(err);
+    showToast('Demo file not found');
+  }
+});
+
   quotesMode.addEventListener('change', ()=> {
   if (window.__lastSheetArr) processSheetArray(window.__lastSheetArr);
     });
