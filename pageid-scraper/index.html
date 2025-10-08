@@ -1,70 +1,139 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>PageID Pull Tool</title>
+  <meta name="robots" content="noindex,nofollow" />
   <link rel="stylesheet" href="styles.css" />
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 </head>
-<body>
-  <header>
-    <h1>PageID Pull Tool</h1>
-    <p>Upload an XLSX/CSV of URLs (+ optional hits/impressions). We’ll dedupe, fetch each page’s <code>wpAdFusion.pageId</code> via a serverless Worker, and build a comma-separated list + CSV.</p>
-    <div class="single-url-test">
-        <label>Quick test URL:
-          <input id="testUrl" type="url" placeholder="https://example.com">
-        </label>
-        <button id="runSingle">Run Single Test</button>
-      </div>   
-      <div id="singleResult" class="single-result" aria-live="polite"></div>   
+<body data-theme="light">
+  <header class="app-header">
+    <div class="container">
+      <div class="hdr">
+        <div class="hdr-left">
+          <h1>PageID Pull Tool</h1>
+          <p>Extract <code>wpAdFusion.pageId</code> from article URLs. Choose a mode below.</p>
+        </div>
+        <div class="hdr-right">
+          <label class="theme-toggle">
+            <input id="themeToggle" type="checkbox" />
+            <span class="toggle-label">Dark</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="tabs" role="tablist" aria-label="Mode">
+        <button id="tabSpreadsheet" class="tab active" role="tab" aria-selected="true" aria-controls="panelSpreadsheet">Spreadsheet</button>
+        <button id="tabSingle" class="tab" role="tab" aria-selected="false" aria-controls="panelSingle">Single URL</button>
+      </div>
+    </div>
   </header>
 
-  <section class="controls">
-    <div class="row">
-      <label>Spreadsheet <input id="file" type="file" accept=".xlsx,.xls,.csv"></label>
-      <label>URL column
-        <select id="urlCol"></select>
-      </label>
-      <label>Hits column (optional)
-        <select id="hitsCol"></select>
-      </label>
-      <label>Min hits to include
-        <input id="minHits" type="number" min="0" value="10" style="width:120px">
-      </label>      
-      <button id="start" disabled>Start</button>
+  <main class="container">
+    <!-- Spreadsheet -->
+    <section id="panelSpreadsheet" class="panel" role="tabpanel" aria-labelledby="tabSpreadsheet">
+      <h2 class="panel-title">Spreadsheet mode</h2>
+      <p class="muted">Process a CSV/XLSX locally in your browser. Only the chosen URL values are posted to your Worker.</p>
+
+      <div id="dropZone" class="dropzone" aria-label="Drag and drop CSV/XLSX here">
+        <div class="drop-inner">
+          <strong>Drop CSV/XLSX here</strong>
+          <span class="dz-note">or</span>
+          <button id="browseBtn" type="button" class="btn ghost">Browse</button>
+          <input id="file" type="file" accept=".xlsx,.xls,.csv" hidden />
+          <div class="dz-subnote">No uploads to our servers. Parsing happens in your browser.</div>
+        </div>
+      </div>
+
+      <div class="grid two compact mt-16">
+        <label>URL column
+          <select id="urlCol"></select>
+        </label>
+        <label>Hits column (optional)
+          <select id="hitsCol"></select>
+        </label>
+      </div>
+
+      <div class="grid two compact">
+        <label>Min hits to include
+          <input id="minHits" type="number" min="0" value="10" class="compact-input">
+        </label>
+        <span></span>
+      </div>
+
+      <div class="grid one compact">
+        <label>Worker URL
+          <input id="workerUrl" type="url" placeholder="https://your-worker.workers.dev" class="compact-input">
+        </label>
+      </div>
+
+      <div class="start-row mt-12">
+        <button id="start" class="btn primary">Start</button>
+        <span id="loading" class="loading" hidden>
+          <span class="spinner" aria-hidden="true"></span> Processing…
+        </span>
+      </div>
+
+      <div class="panel mt-16">
+        <h3 class="panel-title">Progress</h3>
+        <div id="status" class="status">Load a file to begin.</div>
+        <progress id="bar" value="0" max="100"></progress>
+      </div>
+
+      <div class="panel mt-16">
+        <div class="table-header">
+          <h3 class="panel-title">Results</h3>
+          <button id="downloadCSV" class="btn" disabled>Download CSV</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr>
+              <th style="width:50%">URL</th>
+              <th style="width:22%">pageID</th>
+              <th style="width:10%; text-align:right;">Hits</th>
+              <th style="width:18%">Source</th>
+            </tr></thead>
+            <tbody id="detail"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Single URL -->
+    <section id="panelSingle" class="panel hidden" role="tabpanel" aria-labelledby="tabSingle">
+      <h2 class="panel-title">Single URL mode</h2>
+      <p class="muted">Check one URL quickly (uses the same Worker).</p>
+
+      <div class="grid two compact">
+        <label>URL
+          <input id="testUrl" type="url" placeholder="https://example.com/article" class="compact-input">
+        </label>
+        <label>Worker URL
+          <input id="workerUrlSingle" type="url" placeholder="https://your-worker.workers.dev" class="compact-input">
+        </label>
+      </div>
+
+      <div class="start-row mt-12">
+        <button id="runSingle" class="btn">Test</button>
+      </div>
+
+      <div class="panel mt-16">
+        <h3 class="panel-title">Result</h3>
+        <div id="singleResult" class="single-result" aria-live="polite"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-wrap">
+        <span>© 2025 Colin Bingham</span>
+        <a href="https://colinbing.com" target="_blank" rel="noopener">Back to site</a>
+      </div>
     </div>
-    <div class="row">
-      <label>Worker URL
-        <input id="workerUrl" type="url" placeholder="https://your-worker.workers.dev">
-      </label>
-    </div>
-  </section>
-
-  <section class="progress">
-    <div id="status">Load a file to begin.</div>
-    <progress id="bar" value="0" max="100"></progress>
-  </section>
-
-  <section class="results">
-    <div class="summary-row">
-      <button id="copyList" disabled>Copy PageID List</button>
-      <button id="downloadCSV" disabled>Download CSV</button>
-    </div>
-    <pre id="list"></pre>
-
-    <h3>Aggregated by pageId</h3>
-    <table>
-      <thead><tr><th>pageId</th><th>Total Hits</th><th># URLs</th></tr></thead>
-      <tbody id="agg"></tbody>
-    </table>
-
-    <h3>Per-URL Results</h3>
-    <table>
-      <thead><tr><th>URL</th><th>pageId</th><th>Hits</th><th>Source</th><th>Status</th></tr></thead>
-      <tbody id="detail"></tbody>
-    </table>
-  </section>
+  </footer>
 
   <script src="app.js" type="module"></script>
 </body>
