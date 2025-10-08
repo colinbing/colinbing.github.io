@@ -11,6 +11,12 @@
   <header>
     <h1>PageID Pull Tool</h1>
     <p>Upload an XLSX/CSV of URLs (+ optional hits/impressions). We’ll dedupe, fetch each page’s <code>wpAdFusion.pageId</code> via a serverless Worker, and build a comma-separated list + CSV.</p>
+    <div class="single-url-test">
+        <label>Quick test URL:
+          <input id="testUrl" type="url" placeholder="https://example.com">
+        </label>
+        <button id="runSingle">Run Single Test</button>
+      </div>      
   </header>
 
   <section class="controls">

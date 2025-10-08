@@ -68,9 +68,12 @@ startBtn.addEventListener('click', async () => {
     try {
       const res = await fetch(WORKER_URL, {
         method: 'POST',
-        headers: { 'content-type': 'application/json' },
+        headers: {
+          'content-type': 'application/json',
+          'x-api-key': 'colin' // <-- same key as in the Worker
+        },
         body: JSON.stringify({ url })
-      });
+      });      
       const data = await res.json();
       results.push({
         url,
@@ -134,6 +137,34 @@ function render(results) {
     a.click();
   };
 }
+
+// --- Single URL test ---
+const runSingle = document.getElementById('runSingle');
+const testUrlInput = document.getElementById('testUrl');
+
+runSingle?.addEventListener('click', async () => {
+  const url = testUrlInput.value.trim();
+  if (!url) return alert('Enter a valid URL first.');
+  const WORKER_URL = 'https://pageid-proxy.yourname.workers.dev'; // use your actual Worker URL
+  const SECRET = 'my-secret-key'; // same key you set in Worker
+
+  status.textContent = 'Testing single URL...';
+  try {
+    const res = await fetch(WORKER_URL, {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        'x-api-key': SECRET
+      },
+      body: JSON.stringify({ url })
+    });
+    const data = await res.json();
+    alert(`Result for ${url}:\n\npageId: ${data.pageId || '(not found)'}\nsource: ${data.source}\nstatus: ${data.status}`);
+  } catch (err) {
+    alert('Error: ' + err.message);
+  }
+});
+
 
 function esc(s){ return String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
 function csvq(s){ const t=String(s??''); return /[",\n]/.test(t) ? '"' + t.replace(/"/g,'""') + '"' : t; }
