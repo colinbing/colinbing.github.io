@@ -107,7 +107,6 @@
   .panel.sidebar{
     position:sticky; top:calc(var(--bar-h) + 10px); align-self:start;
     width:340px; flex:0 0 340px; min-width:340px;
-    max-height:calc(100vh - var(--bar-h) - 10px);
     overflow:auto; overflow-x:hidden; overscroll-behavior:contain;
     -ms-overflow-style:none; scrollbar-width:none; scrollbar-gutter:auto;
   }
@@ -623,6 +622,19 @@ div.section-header:nth-child(3){
   margin-top:1px;
 }
 
+/* “Run demo” looks like text, but clickable */
+.action-link{
+  appearance:none; border:0; background:transparent; padding:0;
+  font-size:13px; color:var(--link); cursor:pointer;
+}
+.action-link:hover{ text-decoration:underline; }
+
+/* Label row with right-justified "run demo" */
+.label-row{ display:flex; align-items:center; min-width:0; margin-bottom:10px;}
+.label-row .action-link{ margin-left:auto; font-size:13px; }
+
+.panel.sidebar .label-row .action-link{ color:var(--link); }
+
 
   </style>
   
@@ -652,7 +664,10 @@ div.section-header:nth-child(3){
           <div class="content">
             <div class="stack">
               <div>
-                <label>Upload CSV/XLSX</label>
+                <div class="row label-row">
+                  <label>Upload CSV/XLSX</label>
+                  <button id="runDemo" class="action-link" type="button">run demo</button>
+                </div>                              
                 <div id="dropZone" class="dropzone" tabindex="0" role="button" aria-label="Browse or drop a file">
                     <input id="file" class="dz-input" type="file" accept=".csv,.xlsx,.xls">
                     <div class="dz-inner">
@@ -886,6 +901,8 @@ const MONTHS = new Set(["january","february","march","april","may","june","july"
 const WEEKDAYS = new Set(["monday","tuesday","wednesday","thursday","friday","saturday","sunday"]);
 const THREE_EXCEPTIONS = new Set(["war","ban","gas","flu","pox","sex","gun","die"]);
 const VOWELS = new Set(["a","e","i","o","u","y"]);
+const runDemo = document.getElementById('runDemo');
+
 
 async function loadLexicon(){
   try{
@@ -1297,6 +1314,28 @@ function normalizeTokensFromUrl(u, opts){
   return [...new Set(out)];
 }
 
+async function loadDemoFile(url, name){
+  // Fetch demo file
+  const res = await fetch(url, {cache:'no-store'});
+  if (!res.ok) throw new Error(`Demo file not found: ${url}`);
+  const blob = await res.blob();
+
+  // Build a File and assign to the <input type="file">
+  const fname = name || url.split('/').pop() || 'demo.csv';
+  const mime  = fname.toLowerCase().endsWith('.xlsx') ? 
+                  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' : 
+                  'text/csv';
+  const file  = new File([blob], fname, { type: mime, lastModified: Date.now() });
+
+  const dT = new DataTransfer();
+  dT.items.add(file);
+  fileInput.files = dT.files;
+
+  // Update the small file chip row and run the normal pipeline
+  updateFileUI && updateFileUI();
+  await parseInput();
+}
+
 /* ---------- Parsing pipeline ---------- */
     async function parseInput(){
     if (!LEX) await loadLexicon();
@@ -1697,6 +1736,15 @@ function render(){
 
 /* ---------- Interactions ---------- */
 scanBtn.addEventListener('click', parseInput);
+
+runDemo?.addEventListener('click', async ()=>{
+  try{
+    await loadDemoFile('./assets/blocklist-demo-urls.csv', 'blocklist-demo-urls.csv');
+  }catch(err){
+    alert('Could not load demo.\n\n' + (err?.message || err));
+  }
+});
+
 
 minUrls.addEventListener('change', rebuildAvailable);
 sortAvailable.addEventListener('change', ()=>{
