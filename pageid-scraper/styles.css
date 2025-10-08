@@ -34,3 +34,9 @@
   a{color:var(--accent); text-decoration:none}
   a:hover{text-decoration:underline}
   
+  .single-result{
+    margin-top:8px;padding:10px;border:1px solid var(--line);border-radius:10px;
+    background:#0b0e14;font-size:13px;color:var(--muted)
+  }
+  .single-result strong{ color:#e7e9ee }
+  

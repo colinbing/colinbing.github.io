@@ -16,7 +16,8 @@
           <input id="testUrl" type="url" placeholder="https://example.com">
         </label>
         <button id="runSingle">Run Single Test</button>
-      </div>      
+      </div>   
+      <div id="singleResult" class="single-result" aria-live="polite"></div>   
   </header>
 
   <section class="controls">
@@ -28,6 +29,9 @@
       <label>Hits column (optional)
         <select id="hitsCol"></select>
       </label>
+      <label>Min hits to include
+        <input id="minHits" type="number" min="0" value="10" style="width:120px">
+      </label>      
       <button id="start" disabled>Start</button>
     </div>
     <div class="row">
