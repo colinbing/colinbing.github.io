@@ -384,6 +384,10 @@ footer .row{ left:0; right:0 }
   object-fit:contain; display:block;
 }
 
+.collate-logo {
+  max-width:195px !important;
+}
+
 /* --- spacing scale + navbar height --- */
 :root{ --nav-h: 64px }             /* adjust if your navbar is taller */
 
