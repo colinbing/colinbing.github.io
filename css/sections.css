@@ -53,53 +53,97 @@ p,li{ font-size:.9rem; color:var(--text) }
 .row{ padding-left:15px; padding-right:15px }
 
 /* ========= NAV ========= */
-/* keep icons tiny no matter what */
 #navbar .nav-link img{
   width:20px; height:20px; display:inline-block; vertical-align:middle;
 }
 
 /* make the menu two columns without affecting layout */
-#navbar .nav-item.dropdown{ position:relative; }
+/* --- Navbar image (LinkedIn icon etc.) --- */
+#navbar .nav-link img{
+  width:20px;
+  height:20px;
+  display:inline-block;
+  vertical-align:middle;
+}
 
+/* --- Dropdown positioning --- */
+#navbar .nav-item.dropdown{
+  position:relative;
+}
+
+/* --- Two-column dropdown menu --- */
 #navbar .nav-item.dropdown .dropdown-menu{
-  position:absolute;            /* critical: don’t push siblings down */
-  top:100%; left:0;
+  position:absolute;        /* prevents pushing other nav items down */
+  top:100%;
+  left:0;
   min-width:420px;
-  margin:0; padding:0;
+  margin:0;
+  padding:0;
   border-radius:.25rem;
   background:#343a40;
   z-index:1100;
 
-  /* visibility control */
-  display:block; visibility:hidden; opacity:0; pointer-events:none;
+  /* hide by default */
+  display:block;
+  visibility:hidden;
+  opacity:0;
+  pointer-events:none;
   transition:opacity .12s ease;
 
-  /* two columns */
+  /* two-column layout */
   column-count:2;
   column-gap:0;
   overflow:hidden;
 }
 
+/* show on hover or keyboard focus */
 #navbar .nav-item.dropdown:hover .dropdown-menu,
 #navbar .nav-item.dropdown:focus-within .dropdown-menu{
-  visibility:visible; opacity:1; pointer-events:auto;
+  visibility:visible;
+  opacity:1;
+  pointer-events:auto;
 }
 
+/* --- Dropdown items --- */
 #navbar .dropdown-item{
-  color:#fff; padding:10px 15px; display:block; text-decoration:none;
-  white-space:nowrap; break-inside:avoid;
+  color:#fff;
+  padding:10px 15px;
+  display:block;
+  text-decoration:none;
+  white-space:nowrap;
+  break-inside:avoid;
+  background:transparent;
 }
-#navbar .dropdown-item:hover{ background:#495057; color:#fff; }
 
-/* keep navbar items vertically aligned */
-#navbar .navbar-nav{ align-items:center; }
+/* unify hover, focus, and active states */
+#navbar .dropdown-item:hover,
+#navbar .dropdown-item:focus,
+#navbar .dropdown-item:active,
+#navbar .dropdown-item:focus-visible{
+  background:#495057;
+  color:#fff;
+  outline:none;
+}
 
-/* mobile: one column */
+/* prevent focus styles from sticking after mouse click */
+#navbar .dropdown-item:focus:not(:focus-visible){
+  outline:none;
+  background:transparent;
+}
+
+/* keep all navbar items aligned vertically */
+#navbar .navbar-nav{
+  align-items:center;
+}
+
+/* --- Mobile: collapse to single column --- */
 @media (max-width:640px){
   #navbar .nav-item.dropdown .dropdown-menu{
-    min-width:220px; column-count:1;
+    min-width:220px;
+    column-count:1;
   }
 }
+
 
 
 /* ========= INTRO / GENERAL ========= */
