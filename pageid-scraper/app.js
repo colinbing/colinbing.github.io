@@ -94,6 +94,25 @@ function switchTab(which){
   panelSingle.classList.toggle('hidden', s);
 }
 
+/* -------- Demo Loader -------- */
+const runDemo = $('#runDemo');
+if (runDemo) {
+  runDemo.addEventListener('click', async () => {
+    try {
+      const resp = await fetch('assets/Unsafe URLs IAS.xlsx');
+      if (!resp.ok) throw new Error(`Failed to load demo file (${resp.status})`);
+      const blob = await resp.blob();
+
+      // Simulate user-uploaded file
+      const file = new File([blob], 'Unsafe URLs IAS.xlsx', { type: blob.type });
+      await handleFile(file);
+      setStatus('Demo file loaded. Columns auto-detected.');
+    } catch (err) {
+      alert('Error loading demo file: ' + err.message);
+    }
+  });
+}
+
 /* -------- File DnD -------- */
 function initDnD(){
   hitsCol.addEventListener('change', () => { buildCanonMap(); updateImpact(); });

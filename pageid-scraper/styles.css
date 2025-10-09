@@ -259,3 +259,22 @@ a:hover{ text-decoration:underline }
   justify-content:flex-end;
   flex-wrap:wrap;
 }
+
+.run-demo {
+  margin-left: auto;
+  color: var(--accent);
+  font-size: 13px;
+  cursor: pointer;
+  align-self: center;
+  text-decoration: none;
+  user-select: none;
+}
+
+.run-demo:hover {
+  text-decoration: underline;
+}
+
+.pageid-scraper-logo {
+  max-height:52px;
+  margin-bottom:10px;
+}
