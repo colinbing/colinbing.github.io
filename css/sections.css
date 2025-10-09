@@ -104,6 +104,10 @@ p,li{ font-size:.9rem; color:var(--text) }
   pointer-events:auto;
 }
 
+.nav-item a{
+  color:#fff !important;
+}
+
 /* --- Dropdown items --- */
 #navbar .dropdown-item{
   color:#fff;
