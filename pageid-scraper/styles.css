@@ -138,8 +138,16 @@ a:hover{ text-decoration:underline }
 .footer-wrap{
   display:flex; align-items:center; justify-content:space-between;
   padding:0 16px; color:var(--muted); font-size:13px;
-  border-top:1px solid var(--line);
 }
 body[data-theme="dark"] .footer-wrap{ border-top-color:var(--line-dark); }
 .footer-wrap a{ color:var(--accent); }
 .footer-wrap a:hover{ text-decoration:underline; }
+
+.pageid-scraper-logo{
+  max-height:42px;
+  width:auto;
+  border-radius:6px;
+  margin-bottom:10px;
+}
+
+[data-theme="dark"] .pageid-scraper-logo{ content:url('images/pageID-scraper-logo-white.png') }
