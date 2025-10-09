@@ -53,21 +53,54 @@ p,li{ font-size:.9rem; color:var(--text) }
 .row{ padding-left:15px; padding-right:15px }
 
 /* ========= NAV ========= */
-.navbar img{ height:24px; width:24px }
-.nav-item.active > a.nav-link{ font-variation-settings:'wght' 700; color:rgba(255,255,255,1) }
-#navbar9 > ul > li.nav-item > a{ font-weight:400; transition:color .3s ease; color:rgba(255,255,255,1) }
-#navbar9 > ul > li.nav-item > a.nav-link{ display:block }
-#navbar9 > ul > li.nav-item > a:hover{ color:rgba(255,255,255,.8) }
-
-.nav-item.dropdown{ position:relative }
-.nav-item.dropdown .dropdown-menu{
-  position:absolute; top:100%; left:0; min-width:220px; margin:0; padding:0;
-  border-radius:.25rem; background-color:#343a40; z-index:1100;
-  display:block; visibility:hidden; opacity:0; pointer-events:none; transition:opacity .12s ease
+/* keep icons tiny no matter what */
+#navbar .nav-link img{
+  width:20px; height:20px; display:inline-block; vertical-align:middle;
 }
-.nav-item.dropdown:hover .dropdown-menu{ visibility:visible; opacity:1; pointer-events:auto }
-.dropdown-item{ color:#fff; padding:10px 15px; display:block; text-decoration:none }
-.dropdown-item:hover{ background-color:#495057; color:#fff }
+
+/* make the menu two columns without affecting layout */
+#navbar .nav-item.dropdown{ position:relative; }
+
+#navbar .nav-item.dropdown .dropdown-menu{
+  position:absolute;            /* critical: don’t push siblings down */
+  top:100%; left:0;
+  min-width:420px;
+  margin:0; padding:0;
+  border-radius:.25rem;
+  background:#343a40;
+  z-index:1100;
+
+  /* visibility control */
+  display:block; visibility:hidden; opacity:0; pointer-events:none;
+  transition:opacity .12s ease;
+
+  /* two columns */
+  column-count:2;
+  column-gap:0;
+  overflow:hidden;
+}
+
+#navbar .nav-item.dropdown:hover .dropdown-menu,
+#navbar .nav-item.dropdown:focus-within .dropdown-menu{
+  visibility:visible; opacity:1; pointer-events:auto;
+}
+
+#navbar .dropdown-item{
+  color:#fff; padding:10px 15px; display:block; text-decoration:none;
+  white-space:nowrap; break-inside:avoid;
+}
+#navbar .dropdown-item:hover{ background:#495057; color:#fff; }
+
+/* keep navbar items vertically aligned */
+#navbar .navbar-nav{ align-items:center; }
+
+/* mobile: one column */
+@media (max-width:640px){
+  #navbar .nav-item.dropdown .dropdown-menu{
+    min-width:220px; column-count:1;
+  }
+}
+
 
 /* ========= INTRO / GENERAL ========= */
 #intro-section .row{ border-radius:20px; padding:20px 10px;margin: 0 auto;}
@@ -314,6 +347,7 @@ footer .row{ left:0; right:0 }
 [data-theme="dark"] .outline-logo{ content:url('/images/logos/outline-white.PNG'); height:auto }
 [data-theme="dark"] .blocklist-logo{ content:url('/images/logos/blocklist-logo-white.png'); height:auto }
 [data-theme="dark"] .collate-logo{ content:url('/images/logos/collate-logo-white.png'); height:auto }
+[data-theme="dark"] .pageid-scraper-logo{ content:url('/pageid-scraper/images/pageID-scraper-logo-white.png'); height:auto }
 
 /* generic dark helpers */
 [data-theme="dark"] .bg-light{ background-color:#333 !important }
