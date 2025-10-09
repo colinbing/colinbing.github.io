@@ -144,6 +144,44 @@
       max-height:32px; width:auto; border-radius:6px;
     }
 
+    /* Fixed footer at bottom */
+    .site-footer {
+      position: fixed;
+      bottom: 10px;
+      left: 0;
+      right: 0;
+      background: var(--bg);
+      color: var(--muted);
+      z-index: 50;
+      /* no top border */
+    }
+
+    /* Match page width and align nicely */
+    .footer-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 24px;
+      font-size: 12px;
+    }
+
+    /* Prevent page content from sitting under footer */
+    body {
+      padding-bottom: 48px; /* matches footer height */
+    }
+
+    /* Optional: ensure color matches muted link behavior */
+    .footer-inner .demo-link {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .footer-inner .demo-link:hover {
+      text-decoration: underline;
+    }
+
+
   </style>
 </head>
 <body>
@@ -210,13 +248,12 @@
   </div>  
 
   <footer class="site-footer">
-    <div class="container">
-      <div class="footer-wrap">
-        <span>© 2025 Colin Bingham</span>
-        <a href="https://www.colinbing.com" target="_blank" rel="noopener">Back to site</a>
-      </div>
-    </div>
-  </footer>
+  <div class="wrap footer-inner">
+    <span class="muted">© 2025 Colin Bingham</span>
+    <a href="https://www.colinbing.com/" class="demo-link">Back to site</a>
+  </div>
+</footer>
+
 </div>
 
 <div id="toast" class="toast">Copied</div>
