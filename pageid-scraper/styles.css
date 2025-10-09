@@ -105,17 +105,69 @@ body[data-theme="dark"] select{
   padding-left:14px; padding-right:14px;
   overflow:hidden;
 }
+/* Filled gradient that grows left→right as you hold */
+/* Filled gradient grows L→R with a soft, blended front edge */
+/* Takeover fill: soft leading edge, solid #6480ff */
 .btn.hold::after{
-  /* circular progress ring */
   content:"";
-  position:absolute; inset:-4px;
-  border-radius:16px;
-  background:
-    conic-gradient(#ffffff99 var(--deg, 0deg), transparent 0deg);
-  pointer-events:none;
-  mix-blend-mode:screen; /* subtle glow over gradient */
+  position:absolute; inset:0;
+  border-radius:12px;
+  background: linear-gradient(90deg, #6480ff, #6480ff);
+  transform-origin: left center;
+  transform: scaleX(var(--p, 0));
+  transition: transform 80ms linear;
+  opacity: .95;
+  pointer-events: none;           /* <<< add this */
+
+  mask-image:
+    linear-gradient(to right, black calc(100% - 18px), rgba(0,0,0,0) 100%),
+    linear-gradient(black, black);
+  mask-composite: intersect;
+  -webkit-mask-image:
+    linear-gradient(to right, black calc(100% - 18px), rgba(0,0,0,0) 100%),
+    linear-gradient(black, black);
+  -webkit-mask-composite: source-in;
 }
+
+/* Moving highlight riding the takeover edge */
+.btn.hold::before{
+  content:"";
+  position:absolute; inset:0;
+  border-radius:12px;
+  pointer-events: none;           /* <<< add this */
+  background:
+    radial-gradient(60% 140% at calc(var(--p,0)*100%) 50%,
+      rgba(255,255,255,.30) 0%,
+      rgba(255,255,255,.14) 35%,
+      rgba(255,255,255,0) 65%);
+  mix-blend-mode: screen;
+}
+
+/* Once we start, keep the filled state and freeze visuals */
+.btn.hold.running::after{
+  transform: scaleX(1);                /* locked full fill */
+  transition: none;                    /* no unwind */
+}
+.btn.hold.running::before{
+  opacity: 0.25;                       /* subtle highlight while running */
+}
+
 .btn.hold .label{ position:relative; z-index:1; }
+
+/* When the button is fully taken over, kill the feather/mask so no blue edge shows */
+.btn.hold.full::after{
+  -webkit-mask: none;
+  mask: none;
+}
+
+/* Processing/completed cosmetics (optional tweaks) */
+.btn.hold.processing{ cursor: default; }
+.btn.hold.completed{
+  cursor: default;
+  filter: saturate(.95);
+  opacity: .92;
+}
+
 
 /* Start row + spinner */
 .start-row{ display:flex; align-items:center; gap:10px; }
@@ -187,3 +239,23 @@ a:hover{ text-decoration:underline }
 }
 .footer-wrap a{ color:var(--accent); }
 .footer-wrap a:hover{ text-decoration:underline; }
+
+.impact{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  flex-wrap:wrap;
+  justify-content:flex-end; /* keeps them aligned with the right column */
+}
+
+.btn.hold[data-state="holding"] .label{ filter: brightness(1.05); }
+
+/* Keep the impact chips on the same row/baseline as Min hits */
+.grid.two.compact > .impact{
+  display:flex;
+  align-items:center;   /* vertical-centers against the input */
+  gap:10px;
+  margin-top: 4px;      /* tiny nudge to visually align; adjust 0–6px if your fonts shift */
+  justify-content:flex-end;
+  flex-wrap:wrap;
+}

@@ -1,5 +1,5 @@
 // ==== CONFIG ====
-const SECRET = 'placeholder'; // must match worker AUTH_KEY
+const SECRET = 'colin';
 // ================
 
 const $ = (s) => document.querySelector(s);
@@ -50,8 +50,12 @@ const singleResultBox = $('#singleResult');
 let parsedRows = [];
 let headers    = [];
 let results    = [];
+let isRunning  = false;
 let sortMode   = 'hits';
 let canonMap   = new Map(); // canonical URL -> aggregated hits
+
+startBtn.disabled = true;
+if (runSingle) runSingle.disabled = true;
 
 /* Init */
 setStatus('Load a file to begin.');
@@ -92,6 +96,8 @@ function switchTab(which){
 
 /* -------- File DnD -------- */
 function initDnD(){
+  hitsCol.addEventListener('change', () => { buildCanonMap(); updateImpact(); });
+  urlCol.addEventListener('change',  () => { buildCanonMap(); updateImpact(); });
   browseBtn.addEventListener('click', () => file.click());
   dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
   dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
@@ -164,6 +170,9 @@ async function handleFile(f){
   copyBtn.disabled = true;
   detailBody.innerHTML = '';
   bar.value = 0;
+
+  startBtn.disabled = false;
+  if (runSingle) runSingle.disabled = false;
 }
 
 /* -------- Canonicalization / filters -------- */
@@ -205,18 +214,41 @@ function updateImpact(){
   willPct.textContent  = totalH ? Math.round((h/totalH)*100) : 0;
 }
 
-/* -------- Run (Spreadsheet) with hold-to-start -------- */
+/* ======== Hold-to-start STATE MACHINE ======== */
 let holdProgress = 0;       // 0..1
 let holding = false;
 let rafId = null;
-const HOLD_MS = 3000;       // 3 seconds to start
-const DECAY_MS = 1000;      // ~1s to unwind when released
+const HOLD_MS = 2000;       // 2s to start
+const DECAY_MS = 1000;      // ~1s to unwind
+
+// Unified label/class manager
+function setBtnState(state, label){
+  // state: 'idle' | 'holding' | 'processing' | 'completed'
+  startBtn.dataset.state = state;
+  startBtn.querySelector('.label').textContent = label;
+  startBtn.classList.toggle('running',    state === 'processing');
+  startBtn.classList.toggle('processing', state === 'processing');
+  startBtn.classList.toggle('completed',  state === 'completed');
+  startBtn.classList.toggle('full',       state === 'processing' || state === 'completed');
+}
+
+function resetHoldButton(){
+  isRunning = false;
+  cancelAnimationFrame(rafId);
+  holdProgress = 0;
+  loop._fired = false;
+  startBtn.style.setProperty('--p', '0');
+  startBtn.disabled = false;
+  startBtn.classList.remove('running','processing','completed','full');
+  setBtnState('idle','Hold to Start');
+}
 
 startBtn.addEventListener('pointerdown', (e) => {
-  if (startBtn.disabled) return;
+  if (startBtn.disabled || isRunning) return;
   startBtn.setPointerCapture(e.pointerId);
   holding = true;
-  loop();
+  loop._last = performance.now();
+  rafId = requestAnimationFrame(loop);
 });
 
 startBtn.addEventListener('pointerup', (e) => {
@@ -227,60 +259,50 @@ startBtn.addEventListener('pointerup', (e) => {
 
 startBtn.addEventListener('pointercancel', () => { holding = false; });
 
-function loop(ts){
-  cancelAnimationFrame(rafId);
+function loop(now){
+  if (isRunning) return;  // stop anim once processing
   rafId = requestAnimationFrame(loop);
 
-  const now = performance.now();
-  startBtn.dataset.state = holding ? 'holding' : 'idle';
-
-  // progress math
-  const dt = (loop._last || now); // store last timestamp
-  const elapsed = now - dt;
+  const last = loop._last || now;
+  const elapsed = now - last;
   loop._last = now;
 
-  if (holding) {
-    holdProgress += elapsed / HOLD_MS;
-  } else {
-    holdProgress -= elapsed / DECAY_MS; // unwind quickly
-  }
+  // UI state while holding / idle
+  setBtnState(holding ? 'holding' : 'idle',
+    holding ? `Keep holding (${Math.ceil(Math.max(0, HOLD_MS * (1 - holdProgress)) / 1000)})` : 'Hold to Start'
+  );
+
+  // progress math
+  holdProgress += (holding ? 1 : -1) * (elapsed / (holding ? HOLD_MS : DECAY_MS));
   holdProgress = Math.max(0, Math.min(1, holdProgress));
+  startBtn.style.setProperty('--p', holdProgress.toFixed(3));
 
-  // update ring
-  const deg = Math.round(360 * holdProgress);
-  startBtn.style.setProperty('--deg', deg + 'deg');
-
-  // update label
-  const remaining = Math.max(0, HOLD_MS * (1 - holdProgress));
-  const s = Math.ceil(remaining / 1000);
-  startBtn.querySelector('.label').textContent =
-    holdProgress >= 1 ? 'Starting…' :
-    holding ? `Keep holding (${s})` : 'Hold to Start';
-
-  // fire once at completion
+  // fire once when fully held
   if (holdProgress >= 1 && !loop._fired) {
     loop._fired = true;
-    actuallyStart();
-  }
-  if (holdProgress < 1 && loop._fired) {
-    // reset armed state if it dropped below, for any reason
-    loop._fired = false;
+    cancelAnimationFrame(rafId);
+    tryStart();   // async; validates before locking into Processing
   }
 }
 
-async function actuallyStart(){
+/* attempt to start; validate first, then lock into Processing */
+async function tryStart(){
   // sanity checks
-  if (!canonMap.size) { alert('Load a file and select columns first.'); return; }
-  if (!urlCol.value)  { alert('Choose the URL column.'); return; }
+  if (!canonMap.size) { alert('Load a file and select columns first.'); return resetHoldButton(); }
+  if (!urlCol.value)  { alert('Choose the URL column.'); return resetHoldButton(); }
   const workerURL = (workerUrlInp.value || '').trim();
-  if (!workerURL) { alert('Enter your Worker URL.'); return; }
+  if (!workerURL)     { alert('Enter your Worker URL.'); return resetHoldButton(); }
 
   // build items list based on current minHits
   const minHits = Number(minHitsInp.value || 100);
   const items = [...canonMap.entries()].map(([url,hits]) => ({url,hits})).filter(it => it.hits >= minHits);
 
-  // lock UI
-  toggleRunning(true);
+  // Lock UI and enter Processing ONLY AFTER validation passes
+  isRunning = true;
+  startBtn.disabled = true;
+  setBtnState('processing','Processing…');
+  startBtn.classList.add('running','full');
+  loadingEl.hidden = false;
 
   results = [];
   bar.max   = items.length;
@@ -301,7 +323,7 @@ async function actuallyStart(){
           url, hits,
           pageId: data.pageId || '',
           source: data.source || '',
-          status: data.status || (data.pageId ? 'ok':'not-found')
+          status: data.status || (data.pageId ? 'ok' : 'not-found')
         });
       } catch (e) {
         results.push({ url, hits, pageId:'', source:'error', status:'error: ' + e.message });
@@ -312,12 +334,13 @@ async function actuallyStart(){
     }
 
     renderTable(results);
+    setBtnState('completed','Processing Completed'); // final state (disabled)
+  } catch (err) {
+    alert('Run failed: ' + (err?.message || err));
+    resetHoldButton(); // fall back to idle so they can try again
   } finally {
-    toggleRunning(false);
-    // reset button visuals after run
-    holdProgress = 0;
-    startBtn.style.setProperty('--deg', '0deg');
-    startBtn.querySelector('.label').textContent = 'Hold to Start';
+    isRunning = false;
+    loadingEl.hidden  = true;
   }
 }
 
