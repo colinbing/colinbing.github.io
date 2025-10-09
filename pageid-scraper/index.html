@@ -13,8 +13,8 @@
     <div class="container">
       <div class="hdr">
         <div class="hdr-left">
-          <img class="pageid-scraper-logo" src="images/pageID-scraper-logo.png">
-          <p>Extract <code>wpAdFusion.pageId</code> from WAPO article URLs. Choose a mode below.</p>
+          <h1>PageID Pull Tool</h1>
+          <p>Extract <code>wpAdFusion.pageId</code> from article URLs. Choose a mode below.</p>
         </div>
         <div class="hdr-right">
           <label class="theme-toggle">
@@ -41,10 +41,16 @@
         <div class="drop-inner">
           <strong>Drop CSV/XLSX here</strong>
           <span class="dz-note">or</span>
-          <button id="browseBtn" type="button" class="btn ghost">Browse</button>
+          <button id="browseBtn" type="button" class="btn">Browse</button>
           <input id="file" type="file" accept=".xlsx,.xls,.csv" hidden />
           <div class="dz-subnote">No uploads to our servers. Parsing happens in your browser.</div>
         </div>
+      </div>
+
+      <!-- Totals after parsing -->
+      <div class="stats-row" id="totals" hidden>
+        <div class="chip"><span id="totalUrls">0</span> unique URLs</div>
+        <div class="chip"><span id="totalHits">0</span> total hits</div>
       </div>
 
       <div class="grid two compact mt-16">
@@ -58,9 +64,14 @@
 
       <div class="grid two compact">
         <label>Min hits to include
-          <input id="minHits" type="number" min="0" value="100" class="compact-input">
+          <input id="minHits" type="number" min="100" value="100" step="10" class="compact-input">
         </label>
-        <span></span>
+
+        <!-- Live impact preview -->
+        <div class="impact">
+          <div class="chip soft">Will process: <strong><span id="willUrls">0</span> URLs</strong></div>
+          <div class="chip soft">Included hits: <strong><span id="willHits">0</span></strong> (<span id="willPct">0</span>% of total)</div>
+        </div>
       </div>
 
       <div class="grid one compact">
@@ -70,7 +81,10 @@
       </div>
 
       <div class="start-row mt-12">
-        <button id="start" class="btn primary">Start</button>
+        <!-- Hold-to-start button -->
+        <button id="start" class="btn hold primary" aria-live="polite">
+          <span class="label">Hold to Start</span>
+        </button>
         <span id="loading" class="loading" hidden>
           <span class="spinner" aria-hidden="true"></span> Processing…
         </span>
@@ -97,7 +111,7 @@
             <button id="copyIDs" class="btn success" disabled>Copy pageIDs</button>
             <button id="downloadCSV" class="btn" disabled>Download CSV</button>
           </div>
-        </div>        
+        </div>
         <div class="table-wrap">
           <table>
             <thead><tr>
@@ -141,7 +155,7 @@
     <div class="container">
       <div class="footer-wrap">
         <span>© 2025 Colin Bingham</span>
-        <a href="https://www.colinbing.com" target="_blank" rel="noopener">Back to site</a>
+        <a href="https://colinbing.com" target="_blank" rel="noopener">Back to site</a>
       </div>
     </div>
   </footer>

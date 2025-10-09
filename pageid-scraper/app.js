@@ -32,6 +32,14 @@ const dlBtn        = $('#downloadCSV');
 const copyBtn      = $('#copyIDs');
 const sortSel      = $('#sortBy');
 
+/* Totals / impact */
+const totalsBox  = $('#totals');
+const totalUrls  = $('#totalUrls');
+const totalHits  = $('#totalHits');
+const willUrls   = $('#willUrls');
+const willHits   = $('#willHits');
+const willPct    = $('#willPct');
+
 /* Single URL */
 const testUrlInput    = $('#testUrl');
 const workerUrlSingle = $('#workerUrlSingle');
@@ -42,7 +50,8 @@ const singleResultBox = $('#singleResult');
 let parsedRows = [];
 let headers    = [];
 let results    = [];
-let sortMode   = 'hits'; // 'hits' | 'url'
+let sortMode   = 'hits';
+let canonMap   = new Map(); // canonical URL -> aggregated hits
 
 /* Init */
 setStatus('Load a file to begin.');
@@ -51,7 +60,7 @@ initTabs();
 initDnD();
 sortSel?.addEventListener('change', () => { sortMode = sortSel.value; renderTable(results); });
 
-/* ---------------- Theme ---------------- */
+/* -------- Theme -------- */
 function initTheme(){
   const key = 'pageid_theme';
   const saved = localStorage.getItem(key);
@@ -66,7 +75,7 @@ function initTheme(){
   });
 }
 
-/* ---------------- Tabs ---------------- */
+/* -------- Tabs -------- */
 function initTabs(){
   tabSpreadsheet.addEventListener('click', () => switchTab('spreadsheet'));
   tabSingle.addEventListener('click', () => switchTab('single'));
@@ -81,7 +90,7 @@ function switchTab(which){
   panelSingle.classList.toggle('hidden', s);
 }
 
-/* ----------- Drag & drop / file ---------- */
+/* -------- File DnD -------- */
 function initDnD(){
   browseBtn.addEventListener('click', () => file.click());
   dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
@@ -93,9 +102,16 @@ function initDnD(){
   file.addEventListener('change', async () => {
     const f = file.files[0]; if (f) await handleFile(f);
   });
+
+  // clamp min hits live
+  minHitsInp.addEventListener('input', () => {
+    const v = Number(minHitsInp.value);
+    if (!Number.isFinite(v) || v < 100) minHitsInp.value = '100';
+    updateImpact();
+  });
 }
 
-/* ----------- Parse & header detection ---------- */
+/* -------- Parse + header detect -------- */
 async function handleFile(f){
   const buf = await f.arrayBuffer();
   const wb  = XLSX.read(new Uint8Array(buf), { type: 'array' });
@@ -135,49 +151,143 @@ async function handleFile(f){
 
   hitsCol.innerHTML = `<option value="">(none)</option>` + numericish.map(h => `<option value="${esc(h)}">${esc(h)}</option>`).join('');
 
-  setStatus('Columns detected. Adjust if needed, then Start.');
+  // Rebuild canonical map for totals
+  buildCanonMap();
+
+  // Show totals + impact
+  totalsBox.hidden = false;
+  updateImpact();
+
+  // Reset UI bits
+  setStatus('Columns detected. Adjust if needed, then hold to Start.');
   dlBtn.disabled = true;
   copyBtn.disabled = true;
   detailBody.innerHTML = '';
   bar.value = 0;
 }
 
-/* -------------- Run (Spreadsheet) -------------- */
-startBtn.addEventListener('click', async () => {
-  if (!parsedRows.length) { alert('Load a file first.'); return; }
-  if (!urlCol.value)     { alert('Choose the URL column.'); return; }
+/* -------- Canonicalization / filters -------- */
+function buildCanonMap(){
+  const urlKey  = urlCol.value;
+  const hitsKey = hitsCol.value || null;
+  const urlRx = /^https?:\/\//i;
+
+  canonMap = new Map();
+
+  for (const r of parsedRows) {
+    const raw = (r[urlKey] || '').toString().trim();
+    if (!raw || !urlRx.test(raw)) continue;
+
+    const canon = canonicalizeClient(raw);
+    if (!canon) continue;
+    if (isWaPoGames(canon)) continue;
+
+    const hits = hitsKey ? Number(r[hitsKey] || 0) : 0;
+    canonMap.set(canon, (canonMap.get(canon) || 0) + (Number.isFinite(hits) ? hits : 0));
+  }
+
+  // totals
+  let tHits = 0;
+  for (const v of canonMap.values()) tHits += (Number(v)||0);
+  totalUrls.textContent = String(canonMap.size);
+  totalHits.textContent = String(tHits);
+}
+
+function updateImpact(){
+  const minHits = Number(minHitsInp.value || 100);
+  let n=0, h=0, totalH=0;
+  for (const v of canonMap.values()) totalH += (Number(v)||0);
+  for (const [url, hits] of canonMap.entries()) {
+    if ((Number(hits)||0) >= minHits) { n++; h += (Number(hits)||0); }
+  }
+  willUrls.textContent = String(n);
+  willHits.textContent = String(h);
+  willPct.textContent  = totalH ? Math.round((h/totalH)*100) : 0;
+}
+
+/* -------- Run (Spreadsheet) with hold-to-start -------- */
+let holdProgress = 0;       // 0..1
+let holding = false;
+let rafId = null;
+const HOLD_MS = 3000;       // 3 seconds to start
+const DECAY_MS = 1000;      // ~1s to unwind when released
+
+startBtn.addEventListener('pointerdown', (e) => {
+  if (startBtn.disabled) return;
+  startBtn.setPointerCapture(e.pointerId);
+  holding = true;
+  loop();
+});
+
+startBtn.addEventListener('pointerup', (e) => {
+  if (!holding) return;
+  holding = false;
+  startBtn.releasePointerCapture(e.pointerId);
+});
+
+startBtn.addEventListener('pointercancel', () => { holding = false; });
+
+function loop(ts){
+  cancelAnimationFrame(rafId);
+  rafId = requestAnimationFrame(loop);
+
+  const now = performance.now();
+  startBtn.dataset.state = holding ? 'holding' : 'idle';
+
+  // progress math
+  const dt = (loop._last || now); // store last timestamp
+  const elapsed = now - dt;
+  loop._last = now;
+
+  if (holding) {
+    holdProgress += elapsed / HOLD_MS;
+  } else {
+    holdProgress -= elapsed / DECAY_MS; // unwind quickly
+  }
+  holdProgress = Math.max(0, Math.min(1, holdProgress));
+
+  // update ring
+  const deg = Math.round(360 * holdProgress);
+  startBtn.style.setProperty('--deg', deg + 'deg');
+
+  // update label
+  const remaining = Math.max(0, HOLD_MS * (1 - holdProgress));
+  const s = Math.ceil(remaining / 1000);
+  startBtn.querySelector('.label').textContent =
+    holdProgress >= 1 ? 'Starting…' :
+    holding ? `Keep holding (${s})` : 'Hold to Start';
+
+  // fire once at completion
+  if (holdProgress >= 1 && !loop._fired) {
+    loop._fired = true;
+    actuallyStart();
+  }
+  if (holdProgress < 1 && loop._fired) {
+    // reset armed state if it dropped below, for any reason
+    loop._fired = false;
+  }
+}
+
+async function actuallyStart(){
+  // sanity checks
+  if (!canonMap.size) { alert('Load a file and select columns first.'); return; }
+  if (!urlCol.value)  { alert('Choose the URL column.'); return; }
   const workerURL = (workerUrlInp.value || '').trim();
   if (!workerURL) { alert('Enter your Worker URL.'); return; }
 
+  // build items list based on current minHits
+  const minHits = Number(minHitsInp.value || 100);
+  const items = [...canonMap.entries()].map(([url,hits]) => ({url,hits})).filter(it => it.hits >= minHits);
+
+  // lock UI
   toggleRunning(true);
+
+  results = [];
+  bar.max   = items.length;
+  bar.value = 0;
+  setStatus(`Ready: ${items.length} URLs at ≥ ${minHits} hits.`);
+
   try {
-    const urlKey  = urlCol.value;
-    const hitsKey = hitsCol.value || null;
-    const minHits = Number(minHitsInp?.value || 0);
-
-    const urlRx = /^https?:\/\//i;
-
-    // Build canonical URL -> hits map (skip WaPo games)
-    const map = new Map();
-    for (const r of parsedRows) {
-      const raw = (r[urlKey] || '').toString().trim();
-      if (!raw || !urlRx.test(raw)) continue;
-
-      const canon = canonicalizeClient(raw);
-      if (!canon) continue;
-      if (isWaPoGames(canon)) continue;
-
-      const hits = hitsKey ? Number(r[hitsKey] || 0) : 0;
-      map.set(canon, (map.get(canon) || 0) + (Number.isFinite(hits) ? hits : 0));
-    }
-
-    const items = [...map.entries()].map(([url,hits]) => ({url,hits})).filter(it => it.hits >= minHits);
-
-    results = [];
-    bar.max   = items.length;
-    bar.value = 0;
-    setStatus(`Ready: ${items.length} URLs at ≥ ${minHits} hits.`);
-
     for (let i = 0; i < items.length; i++) {
       const { url, hits } = items[i];
       try {
@@ -204,28 +314,26 @@ startBtn.addEventListener('click', async () => {
     renderTable(results);
   } finally {
     toggleRunning(false);
+    // reset button visuals after run
+    holdProgress = 0;
+    startBtn.style.setProperty('--deg', '0deg');
+    startBtn.querySelector('.label').textContent = 'Hold to Start';
   }
-});
+}
 
-/* -------------- Rendering + actions -------------- */
+/* -------- Rendering + actions -------- */
 function renderTable(res){
-  // sort
   let sorted = [...res];
-  if (sortMode === 'hits') {
-    sorted.sort((a,b)=> (b.hits||0)-(a.hits||0));
-  } else {
-    sorted.sort((a,b)=> String(a.url).localeCompare(String(b.url)));
-  }
+  if (sortMode === 'hits') sorted.sort((a,b)=> (b.hits||0)-(a.hits||0));
+  else sorted.sort((a,b)=> String(a.url).localeCompare(String(b.url)));
 
-  // rows
-  const rows = sorted.map(r => `
+  detailBody.innerHTML = sorted.map(r => `
     <tr>
       <td style="word-break:break-word"><a href="${esc(r.url)}" target="_blank" rel="noopener noreferrer">${esc(r.url)}</a></td>
       <td>${esc(r.pageId)}</td>
       <td style="text-align:right">${Number(r.hits)||0}</td>
       <td>${esc(r.source)}</td>
-    </tr>`).join('');
-  detailBody.innerHTML = rows || `<tr><td colspan="4">(no results)</td></tr>`;
+    </tr>`).join('') || `<tr><td colspan="4">(no results)</td></tr>`;
 
   // Copy unique pageIDs
   copyBtn.disabled = sorted.every(r => !r.pageId);
@@ -257,14 +365,13 @@ function renderTable(res){
   setStatus(`Done. ${sorted.length} URLs processed.`);
 }
 
-/* -------------- Single URL -------------- */
+/* -------- Single URL -------- */
 runSingle?.addEventListener('click', async () => {
   const url = (testUrlInput.value || '').trim();
   const workerURL = (workerUrlSingle.value || '').trim();
   if (!/^https?:\/\//i.test(url)) { alert('Enter a valid URL.'); return; }
   if (!workerURL) { alert('Enter your Worker URL.'); return; }
 
-  // front-end canonicalization / skip games too
   const canon = canonicalizeClient(url);
   if (!canon || isWaPoGames(canon)) {
     singleResultBox.textContent = 'Skipped (games/not supported).';
@@ -289,7 +396,7 @@ runSingle?.addEventListener('click', async () => {
   }
 });
 
-/* -------------- Helpers -------------- */
+/* -------- Helpers -------- */
 function toggleRunning(running){
   startBtn.disabled = running;
   loadingEl.hidden  = !running;
@@ -311,18 +418,16 @@ function isWaPoGames(u){
   } catch { return false; }
 }
 
-// Front-end canonicalization to reduce duplicate calls/credits
 function canonicalizeClient(raw){
   try {
     const u = new URL(raw);
     u.hash = '';
     u.hostname = u.hostname.toLowerCase();
 
-    // If it's a WaPo article, toss all params (newsletter/social tracking)
+    // WaPo articles: drop all params (newsletter/social tracking)
     if (u.hostname.endsWith('washingtonpost.com')) {
       u.search = '';
     } else {
-      // Generic tracker strip
       const strip = /^(utm_|gclid|fbclid|icid|cmpid|WT\.|mc_|carta-url)$/i;
       const keep = new URLSearchParams();
       for (const [k, v] of u.searchParams.entries()) {
@@ -331,9 +436,7 @@ function canonicalizeClient(raw){
       u.search = keep.toString();
     }
 
-    // Normalize trailing slash for consistency
     if (u.pathname.endsWith('/')) u.pathname = u.pathname.slice(0, -1);
-
     return u.toString();
   } catch {
     return (raw || '').trim();

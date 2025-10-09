@@ -15,23 +15,24 @@
 
   --accent:#5b9cff;
   --accent-2:#2cd3ff;
+  --success:#22c55e;
 }
 
 *{ box-sizing:border-box; }
+html, body { height: 100%; }
 body{
   margin:0;
+  min-height:100vh;
+  display:grid;
+  grid-template-rows: auto 1fr auto; /* header | main | footer */
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
   font-weight: 450;
-  min-height: 100vh;
-  display: grid;
-  grid-template-rows: auto 1fr auto; /* header | main | footer */
 }
-
-header.app-header, main, footer.site-footer { width: 100%; }
-
 
 body[data-theme="light"]{ background:var(--bg); color:var(--text); }
 body[data-theme="dark"] { background:var(--bg-dark); color:var(--text-dark); }
+
+header.app-header, main, footer.site-footer { width:100%; }
 
 .container{ max-width:1100px; margin:0 auto; padding:0 16px; }
 
@@ -82,19 +83,39 @@ body[data-theme="dark"] input[type="number"],
 body[data-theme="dark"] select{
   background:var(--panel-dark); color:var(--text-dark); border-color:var(--line-dark);
 }
+.compact-input{ padding:6px 8px; font-size:13px; min-width:220px; }
 
-/* Buttons (flat) */
+/* Buttons */
 .btn{
   appearance:none; border:1px solid var(--line); background:#f6f8fd; color:#0a1020;
   border-radius:12px; padding:8px 12px; cursor:pointer; font-weight:600; font-size:14px;
 }
 .btn:hover{ background:#eef3ff; }
 .btn:disabled{ opacity:.6; cursor:not-allowed; }
-.btn.ghost{ background:transparent; }
 .btn.primary{
   background:linear-gradient(135deg, var(--accent), var(--accent-2));
   border:none; color:#fff;
 }
+.btn.success{ background:var(--success); border:none; color:#fff; }
+.btn.success:hover{ filter:brightness(1.05); }
+
+/* Hold-to-start button with progress ring */
+.btn.hold{
+  position:relative;
+  padding-left:14px; padding-right:14px;
+  overflow:hidden;
+}
+.btn.hold::after{
+  /* circular progress ring */
+  content:"";
+  position:absolute; inset:-4px;
+  border-radius:16px;
+  background:
+    conic-gradient(#ffffff99 var(--deg, 0deg), transparent 0deg);
+  pointer-events:none;
+  mix-blend-mode:screen; /* subtle glow over gradient */
+}
+.btn.hold .label{ position:relative; z-index:1; }
 
 /* Start row + spinner */
 .start-row{ display:flex; align-items:center; gap:10px; }
@@ -117,6 +138,27 @@ body[data-theme="dark"] .dropzone{ background:var(--panel-dark); border-color:va
 .drop-inner strong{ display:block; margin-bottom:4px; }
 .dz-note{ margin:0 8px; color:var(--muted); font-size:13px; }
 .dz-subnote{ margin-top:6px; color:var(--muted); font-size:12px; }
+.dropzone .btn{
+  background:#ffffff; color:#0b1220; border:1px solid #cddafd; border-radius:10px;
+  padding:10px 14px; font-size:14px; line-height:1; min-width:96px; font-weight:600;
+}
+.dropzone .btn:hover{ background:#f7f9ff; }
+.dropzone .btn:focus-visible{ outline:2px solid #3b82f6; outline-offset:2px; }
+body[data-theme="dark"] .dropzone .btn{ background:#ffffff; color:#0b1220; border-color:#9db9ff; }
+@media (max-width: 480px){
+  .dropzone .btn{ font-size:16px; padding:12px 16px; min-width:110px; }
+  .drop-inner strong{ font-size:15px; }
+  .dz-note, .dz-subnote{ font-size:12px; }
+}
+
+/* Chips / stats */
+.stats-row{ display:flex; gap:10px; flex-wrap:wrap; margin-top:12px; }
+.chip{
+  background:#eef3ff; border:1px solid var(--line); color:#1b2234;
+  padding:6px 10px; border-radius:999px; font-size:12px;
+}
+.chip.soft{ background:#f8fafc; }
+body[data-theme="dark"] .chip{ background:#111627; color:#dbe6ff; border-color:#2b3347; }
 
 /* Progress */
 .status{ font-size:13px; color:var(--muted); margin-bottom:6px; }
@@ -124,14 +166,12 @@ progress{ width:100%; height:10px; accent-color:var(--accent) }
 
 /* Table */
 .table-wrap{ overflow:auto; border-radius:12px; }
-.table-header{
-  display:flex; align-items:center; justify-content:space-between;
-  margin-bottom:10px; /* <-- space above the table */
-}
+.table-header{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:10px; }
+.table-header .lh{ display:flex; align-items:center; gap:10px; }
+.inline-label{ display:flex; align-items:center; gap:6px; font-size:13px; color:var(--muted); }
+
 table{ width:100%; border-collapse:collapse; }
-th, td{
-  border-bottom:1px solid var(--line); padding:10px; font-size:13px; vertical-align:top;
-}
+th, td{ border-bottom:1px solid var(--line); padding:10px; font-size:13px; vertical-align:top; }
 body[data-theme="dark"] th, body[data-theme="dark"] td{ border-bottom-color:var(--line-dark); }
 th{ background:#f6f8fd; color:#28324a; text-align:left; }
 body[data-theme="dark"] th{ background:var(--panel-dark); color:#cbd2e1; }
@@ -139,75 +179,11 @@ td:nth-child(3){ text-align:right; } /* hits */
 a{ color:var(--accent); text-decoration:none }
 a:hover{ text-decoration:underline }
 
-.table-header{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:10px; }
-.table-header .lh{ display:flex; align-items:center; gap:10px; }
-.inline-label{ display:flex; align-items:center; gap:6px; font-size:13px; color:var(--muted); }
-
-.btn.success{
-  background: #22c55e; /* green */
-  border: none;
-  color: #fff;
+/* Footer */
+.site-footer{ background:transparent; }
+.footer-wrap{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:12px 0; color:var(--muted); font-size:13px;
 }
-.btn.success:hover{ filter: brightness(1.05); }
-
-/* Footer (matches container width) */
-.site-footer { background: transparent; }
-.site-footer .container { max-width: 1100px; margin: 0 auto; padding: 0 16px; }
-.footer-wrap {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  /* no border-top */
-  /* if you want a little breathing room inside the footer, use padding here: */
-  padding: 12px 0; /* ← tweak as you like */
-  color: var(--muted);
-  font-size: 13px;
-}
-.footer-wrap a { color: var(--accent); }
-.footer-wrap a:hover { text-decoration: underline; }
-
-.pageid-scraper-logo{
-  max-height:42px;
-  width:auto;
-  border-radius:6px;
-  margin-bottom:10px;
-}
-
-[data-theme="dark"] .pageid-scraper-logo{ content:url('images/pageID-scraper-logo-white.png') }
-
-/* --- Dropzone Browse button: high-contrast & mobile-friendly --- */
-.dropzone .btn{
-  background:#ffffff;           /* solid, not ghost */
-  color:#0b1220;
-  border:1px solid #cddafd;
-  border-radius:10px;
-  padding:10px 14px;
-  font-size:14px;
-  line-height:1;                /* keeps height tidy on iOS */
-  min-width:96px;               /* clear tap target */
-  font-weight:600;
-}
-.dropzone .btn:hover{ background:#f7f9ff; }
-
-.dropzone .btn:focus-visible{
-  outline:2px solid #3b82f6;    /* accessible focus ring */
-  outline-offset:2px;
-}
-
-/* Dark theme: keep button white for contrast on dark background */
-body[data-theme="dark"] .dropzone .btn{
-  background:#ffffff;
-  color:#0b1220;
-  border-color:#9db9ff;
-}
-
-/* Small screens: bump tap size & font to avoid iOS zoom and improve legibility */
-@media (max-width: 480px){
-  .dropzone .btn{
-    font-size:16px;
-    padding:12px 16px;
-    min-width:110px;
-  }
-  .drop-inner strong{ font-size:15px; }
-  .dz-note, .dz-subnote{ font-size:12px; }
-}
+.footer-wrap a{ color:var(--accent); }
+.footer-wrap a:hover{ text-decoration:underline; }
