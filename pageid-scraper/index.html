@@ -58,7 +58,7 @@
 
       <div class="grid two compact">
         <label>Min hits to include
-          <input id="minHits" type="number" min="0" value="10" class="compact-input">
+          <input id="minHits" type="number" min="0" value="100" class="compact-input">
         </label>
         <span></span>
       </div>
@@ -84,9 +84,20 @@
 
       <div class="panel mt-16">
         <div class="table-header">
-          <h3 class="panel-title">Results</h3>
-          <button id="downloadCSV" class="btn" disabled>Download CSV</button>
-        </div>
+          <div class="lh">
+            <h3 class="panel-title">Results</h3>
+            <label class="inline-label">Sort
+              <select id="sortBy" class="compact-input">
+                <option value="hits">Hits (desc)</option>
+                <option value="url">URL (A→Z)</option>
+              </select>
+            </label>
+          </div>
+          <div class="rh">
+            <button id="copyIDs" class="btn success" disabled>Copy pageIDs</button>
+            <button id="downloadCSV" class="btn" disabled>Download CSV</button>
+          </div>
+        </div>        
         <div class="table-wrap">
           <table>
             <thead><tr>

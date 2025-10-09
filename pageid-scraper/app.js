@@ -1,5 +1,5 @@
 // ==== CONFIG ====
-const SECRET = 'colin'; // must match worker AUTH_KEY
+const SECRET = 'placeholder'; // must match worker AUTH_KEY
 // ================
 
 const $ = (s) => document.querySelector(s);
@@ -29,6 +29,8 @@ const statusEl     = $('#status');
 const bar          = $('#bar');
 const detailBody   = $('#detail');
 const dlBtn        = $('#downloadCSV');
+const copyBtn      = $('#copyIDs');
+const sortSel      = $('#sortBy');
 
 /* Single URL */
 const testUrlInput    = $('#testUrl');
@@ -40,12 +42,14 @@ const singleResultBox = $('#singleResult');
 let parsedRows = [];
 let headers    = [];
 let results    = [];
+let sortMode   = 'hits'; // 'hits' | 'url'
 
 /* Init */
 setStatus('Load a file to begin.');
 initTheme();
 initTabs();
 initDnD();
+sortSel?.addEventListener('change', () => { sortMode = sortSel.value; renderTable(results); });
 
 /* ---------------- Theme ---------------- */
 function initTheme(){
@@ -133,6 +137,7 @@ async function handleFile(f){
 
   setStatus('Columns detected. Adjust if needed, then Start.');
   dlBtn.disabled = true;
+  copyBtn.disabled = true;
   detailBody.innerHTML = '';
   bar.value = 0;
 }
@@ -150,17 +155,20 @@ startBtn.addEventListener('click', async () => {
     const hitsKey = hitsCol.value || null;
     const minHits = Number(minHitsInp?.value || 0);
 
-    const normalize = (u) => { try{ const x=new URL(u); x.hash=''; return x.toString(); } catch{ return (u||'').trim(); } };
     const urlRx = /^https?:\/\//i;
 
-    // Dedupe by URL and sum hits
+    // Build canonical URL -> hits map (skip WaPo games)
     const map = new Map();
     for (const r of parsedRows) {
       const raw = (r[urlKey] || '').toString().trim();
       if (!raw || !urlRx.test(raw)) continue;
-      const url  = normalize(raw);
+
+      const canon = canonicalizeClient(raw);
+      if (!canon) continue;
+      if (isWaPoGames(canon)) continue;
+
       const hits = hitsKey ? Number(r[hitsKey] || 0) : 0;
-      map.set(url, (map.get(url) || 0) + (Number.isFinite(hits) ? hits : 0));
+      map.set(canon, (map.get(canon) || 0) + (Number.isFinite(hits) ? hits : 0));
     }
 
     const items = [...map.entries()].map(([url,hits]) => ({url,hits})).filter(it => it.hits >= minHits);
@@ -199,8 +207,17 @@ startBtn.addEventListener('click', async () => {
   }
 });
 
+/* -------------- Rendering + actions -------------- */
 function renderTable(res){
-  const sorted = [...res].sort((a,b)=> (b.hits||0)-(a.hits||0));
+  // sort
+  let sorted = [...res];
+  if (sortMode === 'hits') {
+    sorted.sort((a,b)=> (b.hits||0)-(a.hits||0));
+  } else {
+    sorted.sort((a,b)=> String(a.url).localeCompare(String(b.url)));
+  }
+
+  // rows
   const rows = sorted.map(r => `
     <tr>
       <td style="word-break:break-word"><a href="${esc(r.url)}" target="_blank" rel="noopener noreferrer">${esc(r.url)}</a></td>
@@ -209,6 +226,14 @@ function renderTable(res){
       <td>${esc(r.source)}</td>
     </tr>`).join('');
   detailBody.innerHTML = rows || `<tr><td colspan="4">(no results)</td></tr>`;
+
+  // Copy unique pageIDs
+  copyBtn.disabled = sorted.every(r => !r.pageId);
+  copyBtn.onclick = async () => {
+    const ids = [...new Set(sorted.map(r => r.pageId).filter(Boolean))];
+    await navigator.clipboard.writeText(ids.join(','));
+    alert(`Copied ${ids.length} pageIDs.`);
+  };
 
   // Download CSV (dedupe by url+pageId)
   dlBtn.disabled = false;
@@ -232,19 +257,26 @@ function renderTable(res){
   setStatus(`Done. ${sorted.length} URLs processed.`);
 }
 
-/* -------------- Single URL mode -------------- */
-runSingle.addEventListener('click', async () => {
+/* -------------- Single URL -------------- */
+runSingle?.addEventListener('click', async () => {
   const url = (testUrlInput.value || '').trim();
   const workerURL = (workerUrlSingle.value || '').trim();
   if (!/^https?:\/\//i.test(url)) { alert('Enter a valid URL.'); return; }
   if (!workerURL) { alert('Enter your Worker URL.'); return; }
+
+  // front-end canonicalization / skip games too
+  const canon = canonicalizeClient(url);
+  if (!canon || isWaPoGames(canon)) {
+    singleResultBox.textContent = 'Skipped (games/not supported).';
+    return;
+  }
 
   singleResultBox.textContent = 'Running…';
   try {
     const res = await fetch(workerURL, {
       method:'POST',
       headers:{ 'content-type':'application/json', 'x-api-key': SECRET },
-      body: JSON.stringify({ url })
+      body: JSON.stringify({ url: canon })
     });
     const data = await res.json();
     singleResultBox.innerHTML = `
@@ -269,3 +301,41 @@ function setStatus(s){ if(statusEl) statusEl.textContent = s; }
 function sleep(ms){ return new Promise(r => setTimeout(r, ms)); }
 function esc(s){ return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
 function csvq(s){ const t=String(s??''); return /[",\n]/.test(t)?'"'+t.replace(/"/g,'""')+'"':t; }
+
+function isWaPoGames(u){
+  try{
+    const x = new URL(u);
+    if (x.hostname === 'games.washingtonpost.com') return true;
+    if (x.hostname.endsWith('washingtonpost.com') && x.pathname.startsWith('/games/')) return true;
+    return false;
+  } catch { return false; }
+}
+
+// Front-end canonicalization to reduce duplicate calls/credits
+function canonicalizeClient(raw){
+  try {
+    const u = new URL(raw);
+    u.hash = '';
+    u.hostname = u.hostname.toLowerCase();
+
+    // If it's a WaPo article, toss all params (newsletter/social tracking)
+    if (u.hostname.endsWith('washingtonpost.com')) {
+      u.search = '';
+    } else {
+      // Generic tracker strip
+      const strip = /^(utm_|gclid|fbclid|icid|cmpid|WT\.|mc_|carta-url)$/i;
+      const keep = new URLSearchParams();
+      for (const [k, v] of u.searchParams.entries()) {
+        if (!strip.test(k)) keep.append(k, v);
+      }
+      u.search = keep.toString();
+    }
+
+    // Normalize trailing slash for consistency
+    if (u.pathname.endsWith('/')) u.pathname = u.pathname.slice(0, -1);
+
+    return u.toString();
+  } catch {
+    return (raw || '').trim();
+  }
+}

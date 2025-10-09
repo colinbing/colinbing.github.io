@@ -139,6 +139,17 @@ td:nth-child(3){ text-align:right; } /* hits */
 a{ color:var(--accent); text-decoration:none }
 a:hover{ text-decoration:underline }
 
+.table-header{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:10px; }
+.table-header .lh{ display:flex; align-items:center; gap:10px; }
+.inline-label{ display:flex; align-items:center; gap:6px; font-size:13px; color:var(--muted); }
+
+.btn.success{
+  background: #22c55e; /* green */
+  border: none;
+  color: #fff;
+}
+.btn.success:hover{ filter: brightness(1.05); }
+
 /* Footer (matches container width) */
 .site-footer { background: transparent; }
 .site-footer .container { max-width: 1100px; margin: 0 auto; padding: 0 16px; }
