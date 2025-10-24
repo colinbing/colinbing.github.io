@@ -70,7 +70,7 @@
     textarea {
       width:100%;
       min-height:260px;
-      resize:vertical;
+      resize:vertical;              /* keep the draggable corner working */
       background:#0c0f14;
       color:#e8eefc;
       border:1px solid var(--border);
@@ -78,13 +78,14 @@
       padding:12px 52px 12px 12px;
       outline:none;
       overflow:auto;
-      user-select:none;
-      caret-color:transparent;
+      caret-color:auto;             /* allow caret again */
+      user-select:text;             /* allow selecting text */
       white-space: pre-wrap;
       overflow-wrap: normal;
       word-break: normal;
-      cursor:pointer;
+      cursor:text;                  /* text cursor instead of pointer */
     }
+
     :root.light textarea{background:#f5f8ff; color:#0c1426}
 
     /* Subtle copy indicator (text only) */
@@ -181,6 +182,25 @@
       text-decoration: underline;
     }
 
+    .filter-row{
+  display:flex; align-items:center; gap:10px;
+  margin: 0 0 8px 0;
+    }
+    #filterInput{
+      flex:1;
+      background: var(--panel);
+      color: var(--text);
+      border:1px solid var(--border);
+      border-radius: 8px;
+      padding:8px 10px;
+      outline:none;
+    }
+    #filterInput:focus{
+      border-color: var(--focus);
+      box-shadow:0 0 0 3px color-mix(in srgb, var(--focus) 30%, transparent);
+    }
+
+
 
   </style>
 </head>
@@ -229,6 +249,11 @@
           <input id="quotesMode" type="checkbox" />
           <span>Quotations</span>
         </label>
+      </div>
+
+      <div class="filter-row">
+        <input id="filterInput" type="text" placeholder="Filter keywords… (e.g. reising)" />
+        <span id="filterCount" class="hint"></span>
       </div>
     
       <div class="output-container">
@@ -291,6 +316,9 @@
   const copyIndicator=document.getElementById('copyIndicator');
   const outBox = document.querySelector('.output-container');
   const quotesMode = document.getElementById('quotesMode');
+  const filterInput = document.getElementById('filterInput');
+  const filterCount = document.getElementById('filterCount');
+
   document.getElementById('runDemo').addEventListener('click', async (e) => {
   e.preventDefault();
   try {
@@ -314,13 +342,15 @@
   if (window.__lastSheetArr) processSheetArray(window.__lastSheetArr);
     });
 
-    outBox.addEventListener('click', copyOutput);
+    outBox.addEventListener('click', (e) => {
+  if (e.target.id !== 'out') copyOutput();
+    });
+
 
   // Fresh state on load/refresh
   window.addEventListener('load',()=>{fileInput.value='';out.value='';window.__lastSheetArr=null;renderMetricsEmpty();});
   // Output: allow scrolling but block click/select focus
   out.setAttribute('tabindex','-1');
-  out.addEventListener('mousedown',e=>{e.preventDefault()}); // blocks selection/focus but wheel scroll still works
 
   // Drag & drop behavior
   ['dragenter','dragover'].forEach(evt =>
@@ -348,56 +378,68 @@
     processSheetArray(arr,t0,file.name);
   }
 
-  function processSheetArray(arr,t0=performance.now(),filename=''){
-    const startRow=hasHeader.checked?1:0;
-    // Auto-pick densest column
-    const colCount=Math.max(0,...arr.map(r=>r.length));
-    const counts=new Array(colCount).fill(0);
-    for(let r=startRow;r<arr.length;r++){
-      const row=arr[r]||[];
-      for(let c=0;c<colCount;c++){
-        const v=String(row[c]??'').trim();
-        if(v) counts[c]++;
-      }
+  function processSheetArray(arr, t0 = performance.now(), filename = '') {
+  const startRow = hasHeader.checked ? 1 : 0;
+
+  // Flatten: collect *all* non-empty cells from all columns
+  const raw = [];
+  for (let r = startRow; r < arr.length; r++) {
+    const row = arr[r] || [];
+    for (let c = 0; c < row.length; c++) {
+      const cell = row[c];
+      if (cell == null) continue;
+      const s = String(cell).trim();
+      if (s) raw.push(s);
     }
-    const colIndex=counts.indexOf(Math.max(...counts));
-
-    const raw=[];
-    for(let r=startRow;r<arr.length;r++){
-      const row=arr[r]||[];
-      const v=row[colIndex];
-      if(v==null) continue;
-      const s=String(v);
-      if(s.trim().length===0) continue;
-      raw.push(s);
-    }
-
-    const t1=performance.now();
-    const { kept, joined } = cleanAndJoin(raw);
-
-    const displayJoined = quotesMode.checked
-      ? kept.map(s => `"${s}"`).join(', ')
-      : kept.join(', ');
-
-    out.value = displayJoined;
-
-    const enabled = displayJoined.length > 0;
-    copyBtn.disabled = !enabled;
-    downloadBtn.disabled = !enabled;
-    copyIndicator.style.display = enabled ? 'block' : 'none';
-
-
-    const t2=performance.now();
-    renderMetrics({
-      file:filename,
-      rows:arr.length,
-      considered:raw.length,
-      uniqueCount:kept.length,
-      bytes:new Blob([joined]).size,
-      prepMs:(t1-t0)|0,
-      cleanMs:(t2-t1)|0
-    });
   }
+
+  const t1 = performance.now();
+  const { kept, joined } = cleanAndJoin(raw);
+
+  // Persist for filtering/rendering
+  window.__lastKept = kept;
+
+  renderOutput(); // will respect filter + quotes mode
+
+  const enabled = kept.length > 0;
+  copyBtn.disabled = !enabled;
+  downloadBtn.disabled = !enabled;
+  copyIndicator.style.display = enabled ? 'block' : 'none';
+
+  const t2 = performance.now();
+  renderMetrics({
+    file: filename,
+    rows: arr.length,
+    considered: raw.length,
+    uniqueCount: kept.length,
+    bytes: new Blob([joined]).size,
+    prepMs: (t1 - t0) | 0,
+    cleanMs: (t2 - t1) | 0
+  });
+}
+
+  function renderOutput(){
+    const kept = window.__lastKept || [];
+    const q = (filterInput?.value || '').trim().toLowerCase();
+
+    const filtered = q
+      ? kept.filter(s => s.toLowerCase().includes(q))
+      : kept;
+
+    const outArr = quotesMode.checked
+      ? filtered.map(s => `"${s}"`)
+      : filtered;
+
+    out.value = outArr.join(', ');
+
+    // Update count badge
+    if (filterCount) {
+      filterCount.textContent = q
+        ? `${filtered.length} match${filtered.length===1?'':'es'} of ${kept.length}`
+        : `${kept.length} total`;
+    }
+  }
+
 
   // Cleaning
   function cleanAndJoin(values){
@@ -464,15 +506,9 @@
   async function copyOutput(){
     if(!out.value) return;
     let toCopy = out.value;
-
     if (quotesMode.checked) {
-      // "a", "b" -> "a","b"
       toCopy = toCopy.replace(/",\s+"/g, '","');
-    } else {
-      // optional: tighten commas if you prefer no spaces in non-quotes mode
-      // toCopy = toCopy.replace(/,\s+/g, ',');
     }
-
     await navigator.clipboard.writeText(toCopy);
     showToast('Copied to clipboard');
     copyIndicator.textContent='Copied';
@@ -480,8 +516,20 @@
     setTimeout(()=>{copyIndicator.textContent='Copy';copyIndicator.classList.remove('copied')},1500);
   }
 
+
   copyBtn.addEventListener('click',copyOutput);
   copyIndicator.addEventListener('click',copyOutput);
+  quotesMode.addEventListener('change', renderOutput);
+  if (filterInput) filterInput.addEventListener('input', renderOutput);
+  window.addEventListener('load', ()=>{
+  fileInput.value='';
+  out.value='';
+  window.__lastSheetArr=null;
+  window.__lastKept=[];
+  renderMetricsEmpty();
+  });
+
+
 
   // Download
   downloadBtn.addEventListener('click',()=>{
