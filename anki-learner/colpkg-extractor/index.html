@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Anki .colpkg → Terms CSV</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
+    body { max-width: 880px; margin: 40px auto; padding: 0 16px; }
+    h1 { font-size: 1.5rem; margin-bottom: 0.25rem; }
+    .card { border: 1px solid #e5e7eb; border-radius: 12px; padding: 16px; box-shadow: 0 2px 10px rgba(0,0,0,.04); }
+    .row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+    .muted { color: #6b7280; }
+    button { padding: 10px 14px; border-radius: 10px; border: 1px solid #d1d5db; background: white; cursor: pointer; }
+    button:disabled { opacity: .6; cursor: not-allowed; }
+    progress { width: 260px; height: 10px; }
+    .log { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; white-space: pre-wrap; background: #f8fafc; padding: 8px; border-radius: 8px; border: 1px solid #e5e7eb; max-height: 200px; overflow: auto; }
+    .pill { padding: 2px 8px; border-radius: 999px; background: #eef2ff; color: #3730a3; display: inline-block; font-size: 12px; }
+    .right { margin-left: auto; }
+  </style>
+
+<!-- HEAD: load libs first, in order -->
+<script src="https://sql.js.org/dist/sql-wasm.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@zip.js/zip.js@2.7.55/dist/zip.min.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@bokuweb/zstd-wasm@latest/dist/index.umd.js"></script>
+
+
+</head>
+<body>
+  <h1>Anki Export → Terms CSV</h1>
+  <p class="muted">Parses <code>.colpkg/.apkg</code> in the browser. No upload. Supports <span class="pill">collection.anki2</span>. Hook included for <span class="pill">collection.anki21b (zstd)</span>.</p>
+
+  <div class="card">
+    <div class="row" style="margin-bottom: 8px;">
+      <input id="file" type="file" accept=".colpkg,.apkg" />
+      <button id="parseBtn" disabled>Parse & Export CSV</button>
+      <a id="download" class="right" style="display:none;">Download CSV</a>
+    </div>
+    <div class="row" style="margin-bottom: 8px;">
+      <progress id="prog" max="100" value="0"></progress>
+      <span id="status" class="muted">Select a .colpkg/.apkg to begin.</span>
+    </div>
+    <div id="log" class="log"></div>
+  </div>
+
+  <script>
+    /* ---------------------------------------------
+       Anki .colpkg → Terms CSV (browser version)
+       --------------------------------------------- */
+    
+    // Simple logger helpers
+    const logEl = document.getElementById("log");
+    const statusEl = document.getElementById("status");
+    function log(msg) { logEl.textContent += msg + "\n"; }
+    function setStatus(msg) { statusEl.textContent = msg; }
+    
+    // Wait for sql.js to load
+    async function loadSQL() {
+      const maxTries = 50;
+      for (let i = 0; i < maxTries; i++) {
+        if (window.initSqlJs) break;
+        await new Promise(r => setTimeout(r, 100));
+      }
+      if (!window.initSqlJs) {
+        throw new Error("sql-wasm.js failed to load. Check that <script src='https://sql.js.org/dist/sql-wasm.js'> is included.");
+      }
+      return await window.initSqlJs({
+        locateFile: file => `https://sql.js.org/dist/${file}`,
+      });
+    }
+    
+    let SQL;
+    const SQLReady = (async () => {
+      SQL = await loadSQL();
+    })();
+    
+    // ----- constants & helpers -----
+    const US = "\x1f";
+    const TERM_FIELDS = ["Expression","Vocab","Word","Kanji","Front","Term","Vocabulary","表現","単語","語","漢字","文"];
+    const READING_FIELDS = ["Reading","Kana","Hiragana","Furigana","Yomi","読み","かな","仮名","よみ"];
+    const MEANING_FIELDS = ["Meaning","English","Gloss","Definition","Translation","意味","英語","定義","訳"];
+    const SENTENCE_FIELDS = ["Sentence","Example","Context","例文","文","Context Sentence"];
+    
+    function stripHtml(s) {
+      if (typeof s !== "string") return s;
+      return s.replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
+    }
+    function pickField(fieldNames, values, candidates) {
+      const map = new Map(fieldNames.map((fn, i) => [fn.trim(), values[i] ?? ""]));
+      for (const c of candidates) if (map.has(c) && map.get(c).trim()) return map.get(c).trim();
+      const lower = new Map([...map.entries()].map(([k, v]) => [k.toLowerCase(), v]));
+      for (const c of candidates) {
+        const cl = c.toLowerCase();
+        for (const [k, v] of lower.entries())
+          if (k.includes(cl) && String(v).trim()) return String(v).trim();
+      }
+      for (const v of values) if (String(v).trim()) return String(v).trim();
+      return "";
+    }
+    function msToISO(ms) { return ms ? new Date(Number(ms)).toISOString() : ""; }
+    function csvEscape(v) {
+      if (v == null) return "";
+      const s = String(v);
+      return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+    }
+    function toCSV(rows, headers) {
+      const h = headers.join(",");
+      const body = rows.map(r => headers.map(h => csvEscape(r[h])).join(",")).join("\n");
+      return h + "\n" + body + "\n";
+    }
+    
+    // Unzip and extract SQLite
+    // Unzip and extract SQLite (supports anki21b via zstd-codec)
+async function extractDbBytesFromColpkg(file) {
+  setStatus("Reading archive…");
+  const zipReader = new zip.ZipReader(new zip.BlobReader(file));
+  const entries = await zipReader.getEntries();
+  log(`Archive has ${entries.length} entries`);
+
+  const preferred = ["collection.anki21", "collection.anki21b", "collection.anki2"];
+  const names = new Set(entries.map(e => e.filename));
+  const targetName = preferred.find(n => names.has(n));
+  if (!targetName) throw new Error("No collection.anki2/anki21/anki21b found in package.");
+  log(`Found ${targetName}`);
+
+  const entry = entries.find(e => e.filename === targetName);
+  const blob = await entry.getData(new zip.BlobWriter());
+  await zipReader.close();
+
+  // If it's already plain SQLite, return its bytes
+  if (targetName === "collection.anki2" || targetName === "collection.anki21") {
+    return await blob.arrayBuffer();
+  }
+
+  // ZSTD path: collection.anki21b → decompress to anki21
+  setStatus("Decompressing zstd (anki21b) …");
+  const inU8 = new Uint8Array(await blob.arrayBuffer());
+
+  // zstd-codec exposes a global ZstdCodec with a .run(cb) initializer.
+  const outBuf = await new Promise((resolve, reject) => {
+    if (typeof ZstdCodec === "undefined") {
+      reject(new Error("zstd-codec not loaded. Check the <script> tag in <head>."));
+      return;
+    }
+    try {
+      ZstdCodec.run((zstd) => {
+        try {
+          const simple = new zstd.Simple();
+          const outU8 = simple.decompress(inU8); // Uint8Array of the SQLite DB
+          resolve(outU8.buffer);
+        } catch (e) {
+          reject(e);
+        }
+      });
+    } catch (e) {
+      reject(e);
+    }
+  });
+
+  return outBuf; // ArrayBuffer of collection.anki21
+}
+
+    
+    // Parse DB → CSV
+    async function parseAndExport(file) {
+      await SQLReady;
+      const dbBytes = await extractDbBytesFromColpkg(file);
+      setStatus("Opening SQLite…");
+      const db = new SQL.Database(new Uint8Array(dbBytes));
+    
+      const colRes = db.exec("SELECT models, decks FROM col");
+      if (!colRes.length) throw new Error("No 'col' row found.");
+      const [modelsJSON, decksJSON] = colRes[0].values[0];
+      const models = JSON.parse(modelsJSON || "{}");
+      const decks = JSON.parse(decksJSON || "{}");
+    
+      const modelFields = new Map();
+      for (const [mid, model] of Object.entries(models))
+        modelFields.set(Number(mid), (model.flds || []).map((f, i) => f.name ?? `Field${i}`));
+    
+      const notes = db.exec("SELECT id, mid, tags, flds FROM notes")[0]?.values || [];
+      const cards = db.exec("SELECT id, nid, did, type FROM cards")[0]?.values || [];
+      const revlog = db.exec("SELECT cid, MAX(id) FROM revlog GROUP BY cid")[0]?.values || [];
+      const revMax = new Map(revlog.map(([cid, maxId]) => [cid, maxId]));
+    
+      const cardsByNote = new Map();
+      for (const [cid, nid, did, type] of cards) {
+        const arr = cardsByNote.get(nid) || [];
+        arr.push([cid, did, type]);
+        cardsByNote.set(nid, arr);
+      }
+    
+      const out = [];
+      for (const [note_id, mid, tags, flds] of notes) {
+        const values = String(flds || "").split(US);
+        const fields = modelFields.get(Number(mid)) || values.map((_, i) => `Field${i}`);
+        const term = pickField(fields, values, TERM_FIELDS);
+        const reading = pickField(fields, values, READING_FIELDS);
+        const meaning = pickField(fields, values, MEANING_FIELDS);
+        const sentence = pickField(fields, values, SENTENCE_FIELDS);
+    
+        const noteCards = cardsByNote.get(note_id) || [];
+        let isAllNew = true, maxMs = null;
+        const deckNames = new Set();
+        for (const [cid, did, type] of noteCards) {
+          const d = decks[String(did)];
+          if (d && d.name) deckNames.add(d.name);
+          if (type !== 0) isAllNew = false;
+          const m = revMax.get(cid);
+          if (m != null) maxMs = (maxMs == null || m > maxMs) ? m : maxMs;
+        }
+    
+        out.push({
+          note_id,
+          model_id: mid,
+          deck: Array.from(deckNames).sort().join(", "),
+          term: stripHtml(term),
+          reading: stripHtml(reading),
+          status: isAllNew ? "new" : "studied",
+          last_studied_at: maxMs ? msToISO(maxMs) : "",
+          translation: stripHtml(meaning),
+          example_sentence: stripHtml(sentence),
+          tags: String(tags || "").trim()
+        });
+      }
+    
+      const headers = ["note_id","model_id","deck","term","reading","status","last_studied_at","translation","example_sentence","tags"];
+      const csv = toCSV(out, headers);
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+    
+      const a = document.getElementById("download");
+      a.href = url;
+      a.download = "anki_terms.csv";
+      a.style.display = "inline-block";
+      a.textContent = "Download CSV";
+    
+      setStatus(`Done. ${out.length} rows.`);
+      log(`Extracted ${out.length} notes.`);
+    }
+    
+    // ---- wire UI ----
+    const fileEl = document.getElementById("file");
+    const btn = document.getElementById("parseBtn");
+    fileEl.addEventListener("change", () => {
+      btn.disabled = !fileEl.files?.length;
+      document.getElementById("download").style.display = "none";
+      setStatus(fileEl.files?.length ? "Ready to parse." : "Select a .colpkg/.apkg to begin.");
+    });
+    btn.addEventListener("click", async () => {
+      btn.disabled = true;
+      document.getElementById("download").style.display = "none";
+      logEl.textContent = "";
+      try {
+        if (!fileEl.files?.length) return;
+        await parseAndExport(fileEl.files[0]);
+      } catch (e) {
+        console.error(e);
+        setStatus("Error");
+        log(String(e?.message || e));
+      } finally {
+        btn.disabled = false;
+      }
+    });
+    </script>
+    
+</body>
+</html>
