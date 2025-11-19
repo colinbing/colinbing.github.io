@@ -5,12 +5,12 @@ const { traceRedirects } = require("./proxyUtils");
 
 // Simple spec thresholds (tune later)
 const SPEC = {
-  maxTotalKB: 1500,   // total weight limit
+  maxTotalKB: 400,    // suggested max total weight (KB)
   maxRequests: 50,    // total HTTP(S) requests
   maxLoadMs: 1500     // ad load time threshold
 };
 
-// Try to guess real click URLs, ignoring obvious ad-infrastructure URLs
+// Try to guess real click URLs, preferring final landing destinations
 function extractClickUrls(tagHTML) {
   const urls = new Set();
 
@@ -35,11 +35,38 @@ function extractClickUrls(tagHTML) {
   const all = Array.from(urls);
   if (!all.length) return all;
 
-  // Domains that are *infrastructure*, not final landing pages
-  const infraHostRx = /(googletagservices\.com|doubleclick\.net|googleads\.g\.doubleclick\.net|flashtalking\.com|adnxs\.com|adsystem\.com|adform\.net|criteo\.com|mathtag\.com)/i;
+  const infraHostRx = /(googletagservices\.com|doubleclick\.net|googleads\.g\.doubleclick\.net|googlesyndication\.com|flashtalking\.com|adnxs\.com|adsystem\.com|adform\.net|criteo\.com|mathtag\.com)/i;
 
-  // Prefer non-infra URLs
-  const filtered = all.filter(u => {
+  const candidates = [];
+
+  for (const u of all) {
+    let urlObj;
+    try {
+      urlObj = new URL(u);
+    } catch {
+      continue;
+    }
+
+    const host = urlObj.hostname;
+    const params = urlObj.searchParams;
+
+    // If the infra URL carries a "real" destination, pull it out.
+    const possibleParam =
+      params.get("adurl") ||
+      params.get("url") ||
+      params.get("redirect") ||
+      null;
+
+    if (possibleParam) {
+      candidates.push(possibleParam);
+    }
+
+    // Also keep the original URL as a candidate
+    candidates.push(u);
+  }
+
+  // Prefer non-infrastructure URLs
+  const nonInfra = candidates.filter((u) => {
     try {
       const host = new URL(u).hostname;
       return !infraHostRx.test(host);
@@ -48,10 +75,11 @@ function extractClickUrls(tagHTML) {
     }
   });
 
-  // If we found any non-infra URLs, use those; otherwise fall back to everything we saw.
-  return filtered.length ? filtered : all;
-}
+  if (nonInfra.length) return nonInfra;
 
+  // Fall back: at least return *something*
+  return candidates.length ? candidates : all;
+}
 
 async function validateTag({ tagHTML, timeoutMs = 15000 }) {
   const browser = await chromium.launch();
@@ -95,12 +123,21 @@ async function validateTag({ tagHTML, timeoutMs = 15000 }) {
   page.on("requestfailed", (req) => {
     const url = req.url();
     if (!/^https?:/i.test(url)) return;
+  
     const failure = req.failure();
+    const errorText = failure ? failure.errorText || "" : "";
+  
+    // Ignore common benign aborts (navigation, tracking pings)
+    if (/ERR_ABORTED/i.test(errorText)) return;
+    if (/pagead2\.googlesyndication\.com|ad\.doubleclick\.net/i.test(url)) {
+      if (/gen_204|pcs\/view/i.test(url)) return;
+    }
+  
     failedRequests.push({
       url,
-      error: failure ? failure.errorText : "unknown"
+      error: errorText || "unknown"
     });
-  });
+  });  
 
   // Capture console errors inside harness + iframe
   page.on("console", (msg) => {

@@ -55,19 +55,19 @@ function buildValidationHTML(v, index) {
 
   let html = `<strong>Tech Validation:</strong><br/>`;
   const status = String(v.status || "unknown").toUpperCase();
-  html += `Status: <strong>${escapeHTML(status)}</strong><br/>`;
+  html += `Status: <span class="metric-chip metric-chip-status">${escapeHTML(status)}</span><br/>`;
 
   if (v.timings && typeof v.timings.adLoadMs === "number") {
     const seconds = v.timings.adLoadMs / 1000;
-    html += `Load: ${seconds.toFixed(2)} s<br/>`;
+    html += `Load: <span class="metric-chip">${seconds.toFixed(2)} s</span><br/>`;
   }
 
   if (v.metrics) {
     if (typeof v.metrics.totalKB === "number") {
-      html += `Total weight: ${v.metrics.totalKB.toFixed(1)} KB<br/>`;
+      html += `Total weight: <span class="metric-chip">${v.metrics.totalKB.toFixed(1)} KB</span><br/>`;
     }
     if (typeof v.metrics.requestCount === "number") {
-      html += `Requests: ${v.metrics.requestCount}<br/>`;
+      html += `Requests: <span class="metric-chip">${v.metrics.requestCount}</span><br/>`;
     }
   }
 
@@ -84,7 +84,7 @@ function buildValidationHTML(v, index) {
     html += "<br/>No issues detected.";
   }
 
-  // Failed requests button (if any)
+  // Failed requests button (if any, after filtering)
   const failedCount =
     (v.metrics && typeof v.metrics.failedRequestCount === "number"
       ? v.metrics.failedRequestCount
@@ -95,9 +95,21 @@ function buildValidationHTML(v, index) {
   }
 
   if (v.landing && v.landing.primaryUrl) {
-    html += `<br/><br/><strong>Landing URL:</strong> ${escapeHTML(v.landing.primaryUrl)}<br/>`;
+    const url = v.landing.primaryUrl;
+    let statusText = "";
     if (v.landing.proxyResult && typeof v.landing.proxyResult.status === "number") {
-      html += `Landing status: ${v.landing.proxyResult.status}<br/>`;
+      const s = v.landing.proxyResult.status;
+      statusText = `${s} — ${describeHttpStatus(s)}`;
+    }
+
+    html += `<br/><br/><strong>Landing URL:</strong> <a href="${escapeHTML(
+      url
+    )}" target="_blank" rel="noopener" class="metric-chip metric-chip-link">${escapeHTML(
+      shortenUrl(url, 90)
+    )}</a><br/>`;
+
+    if (statusText) {
+      html += `Landing status: <span class="metric-chip">${escapeHTML(statusText)}</span><br/>`;
     }
   }
 
@@ -587,10 +599,10 @@ function renderCreativeTable(data) {
               <div class="preview-row-inner">
                 <iframe
                   id="preview-frame-${i}"
+                  class="preview-frame"
                   style="width:100%; height:${previewHeight}px; border:1px solid #ccc;"
                   sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
                 ></iframe>
-
                 <div class="preview-name"><strong>Creative:</strong> ${escapeHTML(c.creativeName)}</div>
                   <strong>Tag Test Results:</strong><br/>
                   ✅ <strong>HTTPS:</strong> ${c.httpsSafe ? "Yes" : "No"}<br/>
@@ -615,8 +627,8 @@ function renderCreativeTable(data) {
   container.innerHTML = `
     <table class="tag-table">
       <colgroup>
-        <col style="width:58%"><col style="width:10%"><col style="width:10%">
-        <col style="width:8%"><col style="width:8%"><col style="width:6%">
+        <col style="width:48%"><col style="width:14%"><col style="width:10%">
+        <col style="width:8%"><col style="width:10%"><col style="width:10%">
       </colgroup>
       <thead>
         <tr>
@@ -769,6 +781,21 @@ function escapeHTML(str) {
     '"': '&quot;',
     "'": '&#39;'
   })[m]);
+}
+
+function describeHttpStatus(status) {
+  if (typeof status !== "number") return "Unknown";
+  if (status >= 200 && status < 300) return "OK (2xx success)";
+  if (status >= 300 && status < 400) return "Redirect (3xx)";
+  if (status >= 400 && status < 500) return "Client error (4xx)";
+  if (status >= 500 && status < 600) return "Server error (5xx)";
+  return "Unknown";
+}
+
+function shortenUrl(url, maxLen = 80) {
+  if (!url) return "";
+  if (url.length <= maxLen) return url;
+  return url.slice(0, maxLen - 1) + "…";
 }
 
 
