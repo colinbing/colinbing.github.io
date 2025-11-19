@@ -360,12 +360,17 @@
     #spinner {
       position: fixed;
       inset: 0;
-      display: flex;
+      /* no display here */
       align-items: flex-start;
       justify-content: flex-end;
       padding: 16px 20px;
       pointer-events: none;
       z-index: 40;
+    }
+
+    /* when hidden class is applied, actually hide it */
+    #spinner.hidden {
+      display: none;
     }
 
     .spinner-circle {
@@ -379,6 +384,7 @@
       box-shadow: 0 12px 30px rgba(15, 23, 42, 0.25);
     }
 
+    /* you can keep this generic utility if you want it elsewhere */
     .hidden {
       display: none;
     }
@@ -387,6 +393,7 @@
       from { transform: rotate(0deg); }
       to { transform: rotate(360deg); }
     }
+
 
     /* FOOTER */
 
