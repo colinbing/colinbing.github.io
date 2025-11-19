@@ -17,22 +17,23 @@ function extractClickUrls(tagHTML) {
   // 1) href="https://..." or href='https://...'
   const hrefDouble = /href\s*=\s*"(\s*https?:\/\/[^"]+)"/gi;
   const hrefSingle = /href\s*=\s*'(\s*https?:\/\/[^']+)'/gi;
-
   let m;
-  while ((m = hrefDouble.exec(tagHTML)) !== null) {
-    urls.add(m[1].trim());
-  }
-  while ((m = hrefSingle.exec(tagHTML)) !== null) {
-    urls.add(m[1].trim());
-  }
+  while ((m = hrefDouble.exec(tagHTML)) !== null) urls.add(m[1].trim());
+  while ((m = hrefSingle.exec(tagHTML)) !== null) urls.add(m[1].trim());
 
-  // 2) Fallback: any bare http(s) URL in the tag
+  // 2) any bare http(s) URL
   const urlLoose = /(https?:\/\/[^\s"'<>]+)/gi;
-  while ((m = urlLoose.exec(tagHTML)) !== null) {
-    urls.add(m[1].trim());
-  }
+  while ((m = urlLoose.exec(tagHTML)) !== null) urls.add(m[1].trim());
 
-  return Array.from(urls);
+  const all = Array.from(urls);
+
+  // Drop obvious script/loader URLs – we care about click destinations
+  const filtered = all.filter((u) => {
+    if (/\.(js|css)(?:[?#]|$)/i.test(u)) return false;
+    return true;
+  });
+
+  return filtered.length ? filtered : all;
 }
 
 async function validateTag({ tagHTML, timeoutMs = 15000 }) {
@@ -161,10 +162,12 @@ async function validateTag({ tagHTML, timeoutMs = 15000 }) {
 
     // Slow load warning (based on adLoadMs)
     if (adLoadMs > SPEC.maxLoadMs) {
+      const loadSec = (adLoadMs / 1000).toFixed(2);
+      const limitSec = (SPEC.maxLoadMs / 1000).toFixed(2);
       issues.push({
         code: "SLOW_LOAD",
         severity: "warn",
-        message: `Ad load time ${adLoadMs}ms exceeds threshold ${SPEC.maxLoadMs}ms`
+        message: `Ad load time ${loadSec}s exceeds threshold ${limitSec}s`
       });
     }
 
@@ -231,11 +234,25 @@ async function validateTag({ tagHTML, timeoutMs = 15000 }) {
         maxRedirects: 10,
         timeoutMs: 10000
       });
-
+  
+      // Try to pick the final user-facing URL
+      let displayUrl = primaryUrl;
+      if (landingResult) {
+        if (Array.isArray(landingResult.redirects) && landingResult.redirects.length) {
+          const last = landingResult.redirects[landingResult.redirects.length - 1];
+          if (last && last.url) displayUrl = last.url;
+        } else if (landingResult.finalUrl) {
+          displayUrl = landingResult.finalUrl;
+        } else if (landingResult.url) {
+          displayUrl = landingResult.url;
+        }
+      }
+  
       landing = {
         primaryUrl,
+        displayUrl,
         proxyResult: landingResult
-      };
+      };  
 
       // Flag if landing looks broken
       if (
