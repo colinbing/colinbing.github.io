@@ -1,6 +1,108 @@
 let creatives = [];
 const EXCLUDED_SHEETS_RX = /legacy/i; // ignore sheets like "Legacy Tags"
 
+// ---------- Backend validation API ----------
+const TAGSAFE_API_BASE = "http://localhost:8787"; // your Node/Playwright server
+
+async function validateTagOnServer(tagHTML) {
+  const res = await fetch(`${TAGSAFE_API_BASE}/api/validate/tag`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ tagHTML }),
+  });
+
+  if (!res.ok) {
+    const text = await res.text().catch(() => "");
+    throw new Error(`Server error ${res.status}: ${text}`);
+  }
+
+  return res.json();
+}
+
+function buildValidationHTML(v) {
+  if (!v) {
+    return "<em>Validation not run yet.</em>";
+  }
+
+  if (v.ok === false && v.error) {
+    return `<strong>Validation failed:</strong> ${escapeHTML(v.error)}`;
+  }
+
+  let html = `<strong>Tech Validation:</strong><br/>`;
+  const status = String(v.status || "unknown").toUpperCase();
+  html += `Status: <strong>${escapeHTML(status)}</strong><br/>`;
+
+  if (v.timings && typeof v.timings.adLoadMs === "number") {
+    html += `Load: ${Math.round(v.timings.adLoadMs)} ms<br/>`;
+  }
+
+  if (v.metrics) {
+    if (typeof v.metrics.totalKB === "number") {
+      html += `Total weight: ${v.metrics.totalKB.toFixed(1)} KB<br/>`;
+    }
+    if (typeof v.metrics.requestCount === "number") {
+      html += `Requests: ${v.metrics.requestCount}<br/>`;
+    }
+  }
+
+  if (Array.isArray(v.issues) && v.issues.length) {
+    html += "<br/><strong>Issues:</strong><br/><ul>";
+    v.issues.forEach(issue => {
+      const sev = (issue.severity || "").toUpperCase();
+      const code = issue.code || "";
+      const msg = issue.message || "";
+      html += `<li>[${escapeHTML(sev)}] ${escapeHTML(code)}: ${escapeHTML(msg)}</li>`;
+    });
+    html += "</ul>";
+  } else {
+    html += "<br/>No issues detected.";
+  }
+
+  if (v.landing && v.landing.primaryUrl) {
+    html += `<br/><strong>Landing URL:</strong> ${escapeHTML(v.landing.primaryUrl)}<br/>`;
+    if (v.landing.proxyResult && typeof v.landing.proxyResult.status === "number") {
+      html += `Landing status: ${v.landing.proxyResult.status}<br/>`;
+    }
+  }
+
+  return html;
+}
+
+async function runValidationForCreative(index) {
+  const c = creatives[index];
+  const container = document.getElementById(`validation-${index}`);
+  if (!c || !container) return;
+
+  // If already validated, just render existing result
+  if (c.validation) {
+    container.innerHTML = buildValidationHTML(c.validation);
+    return;
+  }
+
+  container.innerHTML = "<em>Running validation…</em>";
+
+  try {
+    const result = await validateTagOnServer(c.tag);
+    c.validation = result;
+    container.innerHTML = buildValidationHTML(result);
+  } catch (err) {
+    const msg = err && err.message ? err.message : String(err);
+    const fail = {
+      ok: false,
+      status: "fail",
+      error: msg,
+      issues: [
+        {
+          code: "VALIDATION_REQUEST_FAILED",
+          severity: "error",
+          message: msg,
+        },
+      ],
+    };
+    c.validation = fail;
+    container.innerHTML = buildValidationHTML(fail);
+  }
+}
 
 // ---------- Drag & Drop / File Input wiring ----------
 document.addEventListener("DOMContentLoaded", () => {
@@ -349,7 +451,7 @@ function renderCreativeTable(data) {
         <td class="col-action"><button class="action-btn" onclick="togglePreview(${i}, this)">Preview</button></td>
       </tr>`;
 
-    const trackerPreview = `
+        const trackerPreview = `
       <tr id="preview-row-${i}" class="preview-row" style="display:none;">
         <td colspan="6" id="preview-cell-${i}">
           <div class="preview-name"><strong>Creative:</strong> ${escapeHTML(c.creativeName)}</div>
@@ -363,12 +465,14 @@ function renderCreativeTable(data) {
             ${c.placementId ? `✅ <strong>Placement ID:</strong> ${escapeHTML(c.placementId)}<br/>` : ""}
             ${c.sourceSheet ? `✅ <strong>Sheet:</strong> ${escapeHTML(c.sourceSheet)}<br/>` : ""}
             <br/>
+            <div id="validation-${i}" class="validation-block"><em>Validation not run yet.</em></div>
+            <br/>
             <pre id="raw-tag-${i}" style="white-space:pre-wrap; word-break:break-word;">${escapeHTML(c.tag)}</pre>
           </div>
         </td>
       </tr>`;
 
-    const creativePreview = `
+        const creativePreview = `
       <tr id="preview-row-${i}" class="preview-row" style="display:none;">
         <td colspan="6" id="preview-cell-${i}">
           <iframe id="preview-frame-${i}" style="width:100%; height:${previewHeight}px; border:1px solid #ccc;" sandbox="allow-scripts allow-same-origin"></iframe>
@@ -382,11 +486,14 @@ function renderCreativeTable(data) {
             ${c.placementId ? `✅ <strong>Placement ID:</strong> ${escapeHTML(c.placementId)}<br/>` : ""}
             ${c.sourceSheet ? `✅ <strong>Sheet:</strong> ${escapeHTML(c.sourceSheet)}<br/>` : ""}
             <br/>
+            <div id="validation-${i}" class="validation-block"><em>Validation not run yet.</em></div>
+            <br/>
             <button onclick="toggleRawTag(${i}, this)">Show Raw Tag</button>
             <pre id="raw-tag-${i}" style="display:none; white-space:pre-wrap; word-break:break-word;">${escapeHTML(c.tag)}</pre>
           </div>
         </td>
       </tr>`;
+
 
     return summaryRow + (isTracker ? trackerPreview : creativePreview);
   }).join("");
@@ -424,12 +531,16 @@ function togglePreview(index, btn) {
   // Keep width & placement stable by fixing button width via CSS
   btn.textContent = visible ? "Preview" : "Hide Preview";
 
-  if (frame && !visible) {
-    frame.style.height = `${calculatePreviewHeight(creatives[index].dimensions)}px`;
-    frame.srcdoc = creatives[index].tag;
+  if (!visible) {
+    // Just opened
+    if (frame) {
+      frame.style.height = `${calculatePreviewHeight(creatives[index].dimensions)}px`;
+      frame.srcdoc = creatives[index].tag;
+    }
+    // Trigger backend validation for this creative
+    runValidationForCreative(index);
   }
 }
-
 
 function toggleRawTag(index, btn) {
   const pre = document.getElementById(`raw-tag-${index}`);
