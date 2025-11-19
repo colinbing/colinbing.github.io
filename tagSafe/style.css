@@ -126,8 +126,10 @@ body {
 }
 
 .creative-table-shell {
+  border-top: 1px solid var(--border-subtle);
   padding-top: 6px;
   padding-bottom: 10px;
+  overflow-x: auto;          /* key for Firefox */
 }
 
 .creative-table-shell.has-data {
@@ -296,6 +298,11 @@ button {
   font-size: 0.85rem;
 }
 
+.col-name .name-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  white-space: nowrap;
+}
 
 .tag-table th,
 .tag-table td {
@@ -406,6 +413,10 @@ button {
   padding: 0;
   white-space: normal;
   text-align: left;
+}
+
+.preview-row-inner {
+  padding: 10px 12px 14px;
 }
 
 .preview-shell {

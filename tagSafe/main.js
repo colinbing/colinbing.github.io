@@ -44,7 +44,7 @@ function buildFailedRequestsTooltip(v) {
   return lines.join("\n");
 }
 
-function buildValidationHTML(v) {
+function buildValidationHTML(v, index) {
   if (!v) {
     return "<em>Validation not run yet.</em>";
   }
@@ -57,10 +57,9 @@ function buildValidationHTML(v) {
   const status = String(v.status || "unknown").toUpperCase();
   html += `Status: <strong>${escapeHTML(status)}</strong><br/>`;
 
-  // Load time in seconds
   if (v.timings && typeof v.timings.adLoadMs === "number") {
-    const sec = (v.timings.adLoadMs / 1000).toFixed(2);
-    html += `Load: ${sec} s<br/>`;
+    const seconds = v.timings.adLoadMs / 1000;
+    html += `Load: ${seconds.toFixed(2)} s<br/>`;
   }
 
   if (v.metrics) {
@@ -72,23 +71,6 @@ function buildValidationHTML(v) {
     }
   }
 
-  // Failed requests hover tooltip
-  const failedCount =
-    (v.metrics && typeof v.metrics.failedRequestCount === "number"
-      ? v.metrics.failedRequestCount
-      : (Array.isArray(v.failedRequests) ? v.failedRequests.length : 0));
-
-  if (failedCount > 0 && Array.isArray(v.failedRequests) && v.failedRequests.length) {
-    const tooltip = v.failedRequests
-      .map(fr => `${fr.status || fr.error || ""} — ${fr.url}`)
-      .join("\n");
-
-    html += `<button class="mini-link" title="${escapeHTML(tooltip)}">
-      View failed requests (${failedCount})
-    </button><br/>`;
-  }
-
-  // Issues list (as before)
   if (Array.isArray(v.issues) && v.issues.length) {
     html += "<br/><strong>Issues:</strong><br/><ul>";
     v.issues.forEach(issue => {
@@ -102,12 +84,18 @@ function buildValidationHTML(v) {
     html += "<br/>No issues detected.";
   }
 
-  // Landing URL – prefer displayUrl if present
-  if (v.landing) {
-    const url = v.landing.displayUrl || v.landing.primaryUrl;
-    if (url) {
-      html += `<br/><strong>Landing URL:</strong> ${escapeHTML(url)}<br/>`;
-    }
+  // Failed requests button (if any)
+  const failedCount =
+    (v.metrics && typeof v.metrics.failedRequestCount === "number"
+      ? v.metrics.failedRequestCount
+      : 0);
+
+  if (failedCount > 0) {
+    html += `<br/><button type="button" class="failed-req-btn" onclick="showFailedRequests(${index})">View failed requests (${failedCount})</button>`;
+  }
+
+  if (v.landing && v.landing.primaryUrl) {
+    html += `<br/><br/><strong>Landing URL:</strong> ${escapeHTML(v.landing.primaryUrl)}<br/>`;
     if (v.landing.proxyResult && typeof v.landing.proxyResult.status === "number") {
       html += `Landing status: ${v.landing.proxyResult.status}<br/>`;
     }
@@ -123,7 +111,7 @@ async function runValidationForCreative(index) {
 
   // If already validated, just render existing result
   if (c.validation) {
-    container.innerHTML = buildValidationHTML(c.validation);
+    container.innerHTML = buildValidationHTML(c.validation, index);
     return;
   }
 
@@ -135,7 +123,7 @@ async function runValidationForCreative(index) {
     creatives[index].validation = result;
     updateStatusCell(index);
 
-    container.innerHTML = buildValidationHTML(result);
+    container.innerHTML = buildValidationHTML(result, index);
   } catch (err) {
     const msg = err && err.message ? err.message : String(err);
     const fail = {
@@ -152,7 +140,7 @@ async function runValidationForCreative(index) {
     };
     c.validation = fail;
     updateStatusCell(index);
-    container.innerHTML = buildValidationHTML(fail);
+    container.innerHTML = buildValidationHTML(fail, index);
   }
 }
 
@@ -230,14 +218,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const rulesBtn = document.querySelector(".rules-badge");
   if (rulesBtn) {
     rulesBtn.addEventListener("click", () => {
-      alert(
-        "Current rules:\\n" +
-        "• Load time ≤ 1.5 s\\n" +
-        "• Total weight ≤ 1.5 MB (1500 KB)\\n" +
-        "• Requests ≤ 50\\n" +
-        "• No HTTP 4xx/5xx or failed requests\\n" +
-        "• Landing page returns 2xx/3xx"
-      );
+      alert(rulesBtn.title);
     });
   }
 });
@@ -555,9 +536,12 @@ function renderCreativeTable(data) {
     const previewHeight = calculatePreviewHeight(c.dimensions);
     const isTracker = c.type === "Tracker Tag" || c.dimensions === "1x1";
 
+    const safeName = escapeHTML(c.creativeName);
     const nameCell = `
-      <td class="col-name" title="${escapeHTML(c.creativeName)}" aria-label="${escapeHTML(c.creativeName)}">
-        ${escapeHTML(c.creativeName)}
+      <td class="col-name">
+        <div class="name-scroll" title="${safeName}" aria-label="${safeName}">
+          ${safeName}
+        </div>
       </td>`;
 
       const summaryRow = `
@@ -573,11 +557,10 @@ function renderCreativeTable(data) {
       </tr>`;    
 
       const trackerPreview = `
-        <tr id="preview-row-${i}" class="preview-row" style="display:none;">
-          <td colspan="6" id="preview-cell-${i}">
-            <div class="preview-shell">
-              <div class="preview-details">
-                <div class="preview-name"><strong>Creative:</strong> ${escapeHTML(c.creativeName)}</div>
+      <tr id="preview-row-${i}" class="preview-row" style="display:none;">
+        <td colspan="6" id="preview-cell-${i}">
+          <div class="preview-row-inner">
+            <div class="preview-name"><strong>Creative:</strong> ${escapeHTML(c.creativeName)}</div>
                 <div style="margin-top:6px;">
                   <em>Tracker (1×1) — no visual preview. Raw tag shown below.</em><br/><br/>
                   <strong>Tag Test Results:</strong><br/>
@@ -601,16 +584,14 @@ function renderCreativeTable(data) {
         const creativePreview = `
           <tr id="preview-row-${i}" class="preview-row" style="display:none;">
             <td colspan="6" id="preview-cell-${i}">
-              <div class="preview-shell">
+              <div class="preview-row-inner">
                 <iframe
                   id="preview-frame-${i}"
-                  class="preview-frame"
-                  style="height:${previewHeight}px;"
-                  sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-top-navigation-by-user-activation"
+                  style="width:100%; height:${previewHeight}px; border:1px solid #ccc;"
+                  sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
                 ></iframe>
 
-                <div class="preview-details">
-                  <div class="preview-name"><strong>Creative:</strong> ${escapeHTML(c.creativeName)}</div>
+                <div class="preview-name"><strong>Creative:</strong> ${escapeHTML(c.creativeName)}</div>
                   <strong>Tag Test Results:</strong><br/>
                   ✅ <strong>HTTPS:</strong> ${c.httpsSafe ? "Yes" : "No"}<br/>
                   ✅ <strong>Valid Syntax:</strong> ${c.isValid ? "Yes" : "No"}<br/>
@@ -665,31 +646,27 @@ function togglePreview(index, btn) {
   const row = document.getElementById(`preview-row-${index}`);
   const frame = document.getElementById(`preview-frame-${index}`);
   const visible = row.style.display === "table-row";
-
   row.style.display = visible ? "none" : "table-row";
+
   btn.textContent = visible ? "Preview" : "Hide Preview";
 
-  if (!visible && frame) {
-    const adHTML = creatives[index].tag;
-    const height = calculatePreviewHeight(creatives[index].dimensions);
-    frame.style.height = `${height}px`;
+  if (!visible) {
+    if (frame) {
+      const tagHTML = creatives[index].tag || "";
+      const height = calculatePreviewHeight(creatives[index].dimensions);
 
-    frame.srcdoc = `
+      const wrapped = `
 <!doctype html>
 <html>
   <head>
-    <meta charset="utf-8" />
+    <base target="_blank">
     <style>
-      html, body { margin: 0; padding: 0; overflow: hidden; }
+      html, body { margin:0; padding:0; overflow:hidden; }
     </style>
   </head>
   <body>
-    <div id="ad-slot"></div>
     <script>
-      // Inject the original tag HTML
-      document.getElementById("ad-slot").innerHTML = ${JSON.stringify(adHTML)};
-
-      // Intercept anchor clicks and open in a new tab
+      // Intercept clicks on <a> and open in a new tab
       document.addEventListener("click", function (e) {
         var a = e.target.closest("a");
         if (a && a.href) {
@@ -697,16 +674,20 @@ function togglePreview(index, btn) {
           window.open(a.href, "_blank");
         }
       }, true);
-    <\/script>
+    </script>
+    ${tagHTML}
   </body>
 </html>`;
-  }
 
-  if (!visible) {
-    // Kick off server validation for this creative
+      frame.style.height = `${height}px`;
+      frame.srcdoc = wrapped;
+    }
+
+    // Trigger backend validation for this creative
     runValidationForCreative(index);
   }
 }
+
 
 function toggleRawTag(index, btn) {
   const pre = document.getElementById(`raw-tag-${index}`);
@@ -754,6 +735,31 @@ function updateStatusCell(index) {
     </span>
   `;
 }
+
+function showFailedRequests(index) {
+  const c = creatives[index];
+  if (!c || !c.validation) {
+    alert("No validation details available for this creative yet.");
+    return;
+  }
+
+  const v = c.validation;
+  const failed = (v.failedRequests || []).concat(v.brokenAssets || []);
+
+  if (!failed.length) {
+    alert("No failed or broken requests were recorded for this creative.");
+    return;
+  }
+
+  const lines = failed.map((r, i) => {
+    const url = r.url || (r.request && r.request.url) || "unknown";
+    const status = r.status != null ? `status ${r.status}` : (r.error || "failed");
+    return `${i + 1}. ${url}\n   → ${status}`;
+  });
+
+  alert("Failed / broken requests:\n\n" + lines.join("\n\n"));
+}
+
 
 function escapeHTML(str) {
   return str.replace(/[&<>"']/g, m => ({

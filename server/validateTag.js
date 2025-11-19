@@ -10,31 +10,48 @@ const SPEC = {
   maxLoadMs: 1500     // ad load time threshold
 };
 
-// Very simple static click URL extractor
+// Try to guess real click URLs, ignoring obvious ad-infrastructure URLs
 function extractClickUrls(tagHTML) {
   const urls = new Set();
 
   // 1) href="https://..." or href='https://...'
   const hrefDouble = /href\s*=\s*"(\s*https?:\/\/[^"]+)"/gi;
   const hrefSingle = /href\s*=\s*'(\s*https?:\/\/[^']+)'/gi;
-  let m;
-  while ((m = hrefDouble.exec(tagHTML)) !== null) urls.add(m[1].trim());
-  while ((m = hrefSingle.exec(tagHTML)) !== null) urls.add(m[1].trim());
 
-  // 2) any bare http(s) URL
+  let m;
+  while ((m = hrefDouble.exec(tagHTML)) !== null) {
+    urls.add(m[1].trim());
+  }
+  while ((m = hrefSingle.exec(tagHTML)) !== null) {
+    urls.add(m[1].trim());
+  }
+
+  // 2) Any bare http(s) URL in the tag
   const urlLoose = /(https?:\/\/[^\s"'<>]+)/gi;
-  while ((m = urlLoose.exec(tagHTML)) !== null) urls.add(m[1].trim());
+  while ((m = urlLoose.exec(tagHTML)) !== null) {
+    urls.add(m[1].trim());
+  }
 
   const all = Array.from(urls);
+  if (!all.length) return all;
 
-  // Drop obvious script/loader URLs – we care about click destinations
-  const filtered = all.filter((u) => {
-    if (/\.(js|css)(?:[?#]|$)/i.test(u)) return false;
-    return true;
+  // Domains that are *infrastructure*, not final landing pages
+  const infraHostRx = /(googletagservices\.com|doubleclick\.net|googleads\.g\.doubleclick\.net|flashtalking\.com|adnxs\.com|adsystem\.com|adform\.net|criteo\.com|mathtag\.com)/i;
+
+  // Prefer non-infra URLs
+  const filtered = all.filter(u => {
+    try {
+      const host = new URL(u).hostname;
+      return !infraHostRx.test(host);
+    } catch {
+      return true;
+    }
   });
 
+  // If we found any non-infra URLs, use those; otherwise fall back to everything we saw.
   return filtered.length ? filtered : all;
 }
+
 
 async function validateTag({ tagHTML, timeoutMs = 15000 }) {
   const browser = await chromium.launch();
