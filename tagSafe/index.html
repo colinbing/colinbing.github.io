@@ -2,38 +2,105 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>TagSafe</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TagSafe — Ad Tag Validator</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <img class="tagsafe-logo" src="/images/logos/tagsafe-logo.PNG" alt="Project 1">
-  <div class="input-area">
-    <textarea id="tagInput" placeholder="Paste single tag here..."></textarea>
-    <div class="buttons">
-      <button onclick="analyzeSingleTag()">Analyze Tag</button>
-      <button onclick="clearTagInput()">Clear</button>
+  <div class="app-shell">
+    <!-- Top header -->
+    <header class="ts-header">
+      <div class="ts-brand">
+        <img
+          class="tagsafe-logo"
+          src="/images/logos/tagsafe-logo.PNG"
+          alt="TagSafe"
+        />
+      </div>
+      <div class="ts-header-meta">
+        <span class="badge badge-soft">internal tool</span>
+        <span class="badge badge-accent">beta</span>
+      </div>
+    </header>
+
+    <div class="ts-subheader">
+      <p>Fast, opinionated QA for 3rd-party ad tags.</p>
     </div>
+
+    <main class="ts-main">
+      <!-- Single tag card -->
+      <section class="card card-input">
+        <div class="card-header">
+          <h2>Single tag sandbox</h2>
+          <p>Paste a single tag to quickly preview and validate it.</p>
+        </div>
+        <div class="card-body">
+          <label for="tagInput" class="field-label">Tag HTML / JS</label>
+          <textarea
+            id="tagInput"
+            placeholder="Paste single tag here…"
+          ></textarea>
+
+          <div class="button-row">
+            <button class="btn btn-primary" onclick="analyzeSingleTag()">
+              Analyze tag
+            </button>
+            <button class="btn btn-ghost" onclick="clearTagInput()">
+              Clear
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Bulk upload card -->
+      <section class="card card-upload">
+        <div class="card-header">
+          <h2>Bulk tagsheet upload</h2>
+          <p>
+            Drag in a tagsheet to auto-detect creatives, tags, and run validation across all rows.
+          </p>
+        </div>
+        <div class="card-body">
+          <div id="uploadArea" class="dropzone">
+            <p class="dropzone-title">
+              Drag &amp; drop a tagsheet (<strong>.xlsx / .xls / .csv</strong>) here, or
+            </p>
+            <label class="file-input-label">
+              <input
+                id="fileInput"
+                type="file"
+                accept=".xlsx,.xls,.csv"
+              />
+              <span>Choose file</span>
+            </label>
+          </div>
+          <div id="globalValidationStatus" class="validation-status"></div>
+        </div>
+      </section>
+
+      <!-- Results card -->
+      <section class="card card-results">
+        <div class="card-header">
+          <h2>Creatives &amp; validation</h2>
+          <p>
+            Preview each creative, inspect the raw tag, and review technical checks (load, weight, landing page, console errors, more).
+          </p>
+        </div>
+        <div class="card-body card-body-results">
+          <div id="creativeTable" class="creative-table-shell">
+            <!-- Filled by main.js -->
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer id="footer">
+      <p>&copy;2025 Colin Bingham — TagSafe. Built on GitHub Pages.</p>
+    </footer>
   </div>
 
-  <div id="creativeTable"></div>
-<!-- SheetJS (xlsx) -->
+  <!-- SheetJS (xlsx) -->
   <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
-
-  <div id="uploadArea" class="dropzone">
-    <p><strong>Drag & drop</strong> a tagsheet (.xlsx/.xls/.csv) here, or</p>
-    <input id="fileInput" type="file" accept=".xlsx,.xls,.csv" />
-  </div>
-  <div id="globalValidationStatus" style="margin-top: 8px; font-size: 0.9rem; color: #555;"></div>
-
-  <div id="creativeTable"></div>
   <script src="main.js"></script>
 </body>
-  <footer id="footer">
-    <div class="col-md-12 text-center copyright bg-dark my-auto">
-      <p>&copy;2025 Colin Bingham | Built in GitHub Pages</p>
-    </div>
-  </footer>
 </html>
-
-
