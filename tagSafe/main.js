@@ -19,6 +19,31 @@ async function validateTagOnServer(tagHTML) {
   return res.json();
 }
 
+function formatMsToSeconds(ms) {
+  if (typeof ms !== "number" || !isFinite(ms)) return "—";
+  return (ms / 1000).toFixed(2) + " s";
+}
+
+function buildFailedRequestsTooltip(v) {
+  const failed = (v && v.failedRequests) || [];
+  const broken = (v && v.brokenAssets) || [];
+  const all = [...failed, ...broken];
+  if (!all.length) return "";
+
+  const lines = all.slice(0, 10).map(item => {
+    const url = item.url || "";
+    const short = url.length > 80 ? url.slice(0, 77) + "…" : url || "<unknown>";
+    const status = item.status || item.error || "ERR";
+    return `${status} – ${short}`;
+  });
+
+  if (all.length > 10) {
+    lines.push(`… +${all.length - 10} more`);
+  }
+
+  return lines.join("\n");
+}
+
 function buildValidationHTML(v) {
   if (!v) {
     return "<em>Validation not run yet.</em>";
@@ -32,19 +57,40 @@ function buildValidationHTML(v) {
   const status = String(v.status || "unknown").toUpperCase();
   html += `Status: <strong>${escapeHTML(status)}</strong><br/>`;
 
+  // Timings → seconds for readability
   if (v.timings && typeof v.timings.adLoadMs === "number") {
-    html += `Load: ${Math.round(v.timings.adLoadMs)} ms<br/>`;
+    const loadSec = formatMsToSeconds(v.timings.adLoadMs);
+    html += `Load: ${loadSec}<br/>`;
   }
+
+  // Metrics (weight + request counts)
+  let totalKB = null;
+  let requestCount = null;
+  let failedCount = 0;
 
   if (v.metrics) {
     if (typeof v.metrics.totalKB === "number") {
-      html += `Total weight: ${v.metrics.totalKB.toFixed(1)} KB<br/>`;
+      totalKB = v.metrics.totalKB;
+      html += `Total weight: ${totalKB.toFixed(1)} KB<br/>`;
     }
     if (typeof v.metrics.requestCount === "number") {
-      html += `Requests: ${v.metrics.requestCount}<br/>`;
+      requestCount = v.metrics.requestCount;
+      html += `Requests: ${requestCount}<br/>`;
+    }
+    if (typeof v.metrics.failedRequestCount === "number") {
+      failedCount = v.metrics.failedRequestCount;
     }
   }
 
+  // Also count brokenAssets if present
+  if (Array.isArray(v.brokenAssets)) {
+    failedCount = Math.max(failedCount, v.brokenAssets.length);
+  }
+  if (!failedCount && Array.isArray(v.failedRequests)) {
+    failedCount = v.failedRequests.length;
+  }
+
+  // Issues list
   if (Array.isArray(v.issues) && v.issues.length) {
     html += "<br/><strong>Issues:</strong><br/><ul>";
     v.issues.forEach(issue => {
@@ -58,8 +104,17 @@ function buildValidationHTML(v) {
     html += "<br/>No issues detected.";
   }
 
+  // Optional hover pill listing failed requests
+  if (failedCount > 0) {
+    const tip = buildFailedRequestsTooltip(v);
+    if (tip) {
+      html += `<br/><span class="hint-pill" title="${escapeHTML(tip)}">View failed requests (${failedCount})</span>`;
+    }
+  }
+
+  // Landing URL (already using click URL from backend)
   if (v.landing && v.landing.primaryUrl) {
-    html += `<br/><strong>Landing URL:</strong> ${escapeHTML(v.landing.primaryUrl)}<br/>`;
+    html += `<br/><br/><strong>Landing URL:</strong> ${escapeHTML(v.landing.primaryUrl)}<br/>`;
     if (v.landing.proxyResult && typeof v.landing.proxyResult.status === "number") {
       html += `Landing status: ${v.landing.proxyResult.status}<br/>`;
     }
@@ -84,6 +139,9 @@ async function runValidationForCreative(index) {
   try {
     const result = await validateTagOnServer(c.tag);
     c.validation = result;
+    creatives[index].validation = result;
+    updateStatusCell(index);
+
     container.innerHTML = buildValidationHTML(result);
   } catch (err) {
     const msg = err && err.message ? err.message : String(err);
@@ -100,44 +158,54 @@ async function runValidationForCreative(index) {
       ],
     };
     c.validation = fail;
+    updateStatusCell(index);
     container.innerHTML = buildValidationHTML(fail);
   }
 }
 
+function setValidationStatus(message, current, total) {
+  const top = document.getElementById("globalValidationStatus");
+  const foot = document.getElementById("validationProgressFooter");
+  const bar = document.getElementById("validationProgressBar");
+
+  if (top) top.textContent = message || "";
+  if (foot) foot.textContent = message || "";
+
+  if (bar && bar.parentElement) {
+    if (typeof current === "number" && typeof total === "number" && total > 0) {
+      const pct = Math.min(100, Math.max(0, Math.round((current / total) * 100)));
+      bar.style.width = pct + "%";
+      bar.parentElement.style.opacity = 1;
+    } else {
+      bar.style.width = "0%";
+      bar.parentElement.style.opacity = 0;
+    }
+  }
+}
+
 async function validateAllCreativesSequential() {
-  const statusEl = document.getElementById("globalValidationStatus");
-  if (!creatives || creatives.length === 0) {
-    if (statusEl) statusEl.textContent = "";
+  const total = creatives ? creatives.length : 0;
+  if (!total) {
+    setValidationStatus("", null, null);
     return;
   }
 
-  if (statusEl) {
-    statusEl.textContent = `Running validation for ${creatives.length} tag(s)…`;
-  }
-
-  // Sequential to avoid hammering the backend / CPU
-  for (let i = 0; i < creatives.length; i++) {
+  // Kick off validation sequentially to avoid hammering backend
+  for (let i = 0; i < total; i++) {
     const c = creatives[i];
     if (!c) continue;
 
-    if (statusEl) {
-      statusEl.textContent = `Validating ${i + 1} / ${creatives.length}…`;
-    }
+    setValidationStatus(`Validating ${i + 1} / ${total}…`, i, total);
 
     try {
-      // This will populate creatives[i].validation and update #validation-i
       await runValidationForCreative(i);
     } catch (err) {
-      // runValidationForCreative already handles errors into the UI
       console.error("Validation error for creative", i, err);
     }
   }
 
-  if (statusEl) {
-    statusEl.textContent = `Validation complete for ${creatives.length} tag(s).`;
-  }
+  setValidationStatus(`Validation complete for ${total} tag(s).`, total, total);
 }
-
 
 // ---------- Drag & Drop / File Input wiring ----------
 document.addEventListener("DOMContentLoaded", () => {
@@ -482,20 +550,17 @@ function renderCreativeTable(data) {
         ${escapeHTML(c.creativeName)}
       </td>`;
 
-    const summaryRow = `
+      const summaryRow = `
       <tr class="main-row">
         ${nameCell}
         <td class="col-type">${c.type}</td>
         <td class="col-vendor">${c.vendor}</td>
         <td class="col-size"><span class="dim-chip">${c.dimensions}</span></td>
-        <td
-          class="col-status ${statusClass}"
-          id="${statusCellId}"
-        >
+        <td id="status-cell-${i}" class="col-status ${statusClass}">
           ${statusText}
         </td>
         <td class="col-action"><button class="action-btn" onclick="togglePreview(${i}, this)">Preview</button></td>
-      </tr>`;
+      </tr>`;    
 
         const trackerPreview = `
       <tr id="preview-row-${i}" class="preview-row" style="display:none;">
@@ -521,7 +586,12 @@ function renderCreativeTable(data) {
         const creativePreview = `
       <tr id="preview-row-${i}" class="preview-row" style="display:none;">
         <td colspan="6" id="preview-cell-${i}">
-          <iframe id="preview-frame-${i}" style="width:100%; height:${previewHeight}px; border:1px solid #ccc;" sandbox="allow-scripts allow-same-origin"></iframe>
+          <iframe
+            id="preview-frame-${i}"
+            style="width:100%; height:${previewHeight}px; border:1px solid #ccc;"
+            sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
+          ></iframe>
+
           <div style="margin:10px">
             <div class="preview-name"><strong>Creative:</strong> ${escapeHTML(c.creativeName)}</div>
             <strong>Tag Test Results:</strong><br/>
@@ -563,6 +633,15 @@ function renderCreativeTable(data) {
       <tbody>${rows}</tbody>
     </table>
   `;
+
+  const shell = document.getElementById("creativeTableShell");
+    if (shell) {
+      if (data && data.length) {
+        shell.classList.add("has-data");
+      } else {
+        shell.classList.remove("has-data");
+      }
+    }
 }
 
 
@@ -594,6 +673,41 @@ function toggleRawTag(index, btn) {
   pre.style.display = isVisible ? "none" : "block";
   btn.textContent = isVisible ? "Show Raw Tag" : "Hide Raw Tag";
 }
+
+function updateStatusCell(index) {
+  const creative = creatives[index];
+  const cell = document.getElementById(`status-cell-${index}`);
+  if (!cell) return;
+
+  const v = creative.validation;
+
+  let label = "Queued";
+  let cls = "status-pass";
+
+  if (!v) {
+    label = "Queued";
+    cls = "status-pass";
+  } else if (!v.ok) {
+    label = "Error";
+    cls = "status-fail";
+  } else if (v.status === "fail") {
+    const n = (v.issues && v.issues.length) || 1;
+    label = `${n} issue${n === 1 ? "" : "s"}`;
+    cls = "status-fail";
+  } else if (v.status === "warn") {
+    const n = (v.issues && v.issues.length) || 0;
+    label = n > 0 ? `${n} warning${n === 1 ? "" : "s"}` : "Warnings";
+    cls = "status-warn";
+  } else {
+    label = "Passed";
+    cls = "status-pass";
+  }
+
+  cell.classList.remove("status-pass", "status-warn", "status-fail");
+  cell.classList.add(cls);
+  cell.textContent = label;
+}
+
 
 function escapeHTML(str) {
   return str.replace(/[&<>"']/g, m => ({

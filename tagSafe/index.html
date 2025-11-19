@@ -69,26 +69,41 @@
               <span>Choose file</span>
             </label>
           </div>
-          <div id="globalValidationStatus" class="validation-status"></div>
+          <div class="validation-status">
+            <span id="globalValidationStatus"></span>
+            <div class="validation-progress">
+              <div id="validationProgressBar"></div>
+            </div>
+          </div>          
         </div>
       </section>
 
       <!-- Results card -->
       <section class="card card-results">
-        <div class="card-header">
-          <h2>Creatives &amp; validation</h2>
-          <p>
-            Preview each creative, inspect the raw tag, and review technical checks (load, weight, landing page, console errors, more).
-          </p>
+        <div class="card-header card-header-with-meta">
+          <div>
+            <h2>Creatives &amp; validation</h2>
+            <p>
+              Preview each creative, inspect the raw tag, and review technical checks
+              (load, weight, landing page, console errors, more).
+            </p>
+          </div>
+          <button
+            type="button"
+            class="rules-badge"
+            title="Current rules:\n• Load time ≤ 1.5 s\n• Total weight ≤ 1500 KB\n• Max total requests ≤ 50\n• No failed network requests\n• Landing page responds with 2xx/3xx\n\nThese are tuned for WaPo display inventory."
+          >
+            View rules
+          </button>
         </div>
         <div class="card-body card-body-results">
-          <div id="creativeTable" class="creative-table-shell">
-            <!-- Filled by main.js -->
+          <div id="creativeTableShell" class="creative-table-shell">
+            <div id="creativeTable"></div>
           </div>
         </div>
-      </section>
+      </section>      
     </main>
-
+    <div id="validationProgressFooter" class="validation-status-footer"></div>
     <footer id="footer">
       <p>&copy;2025 Colin Bingham — TagSafe. Built on GitHub Pages.</p>
     </footer>

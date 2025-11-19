@@ -126,11 +126,13 @@ body {
 }
 
 .creative-table-shell {
-  border-top: 1px solid var(--border-subtle);
   padding-top: 6px;
   padding-bottom: 10px;
 }
 
+.creative-table-shell.has-data {
+  border-top: 1px solid var(--border-subtle);
+}
 
 /* Form elements */
 
@@ -479,5 +481,83 @@ pre {
 .badge-accent {
   background: var(--accent-soft);
   border-color: rgba(37, 99, 235, 0.3);
+  color: var(--accent);
+}
+
+
+.validation-status {
+  margin-top: 8px;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.validation-progress {
+  flex-shrink: 0;
+  width: 200px;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--border-subtle);
+  overflow: hidden;
+  opacity: 0; /* hidden until we have progress */
+  transition: opacity 0.15s ease;
+}
+
+.validation-progress-inner,
+#validationProgressBar {
+  height: 100%;
+  width: 0%;
+  background: var(--accent);
+  transition: width 0.2s ease;
+}
+
+/* footer status already present; we just reuse it */
+.validation-status-footer {
+  max-width: 1200px;
+  margin: 6px auto 0;
+  padding: 0 20px 6px;
+  text-align: right;
+  font-size: 0.8rem;
+}
+
+.request-hint {
+  margin-top: 4px;
+}
+
+.hint-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  background: var(--bg-soft);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-muted);
+  cursor: default;
+}
+
+.card-header-with-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.rules-badge {
+  border: 1px solid var(--border-subtle);
+  border-radius: 999px;
+  background: var(--bg-soft);
+  color: var(--text-muted);
+  padding: 4px 10px;
+  font-size: 0.75rem;
+  cursor: default;
+  white-space: nowrap;
+}
+
+.rules-badge:hover {
+  background: #e0e7ff;
+  border-color: rgba(129, 140, 248, 0.9);
   color: var(--accent);
 }
