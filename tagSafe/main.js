@@ -563,10 +563,16 @@ function renderCreativeTable(data) {
         <td class="col-vendor">${c.vendor}</td>
         <td class="col-size"><span class="dim-chip">${c.dimensions}</span></td>
         <td id="status-cell-${i}" class="col-status ${statusClass}">
-          ${statusText}
+          <span class="status-inner">
+            <span class="status-circle">✓</span>
+            <span class="status-label">${statusText}</span>
+          </span>
         </td>
-        <td class="col-action"><button class="action-btn" onclick="togglePreview(${i}, this)">Preview</button></td>
-      </tr>`;    
+        <td class="col-action">
+          <button class="action-btn" onclick="togglePreview(${i}, this)">Preview</button>
+        </td>
+      </tr>`;
+
 
       const trackerPreview = `
       <tr id="preview-row-${i}" class="preview-row" style="display:none;">
@@ -626,10 +632,14 @@ function renderCreativeTable(data) {
 
   container.innerHTML = `
     <table class="tag-table">
-      <colgroup>
-        <col style="width:48%"><col style="width:14%"><col style="width:10%">
-        <col style="width:8%"><col style="width:10%"><col style="width:10%">
-      </colgroup>
+          <colgroup>
+            <col style="width:46%">
+            <col style="width:14%">
+            <col style="width:12%">
+            <col style="width:8%">
+            <col style="width:10%">
+            <col style="width:10%">
+          </colgroup>
       <thead>
         <tr>
           <th class="col-name">Creative Name</th>
@@ -701,13 +711,6 @@ function togglePreview(index, btn) {
 }
 
 
-function toggleRawTag(index, btn) {
-  const pre = document.getElementById(`raw-tag-${index}`);
-  const isVisible = pre.style.display === "block";
-  pre.style.display = isVisible ? "none" : "block";
-  btn.textContent = isVisible ? "Show Raw Tag" : "Hide Raw Tag";
-}
-
 function updateStatusCell(index) {
   const creative = creatives[index];
   const cell = document.getElementById(`status-cell-${index}`);
@@ -743,7 +746,7 @@ function updateStatusCell(index) {
   cell.innerHTML = `
     <span class="status-inner">
       <span class="status-circle">✓</span>
-      <span class="status-label">${label}</span>
+      <span class="status-label">${escapeHTML(label)}</span>
     </span>
   `;
 }

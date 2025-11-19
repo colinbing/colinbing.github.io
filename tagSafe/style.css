@@ -289,6 +289,14 @@ button {
   border-top: 1px solid var(--border-subtle);
 }
 
+/* Size column: keep the chip intact, no ellipsis */
+.tag-table th.col-size,
+.tag-table td.col-size {
+  overflow: visible;
+  text-overflow: clip;
+  white-space: nowrap;
+}
+
 /* Table layout + fixed column widths */
 .tag-table {
   width: 100%;
@@ -296,12 +304,6 @@ button {
   border-collapse: collapse;
   table-layout: fixed;
   font-size: 0.85rem;
-}
-
-.col-name .name-scroll {
-  max-width: 100%;
-  overflow-x: auto;
-  white-space: nowrap;
 }
 
 .tag-table th,
@@ -335,14 +337,6 @@ button {
 .tag-table tr.preview-row td {
   text-align: left !important;
 }
-
-/* Column widths */
-.tag-table th.col-name   { width: 40%; }
-.tag-table th.col-type   { width: 12%; }
-.tag-table th.col-vendor { width: 12%; }
-.tag-table th.col-size   { width: 8%; }
-.tag-table th.col-status { width: 10%; }
-.tag-table th.col-action { width: 16%; }
 
 /* Keep type + action on a single line */
 .tag-table th.col-type,
