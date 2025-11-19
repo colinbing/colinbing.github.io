@@ -206,6 +206,7 @@ function analyzeSingleTag() {
   if (!input) return;
   creatives = [buildCreativeFromTag("Pasted Tag", input)];
   renderCreativeTable(creatives);
+  validateAllCreativesSequential();
 }
 
 function clearTagInput() {
@@ -465,8 +466,13 @@ function renderCreativeTable(data) {
 
   const rows = data.map((c, i) => {
     const issueCount = countIssues(c);
-    const statusText = issueCount === 0 ? "Passed" : `${issueCount} issue${issueCount > 1 ? "s" : ""}`;
-    const statusClass = issueCount === 0 ? "status-pass" : "status-fail";
+    const statusCellId = `status-cell-${i}`;
+    const statusText = c.validation && c.validation.finalLabel
+      ? c.validation.finalLabel
+      : "Validating…";
+    const statusClass = c.validation && c.validation.finalClass
+      ? c.validation.finalClass
+      : "status-pending";
 
     const previewHeight = calculatePreviewHeight(c.dimensions);
     const isTracker = c.type === "Tracker Tag" || c.dimensions === "1x1";
@@ -482,7 +488,12 @@ function renderCreativeTable(data) {
         <td class="col-type">${c.type}</td>
         <td class="col-vendor">${c.vendor}</td>
         <td class="col-size"><span class="dim-chip">${c.dimensions}</span></td>
-        <td class="col-status ${statusClass}">${statusText}</td>
+        <td
+          class="col-status ${statusClass}"
+          id="${statusCellId}"
+        >
+          ${statusText}
+        </td>
         <td class="col-action"><button class="action-btn" onclick="togglePreview(${i}, this)">Preview</button></td>
       </tr>`;
 

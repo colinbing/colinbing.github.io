@@ -37,12 +37,13 @@ body {
 /* Header */
 
 .ts-header {
-  max-width: 1100px;
+  max-width: 1200px;
+  width:100%;
   margin: 20px auto 4px;
   padding: 0 20px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 16px;
 }
 
@@ -64,41 +65,29 @@ body {
   gap: 8px;
 }
 
-/* Short tagline under header */
-
-.ts-subheader {
-  max-width: 1100px;
-  margin: 0 auto 8px;
-  padding: 0 20px;
-}
-
-.ts-subheader p {
+.ts-tagline {
   margin: 0;
   font-size: 0.9rem;
   color: var(--text-muted);
 }
 
-/* Main content */
-
-.ts-main {
-  max-width: 1100px;
-  margin: 0 auto 70px;
-  padding: 0 20px 40px;
+.ts-header-meta {
+  margin-left: auto;          /* pushes chips to the far right */
   display: flex;
-  flex-direction: column;
-  gap: 16px;
+  align-items: center;
+  gap: 8px;
 }
-
 
 /* Main content */
 
 .ts-main {
   max-width: 1200px;
-  margin: 0 auto 80px;
+  width:100%;
+  margin: 0 auto 70px;
   padding: 0 20px 40px;
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 16px;
 }
 
 /* Cards */
@@ -329,23 +318,24 @@ button {
 }
 
 /* Column widths */
-.tag-table th.col-name {
-  width: 58%;
+.tag-table th.col-name   { width: 50%; }
+.tag-table th.col-type   { width: 12%; }
+.tag-table th.col-vendor { width: 10%; }
+.tag-table th.col-size   { width: 8%; }
+.tag-table th.col-status { width: 10%; }
+.tag-table th.col-action { width: 10%; }
+
+/* Keep type + action on a single line */
+.tag-table th.col-type,
+.tag-table td.col-type,
+.tag-table th.col-action,
+.tag-table td.col-action {
+  white-space: nowrap;
 }
-.tag-table th.col-type {
-  width: 10%;
-}
-.tag-table th.col-vendor {
-  width: 6%;
-}
-.tag-table th.col-size {
-  width: 8%;
-}
-.tag-table th.col-status {
-  width: 8%;
-}
-.tag-table th.col-action {
-  width: 10%;
+
+/* Let the action cell show the full button */
+.tag-table td.col-action {
+  overflow: visible;
 }
 
 /* Status colors as chips */
@@ -360,6 +350,34 @@ button {
 
 .status-fail {
   color: var(--danger);
+}
+
+.status-warn { color: var(--warn); }
+
+.status-pending {
+  color: var(--text-muted);
+  position: relative;
+  padding-right: 16px;
+}
+
+.status-pending::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  border: 2px solid rgba(148, 163, 184, 0.9);
+  border-top-color: transparent;
+  transform: translateY(-50%);
+  animation: ts-spin 0.7s linear infinite;
+}
+
+@keyframes ts-spin {
+  to {
+    transform: translateY(-50%) rotate(360deg);
+  }
 }
 
 /* Preview row: left-aligned, compact padding */
@@ -406,7 +424,7 @@ pre {
   margin-top: auto;
   background-color: #0f172a;
   color: #e5e7eb;
-  padding: 10px 20px 12px;
+  padding: 10px 0 12px;  /* no horizontal padding */
   font-size: 0.8rem;
   text-align: center;
 }
