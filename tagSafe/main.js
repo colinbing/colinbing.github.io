@@ -2,7 +2,7 @@ let creatives = [];
 const EXCLUDED_SHEETS_RX = /legacy/i; // ignore sheets like "Legacy Tags"
 
 // ---------- Backend validation API ----------
-const TAGSAFE_API_BASE = "http://localhost:8787"; // your Node/Playwright server
+const TAGSAFE_API_BASE = "https://tagsafe.onrender.com";
 
 async function validateTagOnServer(tagHTML) {
   const res = await fetch(`${TAGSAFE_API_BASE}/api/validate/tag`, {
