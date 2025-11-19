@@ -104,6 +104,41 @@ async function runValidationForCreative(index) {
   }
 }
 
+async function validateAllCreativesSequential() {
+  const statusEl = document.getElementById("globalValidationStatus");
+  if (!creatives || creatives.length === 0) {
+    if (statusEl) statusEl.textContent = "";
+    return;
+  }
+
+  if (statusEl) {
+    statusEl.textContent = `Running validation for ${creatives.length} tag(s)…`;
+  }
+
+  // Sequential to avoid hammering the backend / CPU
+  for (let i = 0; i < creatives.length; i++) {
+    const c = creatives[i];
+    if (!c) continue;
+
+    if (statusEl) {
+      statusEl.textContent = `Validating ${i + 1} / ${creatives.length}…`;
+    }
+
+    try {
+      // This will populate creatives[i].validation and update #validation-i
+      await runValidationForCreative(i);
+    } catch (err) {
+      // runValidationForCreative already handles errors into the UI
+      console.error("Validation error for creative", i, err);
+    }
+  }
+
+  if (statusEl) {
+    statusEl.textContent = `Validation complete for ${creatives.length} tag(s).`;
+  }
+}
+
+
 // ---------- Drag & Drop / File Input wiring ----------
 document.addEventListener("DOMContentLoaded", () => {
   const dz = document.getElementById("uploadArea");
@@ -723,6 +758,8 @@ function processWorkbook(workbook) {
 
   creatives = allCreatives;
   renderCreativeTable(creatives);
+  // Kick off validation for all creatives (fire-and-forget)
+  validateAllCreativesSequential();
 }
 
 function extractCreativesFromAOA(aoa, sheetName) {

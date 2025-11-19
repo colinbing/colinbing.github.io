@@ -10,15 +10,9 @@ const app = express();
 // Basic hardening defaults
 app.disable("x-powered-by");
 
-// CORS: allow local Vite and same-origin previews
-app.use(cors({
-  origin: [
-    "http://localhost:5173", // Vite default
-    "http://127.0.0.1:5173"
-  ],
-  methods: ["GET", "POST", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"]
-}));
+// Dev CORS: allow any origin so local tools / different ports can call this
+app.use(cors());
+
 
 // Basic body parsing
 app.use(express.json({ limit: "1mb" }));
