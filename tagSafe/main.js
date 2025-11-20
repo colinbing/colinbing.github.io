@@ -44,7 +44,7 @@ function buildFailedRequestsTooltip(v) {
   return lines.join("\n");
 }
 
-function buildValidationHTML(v, index) {
+function buildValidationHTML(v) {
   if (!v) {
     return "<em>Validation not run yet.</em>";
   }
@@ -53,68 +53,63 @@ function buildValidationHTML(v, index) {
     return `<strong>Validation failed:</strong> ${escapeHTML(v.error)}`;
   }
 
-  let html = `<strong>Tech Validation:</strong><br/>`;
-  const status = String(v.status || "unknown").toUpperCase();
-  html += `Status: <span class="metric-chip metric-chip-status">${escapeHTML(status)}</span><br/>`;
+  const parts = [];
+  parts.push(`<strong>Tech Validation:</strong>`);
 
+  // Status chip
+  const status = String(v.status || "unknown").toUpperCase();
+  parts.push(
+    `<div class="tv-row">Status:` +
+      `<span class="metric-chip metric-chip-status">${escapeHTML(status)}</span>` +
+    `</div>`
+  );
+
+  // Load time (seconds)
   if (v.timings && typeof v.timings.adLoadMs === "number") {
-    const seconds = v.timings.adLoadMs / 1000;
-    html += `Load: <span class="metric-chip">${seconds.toFixed(2)} s</span><br/>`;
+    const secs = v.timings.adLoadMs / 1000;
+    parts.push(
+      `<div class="tv-row">Load:` +
+        `<span class="metric-chip">${secs.toFixed(2)} s</span>` +
+      `</div>`
+    );
   }
 
+  // Weight + request count
   if (v.metrics) {
     if (typeof v.metrics.totalKB === "number") {
-      html += `Total weight: <span class="metric-chip">${v.metrics.totalKB.toFixed(1)} KB</span><br/>`;
+      parts.push(
+        `<div class="tv-row">Total weight:` +
+          `<span class="metric-chip">${v.metrics.totalKB.toFixed(1)} KB</span>` +
+        `</div>`
+      );
     }
     if (typeof v.metrics.requestCount === "number") {
-      html += `Requests: <span class="metric-chip">${v.metrics.requestCount}</span><br/>`;
+      parts.push(
+        `<div class="tv-row">Requests:` +
+          `<span class="metric-chip">${v.metrics.requestCount}</span>` +
+        `</div>`
+      );
     }
   }
 
+  // Issues
   if (Array.isArray(v.issues) && v.issues.length) {
-    html += "<br/><strong>Issues:</strong><br/><ul>";
-    v.issues.forEach(issue => {
+    parts.push("<br/><strong>Issues:</strong><br/><ul>");
+    v.issues.forEach((issue) => {
       const sev = (issue.severity || "").toUpperCase();
       const code = issue.code || "";
       const msg = issue.message || "";
-      html += `<li>[${escapeHTML(sev)}] ${escapeHTML(code)}: ${escapeHTML(msg)}</li>`;
+      parts.push(
+        `<li>[${escapeHTML(sev)}] ${escapeHTML(code)}: ${escapeHTML(msg)}</li>`
+      );
     });
-    html += "</ul>";
+    parts.push("</ul>");
   } else {
-    html += "<br/>No issues detected.";
+    parts.push("<br/>No issues detected.");
   }
-
-  // Failed requests button (if any, after filtering)
-  const failedCount =
-    (v.metrics && typeof v.metrics.failedRequestCount === "number"
-      ? v.metrics.failedRequestCount
-      : 0);
-
-  if (failedCount > 0) {
-    html += `<br/><button type="button" class="failed-req-btn" onclick="showFailedRequests(${index})">View failed requests (${failedCount})</button>`;
-  }
-
-  if (v.landing && v.landing.primaryUrl) {
-    const url = v.landing.primaryUrl;
-    let statusText = "";
-    if (v.landing.proxyResult && typeof v.landing.proxyResult.status === "number") {
-      const s = v.landing.proxyResult.status;
-      statusText = `${s} — ${describeHttpStatus(s)}`;
-    }
-
-    html += `<br/><br/><strong>Landing URL:</strong> <a href="${escapeHTML(
-      url
-    )}" target="_blank" rel="noopener" class="metric-chip metric-chip-link">${escapeHTML(
-      shortenUrl(url, 90)
-    )}</a><br/>`;
-
-    if (statusText) {
-      html += `Landing status: <span class="metric-chip">${escapeHTML(statusText)}</span><br/>`;
-    }
-  }
-
-  return html;
+  return parts.join("\n");
 }
+
 
 async function runValidationForCreative(index) {
   const c = creatives[index];
@@ -541,9 +536,8 @@ function renderCreativeTable(data) {
     const statusText = c.validation && c.validation.finalLabel
       ? c.validation.finalLabel
       : "Validating…";
-    const statusClass = c.validation && c.validation.finalClass
-      ? c.validation.finalClass
-      : "status-pending";
+    const statusClass = "status-pending";
+    const statusLabel = "Validating…";
 
     const previewHeight = calculatePreviewHeight(c.dimensions);
     const isTracker = c.type === "Tracker Tag" || c.dimensions === "1x1";
@@ -557,22 +551,21 @@ function renderCreativeTable(data) {
       </td>`;
 
       const summaryRow = `
-      <tr class="main-row">
-        ${nameCell}
-        <td class="col-type">${c.type}</td>
-        <td class="col-vendor">${c.vendor}</td>
-        <td class="col-size"><span class="dim-chip">${c.dimensions}</span></td>
-        <td id="status-cell-${i}" class="col-status ${statusClass}">
-          <span class="status-inner">
-            <span class="status-circle">✓</span>
-            <span class="status-label">${statusText}</span>
-          </span>
-        </td>
-        <td class="col-action">
-          <button class="action-btn" onclick="togglePreview(${i}, this)">Preview</button>
-        </td>
-      </tr>`;
-
+        <tr class="main-row">
+          ${nameCell}
+          <td class="col-type">${c.type}</td>
+          <td class="col-vendor">${c.vendor}</td>
+          <td class="col-size"><span class="dim-chip">${c.dimensions}</span></td>
+          <td id="status-cell-${i}" class="col-status ${statusClass}">
+            <div class="status-inner">
+              <span class="status-circle"></span>
+              <span>${escapeHTML(statusLabel)}</span>
+            </div>
+          </td>
+          <td class="col-action">
+            <button class="action-btn" onclick="togglePreview(${i}, this)">Preview</button>
+          </td>
+        </tr>`;
 
       const trackerPreview = `
       <tr id="preview-row-${i}" class="preview-row" style="display:none;">
@@ -633,12 +626,12 @@ function renderCreativeTable(data) {
   container.innerHTML = `
     <table class="tag-table">
           <colgroup>
-            <col style="width:46%">
-            <col style="width:14%">
+            <col style="width:36%">
+            <col style="width:12%">
             <col style="width:12%">
             <col style="width:8%">
             <col style="width:10%">
-            <col style="width:10%">
+            <col style="width:14%">
           </colgroup>
       <thead>
         <tr>
@@ -711,6 +704,7 @@ function togglePreview(index, btn) {
 }
 
 
+
 function updateStatusCell(index) {
   const creative = creatives[index];
   const cell = document.getElementById(`status-cell-${index}`);
@@ -732,22 +726,23 @@ function updateStatusCell(index) {
     label = `${n} issue${n === 1 ? "" : "s"}`;
     cls = "status-fail";
   } else if (v.status === "warn") {
-    const n = (v.issues && v.issues.length) || 0;
-    label = n > 0 ? `${n} warning${n === 1 ? "" : "s"}` : "Warnings";
+    const n = (v.issues && v.issues.length) || 1;
+    label = n === 1 ? "1 warning" : `${n} warnings`;
     cls = "status-warn";
   } else {
     label = "Passed";
     cls = "status-pass";
   }
 
-  cell.classList.remove("status-pass", "status-warn", "status-fail", "status-pending");
-  cell.classList.add(cls);
+  // pending → spinner (empty circle char), others → ✓
+  const circleChar = cls === "status-pending" ? "" : "✓";
 
+  cell.className = `col-status ${cls}`;
   cell.innerHTML = `
-    <span class="status-inner">
-      <span class="status-circle">✓</span>
-      <span class="status-label">${escapeHTML(label)}</span>
-    </span>
+    <div class="status-inner">
+      <span class="status-circle">${circleChar}</span>
+      <span>${escapeHTML(label)}</span>
+    </div>
   `;
 }
 

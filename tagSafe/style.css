@@ -312,7 +312,9 @@ button {
   border-bottom: 1px solid var(--border-subtle);
   overflow: hidden;
   text-overflow: ellipsis;
+  box-sizing: border-box;
 }
+
 
 /* Status column: allow icon + text, don't ellipsis */
 .tag-table th.col-status,
@@ -422,8 +424,8 @@ button {
 }
 
 .preview-shell {
-  margin: 10px 12px 14px;
-  padding: 12px 14px 14px;
+  margin: 14px 16px 18px;
+  padding: 18px 20px 20px;
   border-radius: 12px;
   border: 1px solid var(--border-subtle);
   background: #f9fafb;
@@ -433,7 +435,7 @@ button {
 .preview-frame {
   width: 100%;
   max-width: 100%;
-  margin: 8px 8px 12px;
+  margin: 8px 0 16px;
   border-radius: 10px;
   border: 1px solid var(--border-subtle);
   display: block;
@@ -629,6 +631,10 @@ pre {
   background: #eef2ff;
 }
 
+.tv-row {
+  margin: 3px 0;
+}
+
 .metric-chip {
   display: inline-flex;
   align-items: center;
@@ -637,9 +643,11 @@ pre {
   background: #f3f4f6;
   border: 1px solid var(--border-subtle);
   font-size: 0.78rem;
-  margin-left: 4px;
+  margin-left: 6px;
+  margin-top: 2px;
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
+
 
 .metric-chip-status {
   font-weight: 600;
