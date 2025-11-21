@@ -378,10 +378,6 @@
     color: var(--text-muted);
   }
 
-
-
-
-
   /* Responsive */
 
   @media (max-width: 1040px) {
