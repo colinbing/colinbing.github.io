@@ -18,6 +18,7 @@
     <link rel="stylesheet" href="css/sections.css">
     <link rel="stylesheet" href="css/button.css">
     <link rel="stylesheet" href="css/gallery.css" />
+    <link rel="stylesheet" href="css/project-section.css" />
 
     <!-- for FF, Chrome, Opera -->
     <link rel="apple-touch-icon" sizes="180x180" href="images/favicons/apple-touch-icon.png">
@@ -490,367 +491,633 @@
               </section>
               
 
-        <section id="project-section" class="project-section container-fluid">
-            <div class="col-md-12 text-center">
-                <h2>Projects</h2>
-            </div>
-            <!-- <div class="project-1">
-                <div class="row">
-                    <div class="col-md-6 text-left">
-                        <h3>Website Design</h3>
-                        <hr>
-                        <p>At Tecore Networks, I was responsible for the redesign and development of our <a target="_blank" href="https://www.tecore.com">website</a> in WordPress. I use a combination of a website page builder (WPBakery) and custom HTML/CSS/JS snippets to achieve our team's design goals. Our goal is a website that more effectively communicates our purpose, is mobile friendly, and is intuitive to navigate. <strong>Slide 1</strong> and <strong>Slide 2</strong> show the previous home page (<a target="_blank" href="images/home-page-old-full.png">full size image</a>) and the redesigned one (currently live as of March 12, 2020). The redesign to the home page was by far the most drastic redesign as it was a complete overhaul, and in <strong>Slide 3</strong> you can see the positive changes in performance in most key metrics after the first three months.</p>
-                        <p><strong>Slide 4</strong> is an example of using analytics to identify that mobile performance did not match desktop performance, and how I redesigned page elements and structure to be more mobile responsive for a better user experience.</p>
-                        <ul>
-                            <li>In the first three months, changes to increased sitewide mobile avg. time on page by <strong>37%</strong> (1:23 to 1:54 min), closer in line to desktop performance in the same period (1:59 min). </li>
-                        </ul>
-                        <p>At Phantasy Tour, I was responsible for creating marketing landing pages for <a target="_blank" href="https://phantasy.cards/">Phantasy Tour Trading Cards</a> and <a target="_blank" href="https://contests.phantasytour.com/">Phantasy Tour Contests</a>, both built in WordPress with Elementor.</p>
+              <section class="product-tools" id="projects">
+                <div class="product-tools-inner">
+                  <header class="pt-header">
+                    <div class="pt-kicker">Product tools</div>
+                    <h2>Tools I’ve built to remove ad-ops friction</h2>
+                    <p>
+                      Each tool started as a real workflow problem in ad ops and became a focused
+                      product: scoped MVP, shipped quickly, and iterated as I used it in my own work.
+                    </p>
+                  </header>
+              
+                  <!-- OVERVIEW (grid) -->
+                  <div class="pt-overview" id="pt-overview">
+                    <div class="pt-grid">
+                      <div class="pt-card" data-tool="tagsafe">
+                        <div class="pt-card-logo">
+                          <img src="/images/logos/tagsafe-logo.PNG" alt="TagSafe logo" class="tagsafe-logo"/>
+                        </div>
+                        <div class="pt-card-title-row">
+                          <div class="pt-card-title">TagSafe</div>
+                          <div class="pt-card-pill">Flagship</div>
+                        </div>
+                        <div class="pt-card-desc">
+                          Validate third-party tags, run automated checks, and preview creatives in one place.
+                        </div>
+                        <div class="pt-card-footer">
+                          <span class="pt-card-footer-label">Learn more</span>
+                          <span class="pt-card-arrow">↗</span>
+                        </div>          
+                      </div>
+              
+                      <div class="pt-card" data-tool="outline">
+                        <div class="pt-card-logo">
+                          <img src="/images/logos/outline-logo.PNG" alt="Outline logo" class="outline-logo"/>
+                        </div>
+                        <div class="pt-card-title-row">
+                          <div class="pt-card-title">Outline</div>
+                          <div class="pt-card-pill">Micro tool</div>
+                        </div>
+                        <div class="pt-card-desc">
+                          Add policy-compliant borders to creatives in seconds without Photoshop.
+                        </div>
+                        <div class="pt-card-footer">
+                          <span class="pt-card-footer-label">Learn more</span>
+                          <span class="pt-card-arrow">↗</span>
+                        </div>          
+                      </div>
+              
+                      <div class="pt-card" data-tool="adbuilder">
+                        <div class="pt-card-logo">
+                          <img src="/images/logos/adbuilder-logo.png" alt="AdBuilder logo" class="adbuilder-logo"/>
+                        </div>
+                        <div class="pt-card-title-row">
+                          <div class="pt-card-title">AdBuilder</div>
+                          <div class="pt-card-pill">Layout</div>
+                        </div>
+                        <div class="pt-card-desc">
+                          Generate and QA display layouts across sizes from a shared asset set.
+                        </div>
+                        <div class="pt-card-footer">
+                          <span class="pt-card-footer-label">Learn more</span>
+                          <span class="pt-card-arrow">↗</span>
+                        </div>          
+                      </div>
+              
+                      <div class="pt-card" data-tool="vast2mp4">
+                        <div class="pt-card-logo">
+                          <img src="/images/logos/vast2mp4-logo.png" alt="Vast2MP4 logo" class="vast2mp4-logo"/>
+                        </div>
+                        <div class="pt-card-title-row">
+                          <div class="pt-card-title">Vast2MP4</div>
+                          <div class="pt-card-pill">Utility</div>
+                        </div>
+                        <div class="pt-card-desc">
+                          Inspect VAST tags and pull out media files and trackers for debugging.
+                        </div>
+                        <div class="pt-card-footer">
+                          <span class="pt-card-footer-label">Learn more</span>
+                          <span class="pt-card-arrow">↗</span>
+                        </div>          
+                      </div>
+              
+                      <div class="pt-card" data-tool="pageid">
+                        <div class="pt-card-logo">
+                          <img src="/images/logos/pageID-scraper-logo.png" alt="PageID Scraper logo" class="pageid-scraper-logo"/>
+                        </div>
+                        <div class="pt-card-title-row">
+                          <div class="pt-card-title">PageID Scraper</div>
+                          <div class="pt-card-pill">CMS</div>
+                        </div>
+                        <div class="pt-card-desc">
+                          Convert WaPo article URLs into page IDs for faster targeting setup.
+                        </div>
+                        <div class="pt-card-footer">
+                          <span class="pt-card-footer-label">Learn more</span>
+                          <span class="pt-card-arrow">↗</span>
+                        </div>          
+                      </div>
+              
+                      <div class="pt-card" data-tool="blocklist">
+                        <div class="pt-card-logo">
+                          <img src="/images/logos/blocklist-logo.png" alt="BlockList logo" class="blocklist-logo"/>
+                        </div>
+                        <div class="pt-card-title-row">
+                          <div class="pt-card-title">BlockList</div>
+                          <div class="pt-card-pill">Safety</div>
+                        </div>
+                        <div class="pt-card-desc">
+                          Turn flagged URLs into structured keyword blocklists for exclusions.
+                        </div>
+                        <div class="pt-card-footer">
+                          <span class="pt-card-footer-label">Learn more</span>
+                          <span class="pt-card-arrow">↗</span>
+                        </div>          
+                      </div>
+              
+                      <div class="pt-card" data-tool="collate">
+                        <div class="pt-card-logo">
+                            <img src="/images/logos/collate-logo.png" alt="Collate logo" class="collate-logo" class="collate-logo"/>
+                        </div>
+                        <div class="pt-card-title-row">
+                          <div class="pt-card-title">Collate</div>
+                          <div class="pt-card-pill">Micro tool</div>
+                        </div>
+                        <div class="pt-card-desc">
+                          Clean and join spreadsheet columns into ready-to-paste targeting strings.
+                        </div>
+                        <div class="pt-card-footer">
+                          <span class="pt-card-footer-label">Learn more</span>
+                          <span class="pt-card-arrow">↗</span>
+                        </div>          
+                      </div>
                     </div>
-
-                    <div id="Indicators-1" class="carousel slide col-md-6 my-auto" data-ride="carousel">
-                        <ol class="carousel-indicators">
-                            <li data-target="#Indicators-1" data-slide-to="0" class="active"></li>
-                            <li data-target="#Indicators-1" data-slide-to="1"></li>
-                            <li data-target="#Indicators-1" data-slide-to="2"></li>
-                            <li data-target="#Indicators-1" data-slide-to="3"></li>
-                        </ol>
-                        <div class="carousel-inner">
-                            <div class="carousel-item active">
-                            <img class="d-block w-100" src="images/home-page-old-1102x610.png" alt="First slide">
-                            <div class="carousel-caption">
-                                <h5>Previous Tecore Networks Website Header</h5>
-                                <p>Live from Jan 2018 - Mar 2020</p>
-                            </div>
-                            </div>
-                            <div class="carousel-item">
-                            <img class="d-block w-100" src="images/home-page-new-1102x610.png" alt="Second slide">
-                            <div class="carousel-caption">
-                                <h5>Current Tecore Networks Website Header</h5>
-                                <p>Live from Mar 2020 - Current</p>
-                            </div>
-                            </div>
-                            <div class="carousel-item">
-                            <img class="d-block w-100" src="images/home-page-analytics.png" alt="Third slide">
-                            <div class="carousel-caption">
-                                <h5>Google Analytics Comparison - Redesigned Home Page</h5>
-                                <p>March - July 2020, compared to previous period</p>
-                            </div>
-                            </div>
-                            <div class="carousel-item">
-                            <img class="d-block w-100" src="images/web-design-example-2.png" alt="Fourth slide">
-                            <div class="carousel-caption">
-                                <h5>Mobile Responsive Website Design</h5>
-                                <p></p>
-                            </div>
-                            </div>
-                        </div>
-                        <a class="carousel-control-prev" href="#Indicators-1" role="button" data-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="sr-only">Previous</span>
-                        </a>
-                        <a class="carousel-control-next" href="#Indicators-1" role="button" data-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="sr-only">Next</span>
-                        </a>
+              
+                    <div class="pt-overview-note">
+                      Click any tool to see how I scoped the problem, solution, and impact.
                     </div>
-                </div>
-            </div> -->
-
-            <!-- <div class="project-2">
-                <div class="row">
-                    <div class="col-md-6 text-left ">
-                        <h3>Google Tag Manager</h3>
-                        <hr>
-                        <p>At Tecore Networks, my goal was to improve the visibility of user interaction on the <a target="_blank" href="https://www.tecore.com">website</a>, above the basic functionality that Google Analytics offered. Using Google Tag Manager integrated with Google Analytics, I have created tags and triggers such as:</p>
-                        <ul>
-                            <li><p><strong>Page Scroll Tracking (50%, 90%)</strong> - to identify which pages visitors are engaging with all of the content, and which don't have the information they are looking for</p></li>
-                            <li><p><strong>Datasheet PDF downloads (Micro Goal)</strong> - to identify which products specifications visitors are interested in</p></li>
-                            <li><p><strong>Clicks to Product Inquiry page (Macro Goal)</strong> - to identify which page potential leads are coming from</p></li>
-                            <li><p><strong>Home Page Widget interaction</strong> - to identify which products visitors were most interested in getting more info on, on the front page</p></li>
-                            <li><p><strong>Notification Bar interaction</strong> - to identify which pop-up notifications users were more likely to click on (newsletter, upcoming events, press releases)</p></li>
-                        </ul>
+                  </div>
+              
+                  <!-- DETAIL (tabs + panels) -->
+                  <div class="pt-detail is-hidden" id="pt-detail">
+                    <div class="pt-detail-top">
+                      <button class="pt-back" type="button" id="pt-back-button">All tools</button>
                     </div>
-
-                    <div id="Indicators-2" class="carousel slide col-md-6 my-auto" data-ride="carousel">
-                        <ol class="carousel-indicators">
-                            <li data-target="#Indicators-2" data-slide-to="0" class="active"></li>
-                            <li data-target="#Indicators-2" data-slide-to="1"></li>
-                        </ol>
-                        <div class="carousel-inner">
-                            <div class="carousel-item active">
-                            <img class="d-block w-100" src="images/gtm-1.jpg" alt="Slide 1">
-                            <div class="carousel-caption">
-                                <h5>Home page preview window</h5>
-                                <p>In this preview mode, a user scrolled 50%, clicked on the notification bar, clicked on the iNac dropdown, and then navigated to the product inquiry page.</p>
-                            </div>
-                            </div>
-                            <div class="carousel-item">
-                            <img class="d-block w-100" src="images/gtm-2.jpg" alt="Slide 2">
-                            <div class="carousel-caption">
-                                <h5>Google Analytics/Tag Manager Integration</h5>
-                                <p>All events are consolidated in the Behavior Reports section of GA.</p>
-                            </div>
-                            </div>
-                        </div>
-                        <a class="carousel-control-prev" href="#Indicators-2" role="button" data-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="sr-only">Previous</span>
-                        </a>
-                        <a class="carousel-control-next" href="#Indicators-2" role="button" data-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="sr-only">Next</span>
-                        </a>
+              
+                    <div class="pt-tabs-row">
+                      <div class="pt-tabs" role="tablist" aria-label="Ad tools">
+                        <button class="pt-tab" data-tool="tagsafe" role="tab" aria-selected="false">
+                          <span class="pt-tab-label">TagSafe</span>
+                          <span class="pt-tab-pill">Flagship</span>
+                        </button>
+                        <button class="pt-tab" data-tool="outline" role="tab" aria-selected="false">
+                          <span class="pt-tab-label">Outline</span>
+                          <span class="pt-tab-pill">Micro tool</span>
+                        </button>
+                        <button class="pt-tab" data-tool="adbuilder" role="tab" aria-selected="false">
+                          <span class="pt-tab-label">AdBuilder</span>
+                          <span class="pt-tab-pill">Layout</span>
+                        </button>
+                        <button class="pt-tab" data-tool="vast2mp4" role="tab" aria-selected="false">
+                          <span class="pt-tab-label">Vast2MP4</span>
+                          <span class="pt-tab-pill">Utility</span>
+                        </button>
+                        <button class="pt-tab" data-tool="pageid" role="tab" aria-selected="false">
+                          <span class="pt-tab-label">PageID Scraper</span>
+                          <span class="pt-tab-pill">CMS</span>
+                        </button>
+                        <button class="pt-tab" data-tool="blocklist" role="tab" aria-selected="false">
+                          <span class="pt-tab-label">BlockList</span>
+                          <span class="pt-tab-pill">Safety</span>
+                        </button>
+                        <button class="pt-tab" data-tool="collate" role="tab" aria-selected="false">
+                          <span class="pt-tab-label">Collate</span>
+                          <span class="pt-tab-pill">Micro tool</span>
+                        </button>
+                      </div>
                     </div>
-                </div>
-            </div> -->
-
-            <!-- <div class="project-3">
-                <div class="row">
-                    <div class="col-md-6 text-left">
-                        <h3>Google Analytics</h3>
-                        <hr>
-                        <p>At Tecore I curate and present internal monthly analytics reports using resources such as Google Analytics, Google Search Console, PageSpeed Insights to generate insights into website traffic and marketing channel performance to identify and strategize opportunities for improvement. This is based on key metrics such as: number of users, bounce rates, pages/session, session duration, channel traffic acquisition, performance within channels, and mobile vs. desktop performance. Specific attention is paid to comparing current data to previous periods. <strong>Slide 1</strong> is an example of an Behavior Analysis annual report that compared 2019 to 2018, and <strong>Slide 2</strong> is an example of a biweekly traffic acquisition report that had a focus on bounce rate.</p>
-                        <p><strong>Slide 3</strong> is an example of a content efficiency analysis in a biweekly report, looking at Tecore's most visited pages and identifying poor performers, with a suggested plan of action for each.</p>
-                        <p>Through these analyses, I strategize and implement: new page elements, more visuals, add/remove content and more, in an attempt to refine performance. These changes are tracked, and each period are reviewed for changes in performance.</p>
+              
+                    <div class="pt-shell">
+                      <div class="pt-panels">
+                        <!-- TagSafe -->
+                        <article class="pt-panel" data-tool="tagsafe">
+                          <header class="pt-panel-header">
+                            <div class="pt-panel-logo">
+                                <img src="/images/logos/tagsafe-logo.PNG" alt="TagSafe logo" class="tagsafe-logo" />
+                            </div>
+                            <div class="pt-panel-header-text">
+                              <p class="pt-panel-kicker">TagSafe · Tag validator</p>
+                              <h3 class="pt-panel-title">Compress third-party tag QA into one screen</h3>
+                              <p class="pt-panel-meta">
+                                Browser-based validator for third-party tags with live previews and automated checks.
+                              </p>
+                            </div>
+                          </header>
+              
+                          <div class="pt-panel-body">
+                            <div class="pt-panel-text">
+                              <p>
+                                Third-party tags used to be QA’d with a mix of dev tools, test pages,
+                                and manual notes, which made each creative slow to validate and easy
+                                to break when vendors sent updates.
+                              </p>
+                              <ul class="pt-bullets">
+                                <li>
+                                  <span class="pt-bullet-label">Problem:</span>
+                                  <span class="pt-bullet-text">
+                                    Manual tag QA took 15–20 minutes per creative, spread across multiple tools.
+                                    HTTPS, click tracking, and structure checks were easy to miss under time pressure.
+                                  </span>
+                                </li>
+                                <li>
+                                  <span class="pt-bullet-label">Solution:</span>
+                                  <span class="pt-bullet-text">
+                                    Built a single-page validator that accepts pasted tags, runs core checks
+                                    (structure, HTTPS, basic dimension sanity, click URL presence), and renders
+                                    a live preview in the browser.
+                                  </span>
+                                </li>
+                                <li>
+                                  <span class="pt-bullet-label">Impact:</span>
+                                  <span class="pt-bullet-text">
+                                    Collapsed QA into one screen and made it straightforward to re-run checks
+                                    whenever a tag changes, cutting personal QA time substantially.
+                                  </span>
+                                </li>
+                              </ul>
+                              <div class="pt-chip-row">
+                                <span class="pt-chip">HTML</span>
+                                <span class="pt-chip">CSS</span>
+                                <span class="pt-chip">JavaScript</span>
+                                <span class="pt-chip">Ad QA</span>
+                              </div>
+                              <a class="pt-panel-link" href="tagSafe/" target="_blank" rel="noopener">
+                                  Open TagSafe<span>↗</span>
+                                </a>
+                            </div>
+              
+                            <div class="pt-panel-image">
+                                <img
+                                  src="/images/project-mocks/tagsafe-preview.png"
+                                  alt="Outline tool showing a creative with a blue border applied"
+                                  class="pt-panel-screenshot"
+                                />
+                              </div>
+                          </div>
+                        </article>
+              
+                        <!-- Outline -->
+                        <article class="pt-panel" data-tool="outline">
+                          <header class="pt-panel-header">
+                            <div class="pt-panel-logo">
+                                <img src="/images/logos/outline-logo.PNG" alt="Outline logo" class="outline-logo" />
+                            </div>
+                            <div class="pt-panel-header-text">
+                              <p class="pt-panel-kicker">Outline · Image border tool</p>
+                              <h3 class="pt-panel-title">Make white-edge creatives compliant in seconds</h3>
+                              <p class="pt-panel-meta">
+                                Used by account managers, ad ops, and our trafficking vendor at the Post.
+                              </p>
+                            </div>
+                          </header>
+              
+                          <div class="pt-panel-body">
+                            <div class="pt-panel-text">
+                              <p>
+                                Many client assets arrive with white edges. Policy requires a visible border
+                                so ads aren’t confused with article imagery, but updating each size manually
+                                slows launches.
+                              </p>
+                              <ul class="pt-bullets">
+                                <li>
+                                  <span class="pt-bullet-label">Problem:</span>
+                                  <span class="pt-bullet-text">
+                                    Adding borders meant re-requesting assets or opening each creative
+                                    in Photoshop/Canva. For several concepts across 6+ sizes, that easily
+                                    became a 10–20 minute chore per campaign.
+                                  </span>
+                                </li>
+                                <li>
+                                  <span class="pt-bullet-label">Solution:</span>
+                                  <span class="pt-bullet-text">
+                                    Built a browser tool where anyone can upload standard display assets,
+                                    apply a policy-compliant border in one click, and download renamed files
+                                    that clearly indicate the border has been added.
+                                  </span>
+                                </li>
+                                <li>
+                                  <span class="pt-bullet-label">Impact:</span>
+                                  <span class="pt-bullet-text">
+                                    Turned a license-dependent, ~1-minute-per-asset step into a ~15-second
+                                    process for the full creative set. A typical once-a-week border job now
+                                    takes under a minute instead of up to 20.
+                                  </span>
+                                </li>
+                              </ul>
+                              <div class="pt-chip-row">
+                                <span class="pt-chip">HTML</span>
+                                <span class="pt-chip">CSS</span>
+                                <span class="pt-chip">JavaScript</span>
+                                <span class="pt-chip">Creative workflow</span>
+                              </div>
+                              <a class="pt-panel-link" href="addBorders/" target="_blank" rel="noopener">
+                                  Open Outline<span>↗</span>
+                                </a>
+                            </div>
+              
+                            <div class="pt-panel-image">
+                              Outline border preview<br />
+                              (placeholder image)
+                            </div>
+                          </div>
+                        </article>
+              
+                        <!-- AdBuilder -->
+                        <article class="pt-panel" data-tool="adbuilder">
+                          <header class="pt-panel-header">
+                            <div class="pt-panel-logo">
+                              <img src="/images/logos/adbuilder-logo.png" alt="AdBuilder logo" />
+                            </div>
+                          <div class="pt-panel-header-text">
+                            <p class="pt-panel-kicker">AdBuilder · Layout engine</p>
+                            <h3 class="pt-panel-title">Map one asset set across multiple display sizes</h3>
+                            <p class="pt-panel-meta">
+                              Internal tool to visualize headline/logo/CTA layouts across common formats.
+                            </p>
+                          </div>
+                          </header>
+              
+                          <div class="pt-panel-body">
+                            <div class="pt-panel-text">
+                              <p>
+                                Display campaigns often share the same core assets, but designers and ad ops
+                                see each size in isolation, which makes inconsistencies and cramped layouts
+                                harder to catch.
+                              </p>
+                              <ul class="pt-bullets">
+                                <li>
+                                  <span class="pt-bullet-label">Problem:</span>
+                                  <span class="pt-bullet-text">
+                                    Reviewing each size separately slowed QA and made it easy to ship
+                                    creatives where key elements didn’t translate well between formats.
+                                  </span>
+                                </li>
+                                <li>
+                                  <span class="pt-bullet-label">Solution:</span>
+                                  <span class="pt-bullet-text">
+                                    Built a layout engine that takes a shared set of assets
+                                    (logo, image, headline, body, CTA) and renders them into
+                                    predefined sizes for side-by-side evaluation.
+                                  </span>
+                                </li>
+                                <li>
+                                  <span class="pt-bullet-label">Impact:</span>
+                                  <span class="pt-bullet-text">
+                                    Makes it faster to spot layout issues across a campaign and
+                                    reduces back-and-forth with designers before trafficking.
+                                  </span>
+                                </li>
+                              </ul>
+                              <div class="pt-chip-row">
+                                <span class="pt-chip">HTML</span>
+                                <span class="pt-chip">CSS</span>
+                                <span class="pt-chip">JavaScript</span>
+                                <span class="pt-chip">Creative QA</span>
+                              </div>
+                              <a class="pt-panel-link" href="adbuilder/" target="_blank" rel="noopener">
+                                  Open AdBuilder<span>↗</span>
+                                </a>
+                            </div>
+              
+                            <div class="pt-panel-image">
+                              AdBuilder size grid<br />
+                              (placeholder image)
+                            </div>
+                          </div>
+                        </article>
+              
+                        <!-- Vast2MP4 -->
+                        <article class="pt-panel" data-tool="vast2mp4">
+                          <header class="pt-panel-header">
+                            <div class="pt-panel-logo">
+                              <img src="/images/logos/vast2mp4-logo.png" alt="Vast2MP4 logo" />
+                            </div>
+                            <div class="pt-panel-header-text">
+                              <p class="pt-panel-kicker">Vast2MP4 · Video utility</p>
+                              <h3 class="pt-panel-title">See what’s inside a VAST tag at a glance</h3>
+                              <p class="pt-panel-meta">
+                                Parses VAST XML to surface media URLs and trackers for faster debugging.
+                              </p>
+                            </div>
+                          </header>
+              
+                          <div class="pt-panel-body">
+                            <div class="pt-panel-text">
+                              <p>
+                                Video issues often trace back to specific files or trackers inside
+                                a VAST tag, but inspecting them by hand in raw XML is slow and brittle.
+                              </p>
+                              <ul class="pt-bullets">
+                                <li>
+                                  <span class="pt-bullet-label">Problem:</span>
+                                  <span class="pt-bullet-text">
+                                    Finding the right MP4 URL or tracker in a VAST response meant digging
+                                    through nested XML or relying on dev tools every time an issue came up.
+                                  </span>
+                                </li>
+                                <li>
+                                  <span class="pt-bullet-label">Solution:</span>
+                                  <span class="pt-bullet-text">
+                                    Built a parser that accepts a VAST tag, then lists out media files,
+                                    key metadata, and impression/click trackers in a human-readable way.
+                                  </span>
+                                </li>
+                                <li>
+                                  <span class="pt-bullet-label">Impact:</span>
+                                  <span class="pt-bullet-text">
+                                    Speeds up troubleshooting and makes it easier to confirm file sizes,
+                                    URLs, and tracker coverage without touching dev tools.
+                                  </span>
+                                </li>
+                              </ul>
+                              <div class="pt-chip-row">
+                                <span class="pt-chip">JavaScript</span>
+                                <span class="pt-chip">VAST</span>
+                                <span class="pt-chip">Video QA</span>
+                              </div>
+                              <a class="pt-panel-link" href="vast2mp4/" target="_blank" rel="noopener">
+                                  Open Vast2MP4<span>↗</span>
+                                </a>
+                            </div>
+              
+                            <div class="pt-panel-image">
+                              VAST breakdown view<br />
+                              (placeholder image)
+                            </div>
+                          </div>
+                        </article>
+              
+                        <!-- PageID Scraper -->
+                        <article class="pt-panel" data-tool="pageid">
+                          <header class="pt-panel-header">
+                            <div class="pt-panel-logo">
+                                <img src="/images/logos/pageID-scraper-logo.png" alt="PageID Scraper logo" class="pageid-scraper-logo" />
+                            </div>
+                            <div class="pt-panel-header-text">
+                              <p class="pt-panel-kicker">PageID Scraper · CMS helper</p>
+                              <h3 class="pt-panel-title">Bridge CMS URLs and ad server targeting</h3>
+                              <p class="pt-panel-meta">
+                                Turns WaPo article URLs into page IDs for faster targeting setup.
+                              </p>
+                            </div>
+                          </header>
+              
+                          <div class="pt-panel-body">
+                            <div class="pt-panel-text">
+                              <p>
+                                Page-level targeting often relies on internal IDs, not the public URLs
+                                that most stakeholders share when requesting campaigns.
+                              </p>
+                              <ul class="pt-bullets">
+                                <li>
+                                  <span class="pt-bullet-label">Problem:</span>
+                                  <span class="pt-bullet-text">
+                                    Converting a list of article URLs into page IDs required repeated
+                                    lookups in the CMS, which was slow and prone to copy/paste errors.
+                                  </span>
+                                </li>
+                                <li>
+                                  <span class="pt-bullet-label">Solution:</span>
+                                  <span class="pt-bullet-text">
+                                    Built a small tool that accepts article URLs, queries for their page IDs,
+                                    and returns a clean list ready for ad server targeting.
+                                  </span>
+                                </li>
+                                <li>
+                                  <span class="pt-bullet-label">Impact:</span>
+                                  <span class="pt-bullet-text">
+                                    Shrinks a multi-step CMS task down to a single paste-and-download step,
+                                    and standardizes how page IDs are pulled for campaigns.
+                                  </span>
+                                </li>
+                              </ul>
+                              <div class="pt-chip-row">
+                                <span class="pt-chip">JavaScript</span>
+                                <span class="pt-chip">Automation</span>
+                                <span class="pt-chip">Ad server</span>
+                              </div>
+                              <a class="pt-panel-link" href="pageid-scraper/" target="_blank" rel="noopener">
+                                  Open PageID Scraper<span>↗</span>
+                                </a>
+                            </div>
+              
+                            <div class="pt-panel-image">
+                              URL → pageID mapping<br />
+                              (placeholder image)
+                            </div>
+                          </div>
+                        </article>
+              
+                        <!-- BlockList -->
+                        <article class="pt-panel" data-tool="blocklist">
+                          <header class="pt-panel-header">
+                            <div class="pt-panel-logo">
+                                <img src="/images/logos/blocklist-logo.png" alt="BlockList logo" class="blocklist-logo" />
+                            </div>
+                            <div class="pt-panel-header-text">
+                              <p class="pt-panel-kicker">BlockList · Brand safety</p>
+                              <h3 class="pt-panel-title">Turn messy URLs into usable blocklists</h3>
+                              <p class="pt-panel-meta">
+                                Helps translate flagged pages into exclusion keywords for campaigns.
+                              </p>
+                            </div>
+                          </header>
+              
+                          <div class="pt-panel-body">
+                            <div class="pt-panel-text">
+                              <p>
+                                When content is flagged as unsafe, ad ops often receives URLs, not the structured
+                                exclusion lists that platforms actually need.
+                              </p>
+                              <ul class="pt-bullets">
+                                <li>
+                                  <span class="pt-bullet-label">Problem:</span>
+                                  <span class="pt-bullet-text">
+                                    Converting long lists of URLs into meaningful keywords was a manual,
+                                    spreadsheet-heavy task that varied by who did it and took time away
+                                    from higher-value work.
+                                  </span>
+                                </li>
+                                <li>
+                                  <span class="pt-bullet-label">Solution:</span>
+                                  <span class="pt-bullet-text">
+                                    Built a helper that ingests URLs, extracts key terms, deduplicates
+                                    them, and outputs a list ready for key-value or platform exclusions.
+                                  </span>
+                                </li>
+                                <li>
+                                  <span class="pt-bullet-label">Impact:</span>
+                                  <span class="pt-bullet-text">
+                                    Makes blocklist creation faster and more consistent, especially when
+                                    large spreadsheets of flagged URLs come in.
+                                  </span>
+                                </li>
+                              </ul>
+                              <div class="pt-chip-row">
+                                <span class="pt-chip">JavaScript</span>
+                                <span class="pt-chip">Brand safety</span>
+                                <span class="pt-chip">Workflow</span>
+                              </div>
+                              <a class="pt-panel-link" href="blocklist/" target="_blank" rel="noopener">
+                                  Open BlockList<span>↗</span>
+                                </a>
+                            </div>
+              
+                            <div class="pt-panel-image">
+                              URL → keyword extraction<br />
+                              (placeholder image)
+                            </div>
+                          </div>
+                        </article>
+              
+                        <!-- Collate -->
+                        <article class="pt-panel" data-tool="collate">
+                          <header class="pt-panel-header">
+                            <div class="pt-panel-logo">
+                              <img src="/images/logos/collate-logo.png" alt="Collate logo" class="collate-logo"/>
+                            </div>
+                            <div class="pt-panel-header-text">
+                              <p class="pt-panel-kicker">Collate · Spreadsheet helper</p>
+                              <h3 class="pt-panel-title">Convert a column into a clean list in one click</h3>
+                              <p class="pt-panel-meta">
+                                Tiny helper for turning spreadsheet exports into targeting strings.
+                              </p>
+                            </div>
+                          </header>
+              
+                          <div class="pt-panel-body">
+                            <div class="pt-panel-text">
+                              <p>
+                                A lot of key-value setup starts with a CSV export. Turning a column into
+                                a comma-separated list is simple, but repetitive and easy to mangle.
+                              </p>
+                              <ul class="pt-bullets">
+                                <li>
+                                  <span class="pt-bullet-label">Problem:</span>
+                                  <span class="pt-bullet-text">
+                                    Manually joining long columns into a single string meant trimming spaces,
+                                    hunting duplicates, and hoping no stray characters slipped in.
+                                  </span>
+                                </li>
+                                <li>
+                                  <span class="pt-bullet-label">Solution:</span>
+                                  <span class="pt-bullet-text">
+                                    Collate cleans a column, removes duplicates, and joins it into one
+                                    comma-separated value ready to paste into a UI or config file.
+                                  </span>
+                                </li>
+                                <li>
+                                  <span class="pt-bullet-label">Impact:</span>
+                                  <span class="pt-bullet-text">
+                                    Turns a small but frequent spreadsheet chore into a one-click step and
+                                    reduces the chance of subtle formatting errors.
+                                  </span>
+                                </li>
+                              </ul>
+                              <div class="pt-chip-row">
+                                <span class="pt-chip">JavaScript</span>
+                                <span class="pt-chip">Spreadsheet</span>
+                                <span class="pt-chip">Micro tool</span>
+                              </div>
+                              <a class="pt-panel-link" href="collate/" target="_blank" rel="noopener">
+                                  Open Collate<span>↗</span>
+                                </a>
+                            </div>
+              
+                            <div class="pt-panel-image">
+                              Column → CSV string<br />
+                              (placeholder image)
+                            </div>
+                          </div>
+                        </article>
+                      </div>
                     </div>
-
-                    <div id="Indicators-3" class="carousel slide col-md-6 my-auto" data-ride="carousel">
-                        <ol class="carousel-indicators">
-                            <li data-target="#Indicators-3" data-slide-to="0" class="active"></li>
-                            <li data-target="#Indicators-3" data-slide-to="1"></li>
-                            <li data-target="#Indicators-3" data-slide-to="2"></li>
-                        </ol>
-                        <div class="carousel-inner">
-                            <div class="carousel-item active">
-                            <img class="d-block w-100" src="images/analytics-example-1.png" alt="Slide 1">
-                            <div class="carousel-caption">
-                                <h5>2018-2019 Website Behavior Overview</h5>
-                                <p>Example 1</p>
-                            </div>
-                            </div>
-                            <div class="carousel-item">
-                            <img class="d-block w-100" src="images/analytics-example-2.png" alt="Slide 2">
-                            <div class="carousel-caption">
-                                <h5>2018-2019 Website Traffic Acquisition Report - Bounce Rate</h5>
-                                <p>Example 2</p>
-                            </div>
-                            </div>
-                            <div class="carousel-item">
-                            <img class="d-block w-100" src="images/analytics-example-3.png" alt="Slide 2">
-                            <div class="carousel-caption">
-                                <h5>Content Efficiency Analysis - June 2020</h5>
-                            </div>
-                            </div>
-                        </div>
-                        <a class="carousel-control-prev" href="#Indicators-3" role="button" data-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="sr-only">Previous</span>
-                        </a>
-                        <a class="carousel-control-next" href="#Indicators-3" role="button" data-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="sr-only">Next</span>
-                        </a>
-                    </div>
+                  </div>
+              
                 </div>
-            </div> -->
-
-            <!-- <div class="project-5">
-                <div class="row">
-                    <div class="col-md-6 text-left">
-                        <h3>Graphic Design</h3>
-                        <hr>
-                        <p>At Tecore Networks, I use Adobe Photoshop and Illustrator to produce multi-channel marketing collateral to enhance corporate web and email content. Whether it is a brochure, graphic, datasheet, or product infographic, I specialize in developing clean and concise assets that deliver a powerful message that align's with Tecore's brand, and are easy to understand by both technical and non-technical key decision makers.</p>
-                    </div>
-
-                    <div id="Indicators-5" class="carousel slide col-md-6 my-auto" data-ride="carousel">
-                        <ol class="carousel-indicators">
-                            <li data-target="#Indicators-5" data-slide-to="0" class="active"></li>
-                            <li data-target="#Indicators-5" data-slide-to="1"></li>
-                            <li data-target="#Indicators-5" data-slide-to="2"></li>
-                            <li data-target="#Indicators-5" data-slide-to="3"></li>
-                        </ol>
-                        <div class="carousel-inner">
-                            <div class="carousel-item active">
-                                <img class="d-block w-100" src="images/graphic design/hybrid-cloud-onprem_pLTE_1200x665.jpg" alt="First slide">
-                                <div class="carousel-caption">
-                                    <h5>Graphic - Email, Private LTE Campaign</h5>
-                                </div>
-                            </div>
-                            <div class="carousel-item">
-                                <img class="d-block w-100" src="images/graphic design/icore-brochure-preview_1200x665.jpg" alt="Second slide">
-                                <div class="carousel-caption">
-                                    <h5>Collateral - Product Infographic, iCore Software</h5>
-                                </div>
-                            </div>
-                            <div class="carousel-item">
-                            <img class="d-block w-100" src="images/graphic design/sr-das_1200x665.jpg" alt="Third slide">
-                            <div class="carousel-caption">
-                                <h5>Graphic - Email Header, srDAS</h5>
-                            </div>
-                            </div>
-                            <div class="carousel-item">
-                                <img class="d-block w-100" src="images/graphic design/inac_e-umbrella_1200x665.jpg" alt="Fourth slide">
-                                <div class="carousel-caption">
-                                    <h5>Graphic - Website/Powerpoint, iNAC-E Solution</h5>
-                                </div>
-                            </div>
-                            <div class="carousel-item">
-                                <img class="d-block w-100" src="images/graphic design/managed-access-coverage_1200x665.jpg" alt="Fifth slide">
-                                <div class="carousel-caption">
-                                    <h5>Graphic - Web, iNAC-E Solution</h5>
-                                </div>
-                                </div>
-                        </div>
-                        <a class="carousel-control-prev" href="#Indicators-5" role="button" data-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="sr-only">Previous</span>
-                        </a>
-                        <a class="carousel-control-next" href="#Indicators-5" role="button" data-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="sr-only">Next</span>
-                        </a>
-                    </div>
-                </div>
-            </div> -->
-
-            <!-- <div class="project-4">
-                <div class="row">
-                    <div class="col-md-6 text-left">
-                        <h3>On-Page SEO</h3>
-                        <hr>
-                        <p>When creating content for Tecore's website, I manage optimization of on-page SEO (page meta descriptions, image alt text, header tags, content keywords, page speeds), and Tecore's presence in organic Google searches. I maintain tailored meta descriptions for high level products/solutions in Yoast, and index new/modified/archived pages using Google Search Console. <strong>Slide 1</strong> and <strong>Slide 2</strong> are examples of how I was able to improve organic search results for the query "Tecore Networks".</p>
-                        
-                        <p>By consistently monitoring search results for our most common Google keyword searches and indexing our site, I have been successful in improving our online brand presence by removing poor quality Google search results for Tecore Networks and keeping top results relevant (<strong>Slide 3</strong>).</p>
-
-                        <p>At Tecore I also monitor and investigate telecom trends and market opportunities, and develop pages with meaningful content and visuals to drive traffic to our website. Current popular queries (with pages under development) are: 5G, Distributed Antenna Systems (DAS), Private LTE & CBRS, and the internet of things (IOT).</p>
-                    </div>
-
-                    <div id="Indicators-4" class="carousel slide col-md-6 my-auto" data-ride="carousel">
-                        <ol class="carousel-indicators">
-                            <li data-target="#Indicators-4" data-slide-to="0" class="active"></li>
-                            <li data-target="#Indicators-4" data-slide-to="1"></li>
-                            <li data-target="#Indicators-4" data-slide-to="2"></li>
-                        </ol>
-                        <div class="carousel-inner">
-                            <div class="carousel-item active">
-                            <img class="d-block w-100" src="images/seo-example-1.png" alt="First slide">
-                            <div class="carousel-caption">
-                                <h5>Google search query for "Tecore Networks"</h5>
-                                <p>September 2019</p>
-                            </div>
-                            </div>
-                            <div class="carousel-item">
-                            <img class="d-block w-100" src="images/seo-example-2.png" alt="Second slide">
-                            <div class="carousel-caption">
-                                <h5>Google search query for "Tecore Networks"</h5>
-                                <p>July 2020</p>
-                            </div>
-                            </div>
-                            <div class="carousel-item">
-                            <img class="d-block w-100" src="images/seo-example-3.png" alt="Third slide">
-                            <div class="carousel-caption">
-                                <h5>Google search query for "tecore mas"</h5>
-                                <p>Example of improving Tecore related search queries in Google using Google Search Console indexing and a sitemap</p>
-                            </div>
-                            </div>
-                        </div>
-                        <a class="carousel-control-prev" href="#Indicators-4" role="button" data-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="sr-only">Previous</span>
-                        </a>
-                        <a class="carousel-control-next" href="#Indicators-4" role="button" data-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="sr-only">Next</span>
-                        </a>
-                    </div>
-                </div>
-            </div> -->
-            
-            <div class="row">
-                <!-- Column 1 -->
-                <div class="col-md-3 text-center tagsafe-demo">
-                    <a target="_blank" href="tagSafe/">
-                        <div class="logo-box">
-                            <img class="tagsafe-logo" src="/images/logos/tagsafe-logo.PNG" alt="Project 1">
-                        </div>
-                    </a>
-                    <p>Validate third-party tags and preview creatives instantly.</p>
-                </div>
-
-                <!-- Column 2 -->
-                <div class="col-md-3 text-center outline-demo">
-                    <a target="_blank" href="addBorders/">
-                        <div class="logo-box">
-                            <img class="outline-logo" src="/images/logos/outline-logo.PNG" alt="Project 2">
-                        </div>
-                    </a>
-                    <p>Add custom borders to images for fast creative tweaks.</p>
-                </div>
-
-                <!-- Column 3 -->
-                <div class="col-md-3 text-center adbuilder-demo">
-                    <a target="_blank" href="adbuilder/">
-                        <div class="logo-box">
-                            <img class="adbuilder-logo" src="/images/logos/adbuilder-logo.png" alt="Project 3">
-                        </div>
-                    </a>
-                    <p>Generate ad creatives across sizes from core assets.</p>
-                </div>
-
-                <!-- Column 4 -->
-                <div class="col-md-3 text-center apple-demo">
-                    <a target="_blank" href="appledemo/">
-                        <div class="logo-box">
-                            <img class="apple-logo" src="/images/logos/apple-logo-gray.png" alt="Project 4">
-                        </div>
-                    </a>
-                    <p>Apple Demo</p>
-                </div>
-            </div>
-
-            <div class="row">
-                <!-- Column 1 -->
-                <div class="col-md-3 text-center vast2mp4-demo">
-                    <a target="_blank" href="vast2mp4/">
-                        <div class="logo-box">
-                            <img class="vast2mp4-logo" src="/images/logos/vast2mp4-logo.png" alt="Project 5">
-                        </div>
-                    </a>
-                    <p>Extract MP4 files and trackers from VAST tags.</p>
-                </div>
-
-                <!-- Column 2 -->
-                <div class="col-md-3 text-center blocklist-demo">
-                    <a target="_blank" href="blocklist/">
-                        <div class="logo-box">
-                            <img class="blocklist-logo" src="/images/logos/blocklist-logo.png" alt="Project 6">
-                        </div>
-                    </a>
-                    <p>Build keyword blocklists from URLs with impact analysis.</p>
-                </div>
-
-                <!-- Column 3 -->
-                <div class="col-md-3 text-center collate-demo">
-                    <a target="_blank" href="collate/">
-                        <div class="logo-box">
-                            <img class="collate-logo" src="/images/logos/collate-logo.png" alt="Project 7">
-                        </div>
-                    </a>
-                    <p>Convert a single spreadsheet column into a cleaned, comma-separated string</p>
-                </div>
-
-                <!-- Column 4 -->
-                <div class="col-md-3 text-center pageID-scraper-demo">
-                    <a target="_blank" href="pageid-scraper/">
-                        <div class="logo-box">
-                            <img class="pageid-scraper-logo" src="/images/logos/pageID-scraper-logo.png" alt="Project 8">
-                        </div>
-                    </a>
-                    <p>Extract page IDs from WAPO article URLs.</p>
-                </div>
-            </div>
-
-        </section>
+              </section>
 
         <section id="project-section" class="project-section container-fluid">
             <div class="col-md-12 text-center">
@@ -930,6 +1197,7 @@
     <script src="/homescripts/slider.js"></script>
     <script src="homescripts/gallery-script.js"></script>
     <script src="https://unpkg.com/typeit@8.7.1/dist/index.umd.js"></script>
+    <script src="homescripts/project-section.js"></script>
     <script src="homescripts/typer.js"></script>
         <script>
             (() => {

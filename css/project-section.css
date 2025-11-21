@@ -1,0 +1,540 @@
+  .product-tools {
+    padding: 56px 24px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .product-tools-inner {
+    max-width: 1200px;
+    width: 100%;
+  }
+
+  .pt-header {
+    text-align: left;
+    margin-bottom: 18px;
+  }
+
+  .pt-kicker {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  .pt-header h2 {
+    margin: 0 0 6px;
+    font-size: 1.9rem;
+    letter-spacing: -0.02em;
+  }
+
+  .pt-header p {
+    margin: 0;
+    max-width: 680px;
+    color: var(--text-muted);
+    font-size: 0.98rem;
+  }
+
+  /* OVERVIEW GRID */
+
+  .pt-overview {
+    margin-top: 24px;
+  }
+
+  .pt-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px 20px;
+  }
+
+  .pt-card {
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    padding: 16px 16px 14px;
+    box-shadow: var(--shadow-soft);
+    border: 1px solid transparent;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    transition:
+      transform 0.12s ease,
+      box-shadow 0.12s ease,
+      border-color 0.12s ease,
+      background 0.12s ease;
+  }
+
+  .pt-card:hover{
+    background: var(--surface);          /* no hard jump to pure white */
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(0,0,0,.22);
+    border-color: var(--border);
+  }
+
+  .pt-card-logo {
+    height: 36px;
+    display: flex;
+    align-items: center;
+  }
+
+  .pt-card-logo img {
+    max-height: 36px;
+    max-width: 120px;
+    object-fit: contain;
+    display: block;
+  }
+
+  .pt-card-title-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .pt-card-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+  }
+
+  .pt-card-pill {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    padding: 2px 6px;
+    border-radius: 999px;
+    background: var(--tag-bg);
+    color: var(--text-muted);
+  }
+
+  .pt-card-desc {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+
+  .pt-overview-note {
+    margin-top: 10px;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+
+  
+
+  /* DETAIL MODE */
+
+  .pt-detail {
+    margin-top: 26px;
+  }
+
+  .is-hidden {
+    display: none !important;
+  }
+
+  .pt-detail-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+
+  .pt-back {
+    border: none;
+    background: transparent;
+    padding: 0;
+    font-size: 0.84rem;
+    color: var(--accent-strong);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+  }
+
+  .pt-back::before {
+    content: "←";
+    font-size: 0.9rem;
+  }
+
+  .pt-tabs-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding-bottom:10px;
+  }
+
+  .pt-tabs {
+      display: flex;
+      flex-wrap: nowrap;
+      gap: 8px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      padding-bottom: 4px;
+      -webkit-overflow-scrolling: touch;
+
+      /* hide scrollbar cross-browser while keeping scroll */
+      scrollbar-width: none;              /* Firefox */
+      -ms-overflow-style: none;           /* IE / Edge legacy */
+      }
+
+      .pt-tabs::-webkit-scrollbar {
+      display: none;                      /* WebKit */
+      }
+
+
+.pt-tab {
+    border: 1px solid transparent;
+    background: transparent;
+    border-radius: 999px;
+    padding: 6px 13px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.84rem;
+    white-space: nowrap;
+    cursor: pointer;
+    color: var(--text-muted);
+    transition:
+        background 0.14s ease,
+        color 0.14s ease,
+        border-color 0.14s ease;
+    outline: none;
+    }
+
+    .pt-tab:focus{
+        outline: none;
+    }
+
+  .pt-tab-label {
+    font-weight: 500;
+  }
+
+  .pt-tab-pill {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    padding: 2px 6px;
+    border-radius: 999px;
+    background: var(--tag-bg);
+    color: var(--text-muted);
+  }
+
+  .pt-tab:hover {
+      background: rgba(15, 23, 42, 0.03);
+      }
+
+  .pt-tab.is-active {
+      background: var(--accent-soft);
+      color: var(--accent-strong);
+      border-color: rgba(79, 70, 229, 0.4);
+  }
+
+  .pt-legend {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+
+  /* Panel shell */
+
+  .pt-shell {
+    position: relative;
+    background: var(--bg-section);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-soft);
+    padding: 18px 20px 20px;
+    min-height: 260px;
+  }
+
+  .pt-panels {
+    position: relative;
+    width: 100%;
+  }
+
+  .pt-panel {
+    display: none;
+    padding: 8px 4px 4px;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(4px);
+    transition:
+      opacity 0.14s ease,
+      transform 0.14s ease;
+    flex-direction: column;
+  }
+
+  .pt-panel.is-active {
+    display: flex;
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+
+  .pt-panel-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+  padding-right: 12px;
+  }
+
+  .pt-panel-logo {
+      order: 2;
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-end;
+      max-width: 150px;
+      height: 40px;
+      background: transparent;   /* remove pill/circle */
+      border-radius: 0;
+      flex-shrink: 0;
+      margin-top: 4px;
+      margin-right: 4px;
+      }
+
+      .pt-panel-logo img {
+      max-height: 40px;
+      max-width: 150px;
+      object-fit: contain;
+      display: block;
+      }
+
+      .pt-panel-header-text {
+      min-width: 0;
+      flex: 1;
+      }
+
+  .pt-panel-kicker {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-muted);
+    margin: 0 0 4px;
+  }
+
+  .pt-panel-title {
+    margin: 0 0 4px;
+    font-size: 1.3rem;
+    letter-spacing: -0.02em;
+  }
+
+  .pt-panel-meta {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+
+  .pt-panel-body {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    gap: 18px;
+    align-items: flex-start;
+    margin-top: 6px;
+  }
+
+  .pt-panel-text {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+  }
+
+  .pt-panel-text > p {
+    margin: 0 0 8px;
+  }
+
+  .pt-bullets {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 10px;
+  }
+
+  .pt-bullets li + li {
+    margin-top: 6px;
+  }
+
+  .pt-bullet-label {
+    font-weight: 600;
+    color: var(--text-main);
+    margin-right: 4px;
+  }
+
+  .pt-bullet-text {
+    color: var(--text-muted);
+  }
+
+  .pt-chip-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .pt-chip {
+    font-size: 0.74rem;
+    padding: 3px 8px;
+    border-radius: 999px;
+    background: var(--tag-bg);
+    color: var(--text-muted);
+  }
+
+
+
+
+
+  /* Responsive */
+
+  @media (max-width: 1040px) {
+    .pt-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 800px) {
+    .pt-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 960px) {
+    .product-tools {
+      padding: 44px 16px;
+    }
+
+    .pt-panel-body {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .pt-panel-image {
+      max-width: 100%;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .pt-header h2 {
+      font-size: 1.6rem;
+    }
+
+    .pt-legend {
+      display: none;
+    }
+
+    .pt-shell {
+      padding: 14px 14px 16px;
+    }
+  }
+
+  @media (max-width: 520px) {
+    .pt-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .product-tools {
+      padding-inline: 12px;
+    }
+  }
+
+  .pt-card-footer {
+      margin-top: 4px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.78rem;
+      color: var(--accent-strong);
+      }
+
+  .pt-card-arrow {
+  font-size: 0.8rem;
+  transform: translateY(1px);
+  }
+
+  .pt-panel-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 8px;
+  font-size: 0.82rem;
+  color: var(--accent-strong);
+  text-decoration: none;
+  }
+
+  .pt-panel-link span {
+  font-size: 0.85rem;
+  transform: translateY(1px);
+  }
+
+  .pt-panel-link:hover {
+  text-decoration: underline;
+  }
+
+  /* ==== Product tools: readability tweaks ==== */
+
+/* overall body text line-height */
+.pt-panel-text,
+.pt-panel-text p,
+.pt-bullets{
+  line-height: 1.55;
+}
+
+/* group the three bullets in a soft panel */
+.pt-bullets{
+  list-style: none;
+  margin: 10px 0 12px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: rgba(0,0,0,.02);
+  border: 1px solid rgba(0,0,0,.03);
+}
+[data-theme="dark"] .pt-bullets{
+  background: rgba(255,255,255,.03);
+  border-color: rgba(255,255,255,.05);
+}
+
+/* spacing between items */
+.pt-bullets li + li{
+  margin-top: 10px;
+}
+
+/* labels on their own line */
+.pt-bullet-label{
+  display: block;
+  font-weight: 600;
+  font-size: .9rem;
+  color: var(--text-strong);
+  margin-bottom: 2px;
+}
+
+/* body text slightly muted */
+.pt-bullet-text{
+  display: block;
+  color: var(--muted);
+}
+
+/* give the intro paragraph a bit more air above the bullets */
+.pt-panel-text > p:first-of-type{
+  margin-bottom: 10px;
+}
+
+
+/* Preview container: defines the window + clips vertically */
+.pt-panel-image{
+    width: 100%;
+    height: 100%;           /* whatever height we gave the preview area */
+    border-radius: 18px;
+    overflow: hidden;       /* crop top/bottom when image is taller */
+    display: flex;
+    align-items: center;    /* vertical centering of the image */
+    justify-content: center;/* horizontal centering (just in case) */
+  }
+  
+  /* Screenshot: full width, keep aspect ratio, no horizontal crop */
+  .pt-panel-image .pt-panel-screenshot{
+    width: 100%;       /* always span full width of container */
+    height: auto;      /* maintain aspect ratio */
+    max-width: none;   /* don't let any max-width rule interfere */
+    flex-shrink: 0;    /* don't let flexbox squish it smaller */
+    display: block;
+  }
+  
