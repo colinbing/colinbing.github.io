@@ -395,7 +395,7 @@ footer .row{ left:0; right:0 }
 [data-theme="dark"] .outline-logo{ content:url('/images/logos/outline-white.PNG'); height:auto }
 [data-theme="dark"] .blocklist-logo{ content:url('/images/logos/blocklist-logo-white.png'); height:auto }
 [data-theme="dark"] .collate-logo{ content:url('/images/logos/collate-logo-white.png'); height:auto }
-[data-theme="dark"] .pageid-scraper-logo{ content:url('/pageid-scraper/images/pageID-scraper-logo-white.png'); height:auto }
+[data-theme="dark"] .pageid-scraper-logo{ content:url('/images/logos/pageID-scraper-logo-white.png'); height:auto }
 
 /* generic dark helpers */
 [data-theme="dark"] .bg-light{ background-color:#333 !important }
