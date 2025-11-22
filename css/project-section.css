@@ -426,6 +426,9 @@
     }
   }
 
+
+
+
   @media (max-width: 480px) {
     .product-tools {
       padding-inline: 12px;
@@ -534,3 +537,46 @@
     display: block;
   }
   
+
+/* ==== Product tools – mobile header layout ==== */
+@media (max-width: 768px) {
+  /* Make header a single column stack */
+  .pt-panel-header {
+    grid-template-columns: 1fr;     /* was 2 columns on desktop */
+    column-gap: 0;
+    row-gap: 0.45rem;
+    align-items: flex-start;
+  }
+
+  /* Logo goes on its own row, aligned left, smaller */
+  .pt-panel-logo {
+    justify-self: flex-start;
+    margin-bottom: 0.1rem;
+  }
+
+  .pt-panel-logo img {
+    max-width: 130px;
+    height: auto;
+    display: block;
+  }
+
+  /* Text gets full width under the logo */
+  .pt-panel-header-text {
+    max-width: 100%;
+  }
+
+  .pt-panel-kicker {
+    margin-bottom: 0.2rem;
+  }
+
+  .pt-panel-title {
+    max-width: none;                /* allow full width */
+    font-size: 1.35rem;
+    line-height: 1.25;
+    margin-bottom: 0.35rem;
+  }
+
+  .pt-panel-meta {
+    max-width: none;
+  }
+}
