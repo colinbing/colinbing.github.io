@@ -540,43 +540,60 @@
 
 /* ==== Product tools – mobile header layout ==== */
 @media (max-width: 768px) {
-  /* Make header a single column stack */
+  /* Stack header content in one column */
   .pt-panel-header {
-    grid-template-columns: 1fr;     /* was 2 columns on desktop */
-    column-gap: 0;
-    row-gap: 0.45rem;
+    display: flex;              /* still flex */
+    flex-direction: column;     /* stack: logo, kicker, title, meta */
     align-items: flex-start;
+    gap: 6px;
+    padding-right: 0;
   }
 
-  /* Logo goes on its own row, aligned left, smaller */
+  /* Logo on its own row, left aligned and a bit smaller */
   .pt-panel-logo {
-    justify-self: flex-start;
-    margin-bottom: 0.1rem;
+    order: 0;
+    margin: 0 0 4px;
+    justify-content: flex-start;
+    max-width: 140px;
+    height: auto;
   }
 
   .pt-panel-logo img {
-    max-width: 130px;
+    max-width: 140px;
+    max-height: 32px;
     height: auto;
     display: block;
   }
 
-  /* Text gets full width under the logo */
+  /* Text block takes full width under the logo */
   .pt-panel-header-text {
+    order: 1;
     max-width: 100%;
   }
 
   .pt-panel-kicker {
-    margin-bottom: 0.2rem;
+    margin-bottom: 2px;
+    font-size: 0.78rem;
   }
 
   .pt-panel-title {
-    max-width: none;                /* allow full width */
-    font-size: 1.35rem;
+    text-align: left;
+    max-width: 100%;
+    font-size: 1.3rem;
     line-height: 1.25;
-    margin-bottom: 0.35rem;
+    margin-bottom: 4px;
   }
 
   .pt-panel-meta {
-    max-width: none;
+    max-width: 100%;
+  }
+}
+
+
+/* Let the screenshot set its own height on single-column layouts */
+@media (max-width: 960px) {
+  .pt-panel-image {
+    height: auto;
+    margin-top: 8px;           /* small breathing room under text */
   }
 }
