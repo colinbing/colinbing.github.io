@@ -34,6 +34,13 @@
 
   /* misc */
   --ringOpacity: .12;
+
+  /* Contact section – light */
+  --contact-bg: #f5f7fb;
+  --contact-text: #111827;
+  --contact-muted: #4b5563;
+  --contact-border: rgba(15, 23, 42, 0.06);
+  --contact-floating-bg: #4f46e5;
 }
 
 [data-theme="dark"]{
@@ -70,6 +77,13 @@
   --sec-blue: #007acc;
 
   --ringOpacity: .22;
+
+  /* Contact section – dark */
+  --contact-bg: var(--surface-2);
+  --contact-text: #f9fafb;
+  --contact-muted: #9ca3af;
+  --contact-border: rgba(148, 163, 184, 0.18);
+  --contact-floating-bg: #4f46e5; /* stays on brand */
 }
 
 
@@ -87,6 +101,17 @@ p,li{ font-size:.9rem; color:var(--text) }
 
 .container-fluid{ padding-left:0; padding-right:0 }
 .row{ padding-left:15px; padding-right:15px }
+
+/* Reserve space for fixed navbar */
+.main {
+  padding-top: var(--nav-h);
+}
+
+/* All in-page sections scroll to just below the navbar */
+section[id] {
+  scroll-margin-top: calc(var(--nav-h) + 12px);
+}
+
 
 /* ========= NAV ========= */
 #navbar .nav-link img{
@@ -516,16 +541,8 @@ footer .row{ left:0; right:0 }
 #footer-carousel .ix-slide{flex:0 0 33.333%!important}
 #footer-carousel .ix-slide img{display:block;width:100%;height:auto}
 
-
-#contact-section{ margin-bottom:30px; }
-
 section {
   padding-top: 20px;
-}
-
-#project-section:target, #skills-section:target, #certification-section:target, #experience-section:target {
-    padding-top: 100px; /* Matches navbar height */
-    margin-top: -100px; /* Counteracts the padding to avoid shifting content */
 }
 
 /* ===== Experience: canonical styles ===== */
@@ -770,4 +787,150 @@ section {
 /* narrower variant for wordier sections like Product Tools */
 .section-heading--narrow {
   max-width: 760px;
+}
+
+/* Stronger active state in navbar */
+#navbar .nav-item .nav-link {
+  position: relative;
+  font-weight: 500;
+  opacity: 0.78;
+  transition: opacity 0.15s ease;
+}
+
+#navbar .nav-item.active .nav-link {
+  opacity: 1;
+  font-weight: 600;
+}
+
+#navbar .nav-item.active .nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -4px;
+  height: 2px;
+  border-radius: 999px;
+  background: var(--accent);
+}
+
+/* CONTACT SECTION */
+
+.contact-section {
+  background: var(--contact-bg);
+  color: var(--contact-text);
+  padding: 72px 24px 80px;       /* similar vertical rhythm as other sections */
+}
+
+.contact-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+/* Heading – match other H2 sections */
+
+.contact-inner h2 {
+  font-size: 2rem;
+  letter-spacing: -0.02em;
+  margin: 0 0 12px;
+}
+
+.contact-tagline {
+  margin: 0 auto 32px;
+  max-width: 560px;
+  font-size: 0.98rem;
+  color: var(--contact-muted);
+}
+
+/* Buttons row */
+
+.contact-actions {
+  display: inline-flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.contact-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 150px;
+  padding: 10px 22px;
+  border-radius: 999px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  border: 1px solid transparent;
+  transition:
+    background-color 0.18s ease,
+    color 0.18s ease,
+    box-shadow 0.18s ease,
+    border-color 0.18s ease;
+}
+
+/* Primary = filled */
+
+.contact-btn--primary {
+  background: #007acc;
+  color: #ffffff;
+  box-shadow: 0 14px 30px rgba(79, 70, 229, 0.35);
+}
+
+.contact-btn--primary:hover {
+  box-shadow: 0 18px 40px rgba(79, 70, 229, 0.45);
+  transform: translateY(-1px);
+}
+
+/* Ghost = outline */
+
+.contact-btn--ghost {
+  background: transparent;
+  color: var(--contact-text);
+  border-color: var(--contact-border);
+}
+
+.contact-btn--ghost:hover {
+  border-color: var(--accent);
+  box-shadow: 0 10px 26px rgba(15, 23, 42, 0.25);
+}
+
+/* Floating CTA pill */
+
+.contact-fab {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 60;
+}
+
+.contact-fab button {
+  border: none;
+  border-radius: 999px;
+  padding: 10px 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  background: #007acc;
+  color: #fff;
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.45);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition:
+    transform 0.16s ease,
+    box-shadow 0.16s ease,
+    opacity 0.16s ease;
+}
+
+.contact-fab button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 22px 55px rgba(15, 23, 42, 0.6);
+}
+
+/* Optional: hide the FAB on very small screens so it doesn’t crowd the UI */
+@media (max-width: 600px) {
+  .contact-fab {
+    display: none;
+  }
 }

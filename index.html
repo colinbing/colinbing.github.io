@@ -493,7 +493,7 @@
               </section>
               
 
-              <section class="product-tools" id="projects">
+              <section id="project-section" class="product-tools" id="projects">
                 <div class="product-tools-inner">
                   <header class="section-heading section-heading--narrow">
                     <div class="section-kicker">Product tools</div>
@@ -1153,7 +1153,7 @@
                 </div>
               </section>
 
-          <section id="project-section" class="project-section container-fluid">
+          <section class="project-section container-fluid">
             <header class="section-heading">
               <h2>Graphic Design</h2>
             </header>
@@ -1203,20 +1203,26 @@
             </div>
         </section>
 
-        <section id="contact-section" class="header-padding">
-          <div class="container-fluid text-center">
-            <header class="section-heading">
-              <h2>Contact</h2>
-            </header>
-        
-            <div class="row">
-              <div class="col-12 social-link-row">
-                        <a class= "social-link text-center" href="mailto:colinm.bingham@gmail.com" target="_blank"><img src="/images/icons/gmail.png"></img></a>
-                        <a class= "social-link text-center" href="https://www.linkedin.com/in/bingham-colin/" target="_blank"><img src="/images/icons/LinkedIn.png"></img></i></a>
-                    </div>
-                </div>
+        <section id="contact-section" class="contact-section">
+          <div class="contact-inner">
+            <h2>Contact</h2>
+            <p class="contact-tagline">
+              Open to ad ops, ad-tech, and product-adjacent roles — or just talking tooling.
+            </p>
+            <div class="contact-actions">
+              <a href="mailto:colinm.bingham@gmail.com"
+                 class="contact-btn contact-btn--primary">
+                Email me
+              </a>
+              <a href="https://www.linkedin.com/in/bingham-colin/"
+                 target="_blank" rel="noopener"
+                 class="contact-btn contact-btn--ghost">
+                Connect on LinkedIn
+              </a>
             </div>
+          </div>
         </section>
+        
 
         <footer id="footer">
             <div class="col-md-12 text-center copyright bg-dark my-auto">
@@ -1226,7 +1232,6 @@
     </main>    
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="./homescripts/bootstrap.min.js"></script>
-    <script src="homescripts/dynamic-height.js"></script>
     <script src="./homescripts/dark-mode-switch.min.js"></script>
     <script src="/homescripts/highlight-nav.js"></script>
     <script src="/homescripts/slider.js"></script>
@@ -1313,5 +1318,10 @@
             window.addEventListener('resize', () => chips.forEach(snapOrCenter), {passive:true});
             })();
             </script>
+    <div class="contact-fab">
+      <button type="button" onclick="document.getElementById('contact-section').scrollIntoView({ behavior: 'smooth' });">
+        Contact
+      </button>
+    </div>
 </body>
 </html>
