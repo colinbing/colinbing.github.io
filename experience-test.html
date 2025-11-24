@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Colin Bingham — Experience Layout Demo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #f4f5fb;
+      --bg-alt: #f9fafb;
+      --card-bg: #ffffff;
+      --border-subtle: #e5e7eb;
+      --border-strong: #d1d5db;
+      --text-main: #111827;
+      --text-muted: #6b7280;
+      --accent: #4f46e5;
+      --accent-soft: rgba(79, 70, 229, 0.06);
+      --radius-lg: 16px;
+      --radius-xl: 20px;
+      --shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text-main);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* LAYOUT */
+
+    .page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      padding: 16px 24px;
+      border-bottom: 1px solid rgba(15, 23, 42, 0.06);
+      background: #111827;
+      color: #f9fafb;
+    }
+
+    .nav-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      font-size: 0.9rem;
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #6366f1, #a855f7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .nav-name {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .nav-name span:first-child {
+      font-weight: 600;
+    }
+
+    .nav-name span:last-child {
+      font-size: 0.78rem;
+      opacity: 0.8;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 18px;
+      font-size: 0.82rem;
+      opacity: 0.9;
+    }
+
+    .nav-link {
+      position: relative;
+      padding-bottom: 2px;
+    }
+
+    .nav-link::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -2px;
+      height: 2px;
+      border-radius: 999px;
+      background: transparent;
+      transform-origin: left;
+      transform: scaleX(0.4);
+      transition: background 0.16s ease, transform 0.16s ease, opacity 0.16s ease;
+      opacity: 0;
+    }
+
+    .nav-link:hover::after {
+      background: #e5e7eb;
+      transform: scaleX(1);
+      opacity: 1;
+    }
+
+    main {
+      flex: 1;
+      padding: 32px 16px 64px;
+    }
+
+    .content {
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    /* HERO */
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 2.2fr) minmax(0, 1.3fr);
+      gap: 32px;
+      padding: 32px 24px;
+      border-radius: 24px;
+      background: radial-gradient(circle at top left, #ffffff, #eef2ff);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .hero h1 {
+      margin: 0 0 10px;
+      font-size: 1.9rem;
+      letter-spacing: -0.03em;
+    }
+
+    .hero-sub {
+      margin: 0 0 16px;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      max-width: 520px;
+    }
+
+    .hero-tagline {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.06);
+      font-size: 0.78rem;
+      margin-bottom: 16px;
+    }
+
+    .hero-tagline span {
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-weight: 600;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      border-radius: 999px;
+      padding: 8px 16px;
+      border: none;
+      font-size: 0.86rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      letter-spacing: -0.01em;
+      transition: transform 0.12s ease, box-shadow 0.12s ease,
+        background 0.12s ease, color 0.12s ease;
+    }
+
+    .btn-primary {
+      background: #111827;
+      color: #f9fafb;
+      box-shadow: 0 14px 32px rgba(15, 23, 42, 0.35);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.45);
+    }
+
+    .btn-ghost {
+      background: rgba(255, 255, 255, 0.7);
+      color: #111827;
+      border: 1px solid rgba(15, 23, 42, 0.08);
+    }
+
+    .btn-ghost:hover {
+      background: #ffffff;
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .hero-meta span {
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.03);
+    }
+
+    .hero-right {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      align-items: flex-end;
+      text-align: right;
+    }
+
+    .hero-photo {
+      width: 140px;
+      height: 140px;
+      border-radius: 32px;
+      background: radial-gradient(circle at 10% 0%, #f97316, #ec4899);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #f9fafb;
+      font-size: 3rem;
+      font-weight: 700;
+      box-shadow: 0 18px 45px rgba(15, 23, 42, 0.3);
+    }
+
+    .hero-role {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .hero-location {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    /* SECTION SHELLS */
+
+    .section {
+      margin-top: 40px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      padding: 0 2px;
+    }
+
+    .section-title {
+      font-size: 1.2rem;
+      letter-spacing: -0.02em;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .section-kicker {
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .section-sub {
+      font-size: 0.86rem;
+      color: var(--text-muted);
+      max-width: 420px;
+    }
+
+    /* TOOLS / SKILLS (MINI VERSION) */
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(15, 23, 42, 0.05);
+      padding: 14px 16px 16px;
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.03);
+    }
+
+    .card-title {
+      font-size: 0.92rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .chip {
+      font-size: 0.78rem;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: #f3f4ff;
+      color: #4338ca;
+      border: 1px solid rgba(79, 70, 229, 0.08);
+      white-space: nowrap;
+    }
+
+    .chip-soft {
+      background: #f9fafb;
+      color: var(--text-muted);
+      border-color: rgba(15, 23, 42, 0.03);
+    }
+
+    /* CERTIFICATIONS */
+
+    .cert-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .cert-card {
+      background: var(--card-bg);
+      border-radius: 14px;
+      border: 1px solid rgba(15, 23, 42, 0.05);
+      padding: 12px 14px;
+      font-size: 0.8rem;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .cert-name {
+      font-weight: 600;
+    }
+
+    .cert-meta {
+      color: var(--text-muted);
+      font-size: 0.76rem;
+    }
+
+    .cert-link {
+      font-size: 0.76rem;
+      color: var(--accent);
+      margin-top: 4px;
+    }
+
+    /* EXPERIENCE — NEW LAYOUT */
+
+    .experience-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .role-card {
+      background: var(--card-bg);
+      border-radius: var(--radius-xl);
+      border: 1px solid rgba(15, 23, 42, 0.06);
+      padding: 18px 20px 18px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.7fr) minmax(0, 2.3fr);
+      gap: 18px;
+      box-shadow: 0 12px 32px rgba(15, 23, 42, 0.04);
+    }
+
+    .role-header {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .role-title-row {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .role-title {
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      font-size: 0.98rem;
+    }
+
+    .role-company {
+      font-size: 0.86rem;
+      color: var(--text-muted);
+    }
+
+    .role-meta {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .role-impact-pill {
+      margin-top: 8px;
+      padding: 6px 8px;
+      border-radius: 10px;
+      border: 1px dashed rgba(79, 70, 229, 0.35);
+      background: rgba(79, 70, 229, 0.02);
+      font-size: 0.78rem;
+      color: #312e81;
+    }
+
+    .role-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .role-tag {
+      font-size: 0.74rem;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: #f3f4ff;
+      color: #4338ca;
+      border: 1px solid rgba(79, 70, 229, 0.16);
+      white-space: nowrap;
+    }
+
+    .role-body {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      font-size: 0.8rem;
+    }
+
+    .role-group-title {
+      font-weight: 600;
+      font-size: 0.8rem;
+      margin-bottom: 6px;
+      color: #111827;
+      letter-spacing: -0.01em;
+    }
+
+    .role-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .role-list li {
+      position: relative;
+      padding-left: 12px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    .role-list li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0.65em;
+      width: 4px;
+      height: 4px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.15);
+    }
+
+    .metric {
+      font-weight: 600;
+      color: #111827;
+    }
+
+    /* Smaller helper for lower roles to feel “lighter” */
+
+    .role-card.is-secondary {
+      background: #f9fafb;
+      border-style: dashed;
+      border-color: rgba(148, 163, 184, 0.6);
+    }
+
+    /* FOOTER */
+
+    footer {
+      padding: 20px 16px;
+      border-top: 1px solid rgba(15, 23, 42, 0.06);
+      background: #111827;
+      color: #9ca3af;
+      font-size: 0.78rem;
+    }
+
+    .footer-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* RESPONSIVE */
+
+    @media (max-width: 900px) {
+      .hero {
+        grid-template-columns: minmax(0, 1fr);
+        padding: 24px 18px;
+      }
+
+      .hero-right {
+        align-items: flex-start;
+        text-align: left;
+      }
+
+      .grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .cert-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .role-card {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .role-body {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    @media (max-width: 640px) {
+      header {
+        padding-inline: 16px;
+      }
+
+      .nav-inner {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      main {
+        padding-inline: 10px;
+      }
+
+      .grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .cert-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .section-header {
+        flex-direction: column;
+        gap: 6px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <div class="nav-inner">
+        <div class="nav-left">
+          <div class="avatar">CB</div>
+          <div class="nav-name">
+            <span>Colin Bingham</span>
+            <span>Ad Ops · QA · Product-ish</span>
+          </div>
+        </div>
+        <nav class="nav-links">
+          <a href="#tools" class="nav-link">Tools &amp; Skills</a>
+          <a href="#certs" class="nav-link">Certifications</a>
+          <a href="#experience" class="nav-link">Experience</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <div class="content">
+        <!-- HERO -->
+        <section class="hero">
+          <div>
+            <div class="hero-tagline">
+              <span>Ad Ops &amp; QA</span>
+              <div>Building tools to remove ad-ops friction.</div>
+            </div>
+            <h1>Hi, I’m Colin.</h1>
+            <p class="hero-sub">
+              Advertising Operations &amp; QA specialist at The Washington Post. I troubleshoot broken ads,
+              build internal tools, and connect campaign performance to real business outcomes.
+            </p>
+            <div class="hero-actions">
+              <button class="btn btn-primary">Download resume</button>
+              <button class="btn btn-ghost">View case studies</button>
+            </div>
+            <div class="hero-meta">
+              <span>Ad servers: GAM, DV360, LiveIntent, Apple News</span>
+              <span>Strength: turning messy tags into repeatable workflows</span>
+            </div>
+          </div>
+          <div class="hero-right">
+            <div class="hero-photo">CB</div>
+            <div class="hero-role">Ad Operations &amp; QA Specialist</div>
+            <div class="hero-location">Washington, DC · Remote-friendly</div>
+          </div>
+        </section>
+
+        <!-- TOOLS & SKILLS (mini) -->
+        <section id="tools" class="section">
+          <div class="section-header">
+            <div class="section-title">
+              <div class="section-kicker">Tools &amp; Skills</div>
+              <div>Technical focus areas</div>
+            </div>
+            <div class="section-sub">
+              A quick snapshot of where I spend most of my time: ad serving, QA, and internal tooling.
+            </div>
+          </div>
+          <div class="grid">
+            <div class="card">
+              <div class="card-title">Ad Tech &amp; Platforms</div>
+              <div class="chip-row">
+                <span class="chip">Google Ad Manager</span>
+                <span class="chip">DV360</span>
+                <span class="chip chip-soft">LiveIntent</span>
+                <span class="chip chip-soft">Apple News</span>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-title">Analytics, QA &amp; Workflow</div>
+              <div class="chip-row">
+                <span class="chip chip-soft">Troubleshooting</span>
+                <span class="chip chip-soft">Delivery diagnostics</span>
+                <span class="chip chip-soft">Brand safety</span>
+                <span class="chip chip-soft">Custom QA checklists</span>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-title">Internal Tools &amp; Automation</div>
+              <div class="chip-row">
+                <span class="chip chip-soft">Spreadsheet tooling</span>
+                <span class="chip chip-soft">Tag validation prototypes</span>
+                <span class="chip chip-soft">Ad QA utilities</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- CERTIFICATIONS -->
+        <section id="certs" class="section">
+          <div class="section-header">
+            <div class="section-title">
+              <div class="section-kicker">Certifications</div>
+              <div>Verified foundations</div>
+            </div>
+            <div class="section-sub">
+              Formal training that backs up the day-to-day work in ad tech, analytics, and marketing.
+            </div>
+          </div>
+          <div class="cert-grid">
+            <div class="cert-card">
+              <div class="cert-name">Google Ads Measurement</div>
+              <div class="cert-meta">Google · Active</div>
+              <div class="cert-link">View credential →</div>
+            </div>
+            <div class="cert-card">
+              <div class="cert-name">Google Analytics</div>
+              <div class="cert-meta">Google · Active</div>
+              <div class="cert-link">View credential →</div>
+            </div>
+            <div class="cert-card">
+              <div class="cert-name">Marketing Fundamentals</div>
+              <div class="cert-meta">The Trade Desk · Active</div>
+              <div class="cert-link">View credential →</div>
+            </div>
+            <div class="cert-card">
+              <div class="cert-name">Additional Platform Certs</div>
+              <div class="cert-meta">Details in full resume</div>
+              <div class="cert-link">Open full list →</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- EXPERIENCE — NEW FORMAT -->
+        <section id="experience" class="section">
+          <div class="section-header">
+            <div class="section-title">
+              <div class="section-kicker">Professional Experience</div>
+              <div>How I’ve applied all of this</div>
+            </div>
+            <div class="section-sub">
+              Each role mixes standard ad-ops responsibilities with things I’ve built or improved:
+              workflows, tools, and QA patterns that outlast individual campaigns.
+            </div>
+          </div>
+
+          <div class="experience-wrapper">
+            <!-- Role 1 -->
+            <article class="role-card">
+              <div class="role-header">
+                <div class="role-title-row">
+                  <div class="role-title">Ad Operations &amp; QA Specialist</div>
+                  <div class="role-company">The Washington Post · Dec 2022 – Present</div>
+                </div>
+                <div class="role-meta">
+                  Leading troubleshooting &amp; QA for premium campaigns across GAM, DV360, and direct-sold products.
+                </div>
+                <div class="role-impact-pill">
+                  Improved troubleshooting efficiency and QA reliability by <span class="metric">30–50%</span> by
+                  standardizing checks and building lightweight tools used across accounts.
+                </div>
+                <div class="role-tags">
+                  <span class="role-tag">Google Ad Manager</span>
+                  <span class="role-tag">DV360</span>
+                  <span class="role-tag">Ad QA</span>
+                  <span class="role-tag">Internal tooling</span>
+                </div>
+              </div>
+
+              <div class="role-body">
+                <div>
+                  <div class="role-group-title">Core Responsibilities</div>
+                  <ul class="role-list">
+                    <li>Lead QA &amp; trafficking for high-visibility campaigns in Google Ad Manager (display, native, rich media).</li>
+                    <li>Own discrepancy investigations, creative validation, brand safety checks, and tag troubleshooting.</li>
+                    <li>Partner with sales, product, and vendors to unblock delivery issues and protect user experience.</li>
+                  </ul>
+                </div>
+                <div>
+                  <div class="role-group-title">Internal Tools &amp; Workflow</div>
+                  <ul class="role-list">
+                    <li>Designed spreadsheet-driven QA helpers to standardize checks and reduce manual copy-paste.</li>
+                    <li>Prototyped browser-based tag validation (“TagSafe”) to preview tags, flag HTTPS issues, and surface basic load metrics.</li>
+                    <li>Documented repeatable troubleshooting playbooks so that complex fixes become team-level knowledge.</li>
+                  </ul>
+                </div>
+                <div>
+                  <div class="role-group-title">Impact &amp; Outcomes</div>
+                  <ul class="role-list">
+                    <li>
+                      Cut average investigation time per complex QA ticket by
+                      <span class="metric">30–50%</span> through structured checklists and tooling.
+                    </li>
+                    <li>
+                      Reduced launch delays for premium campaigns by catching mis-configurations before go-live.
+                    </li>
+                    <li>
+                      Helped maintain a clean ad experience by quickly isolating heavy, broken, or noisy creatives.
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </article>
+
+            <!-- Role 2 -->
+            <article class="role-card is-secondary">
+              <div class="role-header">
+                <div class="role-title-row">
+                  <div class="role-title">Digital Advertising Trafficking Coordinator</div>
+                  <div class="role-company">The Washington Post · Dec 2021 – Dec 2022</div>
+                </div>
+                <div class="role-meta">
+                  Owned day-to-day trafficking and setup for campaigns across display, native, and newsletters.
+                </div>
+                <div class="role-impact-pill">
+                  Shifted the team from ad-hoc fixes to <span class="metric">repeatable launch workflows</span>,
+                  reducing one-off errors and re-work.
+                </div>
+                <div class="role-tags">
+                  <span class="role-tag">Campaign setup</span>
+                  <span class="role-tag">Trafficking</span>
+                  <span class="role-tag">Ops documentation</span>
+                </div>
+              </div>
+              <div class="role-body">
+                <div>
+                  <div class="role-group-title">Core Responsibilities</div>
+                  <ul class="role-list">
+                    <li>Trafficked display and native campaigns in GAM, including line items, targeting, and creative mapping.</li>
+                    <li>Monitored delivery and pacing daily, flagging under-delivery and implementing optimizations.</li>
+                    <li>Communicated status updates to account managers and sales when campaigns required adjustments.</li>
+                  </ul>
+                </div>
+                <div>
+                  <div class="role-group-title">Process &amp; Quality</div>
+                  <ul class="role-list">
+                    <li>Introduced standardized trafficking checklists to reduce launch-day surprises.</li>
+                    <li>Documented “common failure modes” so newer teammates could troubleshoot faster.</li>
+                    <li>Helped align trafficking with sales packaging to make complex deals easier to execute.</li>
+                  </ul>
+                </div>
+                <div>
+                  <div class="role-group-title">Impact</div>
+                  <ul class="role-list">
+                    <li>Lowered avoidable trafficking errors, cutting follow-up tickets from sales and account teams.</li>
+                    <li>Shortened time-to-launch for repeat campaign types by re-using templates.</li>
+                    <li>Built the foundation for later QA tooling and TagSafe prototypes.</li>
+                  </ul>
+                </div>
+              </div>
+            </article>
+
+            <!-- Role 3 (example earlier role condensed) -->
+            <article class="role-card is-secondary">
+              <div class="role-header">
+                <div class="role-title-row">
+                  <div class="role-title">Digital Marketing Specialist</div>
+                  <div class="role-company">Tecore Networks · Jul 2020 – Jul 2021</div>
+                </div>
+                <div class="role-meta">
+                  Mixed hands-on campaign execution with reporting and marketing ops for a B2B telecom company.
+                </div>
+                <div class="role-impact-pill">
+                  Helped marketing leadership understand which campaigns actually moved pipeline using clearer,
+                  <span class="metric">story-driven reporting decks</span>.
+                </div>
+                <div class="role-tags">
+                  <span class="role-tag">Paid media</span>
+                  <span class="role-tag">Reporting</span>
+                  <span class="role-tag">Marketing ops</span>
+                </div>
+              </div>
+              <div class="role-body">
+                <div>
+                  <div class="role-group-title">Core Responsibilities</div>
+                  <ul class="role-list">
+                    <li>Executed paid campaigns across search, social, and display to support product launches.</li>
+                    <li>Managed day-to-day budget pacing and optimizations to hit lead goals.</li>
+                    <li>Coordinated with sales to align targeting and creative with pipeline needs.</li>
+                  </ul>
+                </div>
+                <div>
+                  <div class="role-group-title">Reporting &amp; Insights</div>
+                  <ul class="role-list">
+                    <li>Built recurring performance reports highlighting channel efficiency and lead quality.</li>
+                    <li>Turned raw metrics into simple takeaways for non-technical stakeholders.</li>
+                    <li>Flagged under-performing tactics and recommended reallocations.</li>
+                  </ul>
+                </div>
+                <div>
+                  <div class="role-group-title">Impact</div>
+                  <ul class="role-list">
+                    <li>Improved clarity into which campaigns fed sales conversations vs. just clicks.</li>
+                    <li>Contributed to more focused media plans with fewer low-impact experiments.</li>
+                    <li>Gave early proof that I enjoy the “diagnose and improve systems” part of marketing.</li>
+                  </ul>
+                </div>
+              </div>
+            </article>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <footer>
+      <div class="footer-inner">
+        <div>© 2025 Colin Bingham · Layout demo for experience section</div>
+        <div>Built with vanilla HTML &amp; CSS</div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Optional: tiny JS just for smooth scrolling on this demo -->
+  <script>
+    document.querySelectorAll('a[href^="#"]').forEach((link) => {
+      link.addEventListener("click", (e) => {
+        const targetId = link.getAttribute("href").slice(1);
+        const target = document.getElementById(targetId);
+        if (!target) return;
+        e.preventDefault();
+        window.scrollTo({
+          top: target.offsetTop - 72,
+          behavior: "smooth",
+        });
+      });
+    });
+  </script>
+</body>
+</html>
