@@ -330,12 +330,17 @@
   .pt-panel-body {
     display: grid;
     grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    grid-template-areas:
+      "text image"
+      "footer image";
     gap: 18px;
     align-items: flex-start;
     margin-top: 6px;
   }
 
   .pt-panel-text {
+    grid-area: text;
     font-size: 0.9rem;
     color: var(--text-muted);
   }
@@ -396,15 +401,21 @@
     .product-tools {
       padding: 44px 16px;
     }
-
+  
     .pt-panel-body {
       grid-template-columns: minmax(0, 1fr);
+      grid-template-rows: auto auto auto;
+      grid-template-areas:
+        "text"
+        "image"
+        "footer";
     }
-
+  
     .pt-panel-image {
       max-width: 100%;
     }
   }
+  
 
   @media (max-width: 640px) {
     .pt-header h2 {
@@ -450,23 +461,43 @@
   }
 
   .pt-panel-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  margin-top: 8px;
-  font-size: 0.82rem;
-  color: var(--accent-strong);
-  text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    margin-top: 6px;
+  
+    font-size: 0.82rem;
+    font-weight: 500;
+    text-decoration: none;
+  
+    background: var(--accent-soft);
+    color: var(--accent-strong);
+    border: 1px solid rgba(79, 70, 229, 0.4);
   }
-
+  
   .pt-panel-link span {
-  font-size: 0.85rem;
-  transform: translateY(1px);
+    font-size: 0.85rem;
+    transform: translateY(1px);
   }
-
+  
   .pt-panel-link:hover {
-  text-decoration: underline;
+    text-decoration: none;
+    background: rgba(79, 70, 229, 0.16);
   }
+  
+  /* Slightly brighter in dark mode */
+  [data-theme="dark"] .pt-panel-link {
+    background: rgba(129, 140, 248, 0.22);
+    border-color: rgba(129, 140, 248, 0.55);
+    color: #e5e7ff;
+  }
+  
+  [data-theme="dark"] .pt-panel-link:hover {
+    background: rgba(129, 140, 248, 0.3);
+  }
+  
 
   /* ==== Product tools: readability tweaks ==== */
 
@@ -516,6 +547,12 @@
   margin-bottom: 10px;
 }
 
+.pt-panel-footer {
+  grid-area: footer;
+  align-self: flex-start;
+  margin-top: 4px;
+}
+
 
 /* Preview container: defines the window + clips vertically */
 .pt-panel-image{
@@ -526,6 +563,7 @@
     display: flex;
     align-items: center;    /* vertical centering of the image */
     justify-content: center;/* horizontal centering (just in case) */
+    grid-area: image;
   }
   
   /* Screenshot: full width, keep aspect ratio, no horizontal crop */
