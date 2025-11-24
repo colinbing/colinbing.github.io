@@ -646,3 +646,65 @@ section {
 .pushable {
       margin-top: 20px;
 }
+
+/* Mobile navbar clean-up */
+@media (max-width: 991.98px) {
+  /* give the bar some breathing room */
+  #navbar .container-fluid {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  /* left-align nav items instead of centering */
+  #navbar .navbar-nav {
+    align-items: flex-start;   /* overrides align-items:center; */
+    padding: 0.5rem 0 0.75rem; /* a bit of vertical breathing room */
+  }
+
+  /* make each item full-width and evenly spaced for better tap targets */
+  #navbar .nav-item {
+    width: 100%;
+    margin-bottom: 0.25rem;
+  }
+
+  #navbar .nav-link {
+    padding: 0.35rem 0;        /* tighten vertical padding a bit */
+    text-align: left;          /* just in case */
+    font-size: 1rem;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+  }
+
+  /* keep the name/title from feeling crammed */
+  #navbar .name {
+    display: block;
+    margin-top: 0.25rem;
+  }
+
+  #navbar .title {
+    font-size: 0.85rem;
+    margin-bottom: 0.25rem;
+  }
+
+  #navbar .navbar-collapse {
+    border-top: 1px solid rgba(255,255,255,.16);
+    margin-top: 0.75rem;
+    padding-top: 0.5rem;
+  }
+
+  #navbar .nav-item:nth-last-child(2) {
+    margin-top: 0.6rem;
+    padding-top: 0.6rem;
+    border-top: 1px solid rgba(255,255,255,.16);
+  }
+
+  /* shrink the utility section slightly */
+  #navbar .nav-item:nth-last-child(2),
+  #navbar .nav-item:last-child {
+    font-size: 0.9rem;
+  }
+
+  #navbar .nav-item:last-child .custom-control-label {
+    transform: translateY(1px);
+  }
+}
