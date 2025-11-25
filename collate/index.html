@@ -199,6 +199,11 @@
       border-color: var(--focus);
       box-shadow:0 0 0 3px color-mix(in srgb, var(--focus) 30%, transparent);
     }
+    .common-chip{
+      display:inline-block; margin:2px 6px 0 0; padding:3px 8px;
+      border-radius:999px; border:1px dashed var(--border); color:var(--warn);
+      font-size:12px;
+    }
 
 
 
@@ -223,6 +228,10 @@
         <div class="row">
           <label><input id="hasHeader" type="checkbox" checked /> My list has a header</label>
         </div>
+        <label style="margin-left:8px">
+          <input id="excludeCommon" type="checkbox" checked />
+          Exclude common words (recommended)
+        </label>
         <div class="row">
           <button id="copyBtn" class="btn" disabled>Copy list</button>
           <button id="downloadBtn" class="btn" disabled>Download .txt</button>
@@ -238,7 +247,7 @@
         </div>
         <div class="hint">Auto‑parses on upload. Up to 50k+ rows.</div>
       </div>
-
+      <div id="commonWarn" class="hint" style="margin-top:10px; display:none;"></div>
       <div class="metrics" id="metrics"></div>
     </section>
 
@@ -318,6 +327,18 @@
   const quotesMode = document.getElementById('quotesMode');
   const filterInput = document.getElementById('filterInput');
   const filterCount = document.getElementById('filterCount');
+  // Toggle ref
+  const excludeCommon = document.getElementById('excludeCommon');
+  excludeCommon.addEventListener('change', ()=> {
+    if (window.__lastSheetArr) processSheetArray(window.__lastSheetArr);
+  });
+
+  // Very conservative English function words & similar “inventory killers”
+  const STOPWORDS = new Set([
+    'a','an','and','are','as','at','be','but','by','for','from','how','if','in','is',
+    'it','its','of','on','or','so','that','the','then','there','these','this','those',
+    'to','was','were','what','when','where','which','who','why','with','you','your'
+  ]);
 
   document.getElementById('runDemo').addEventListener('click', async (e) => {
   e.preventDefault();
@@ -379,6 +400,8 @@
   }
 
   function processSheetArray(arr, t0 = performance.now(), filename = '') {
+  const commonWarnEl = document.getElementById('commonWarn'); // ok if null
+
   const startRow = hasHeader.checked ? 1 : 0;
 
   // Flatten: collect *all* non-empty cells from all columns
@@ -394,29 +417,64 @@
   }
 
   const t1 = performance.now();
-  const { kept, joined } = cleanAndJoin(raw);
 
-  // Persist for filtering/rendering
+  // Clean + dedupe + sort (your existing logic)
+  const { kept: cleanedKept } = cleanAndJoin(raw);
+
+  // Exclude ultra-common terms (exact matches, case-insensitive) if toggle is on
+  let excludedCommon = [];
+  let kept = cleanedKept;
+
+  if (excludeCommon && excludeCommon.checked) {
+    const next = [];
+    for (const term of cleanedKept) {
+      if (STOPWORDS.has(term.toLowerCase())) {
+        excludedCommon.push(term);
+      } else {
+        next.push(term);
+      }
+    }
+    kept = next;
+  }
+
+  // Persist for renderOutput() (which applies quotes mode, etc.)
   window.__lastKept = kept;
+  renderOutput();
 
-  renderOutput(); // will respect filter + quotes mode
-
+  // Enable/disable actions
   const enabled = kept.length > 0;
   copyBtn.disabled = !enabled;
   downloadBtn.disabled = !enabled;
   copyIndicator.style.display = enabled ? 'block' : 'none';
 
+  // Subtle note about excluded commons (if slot exists)
+  if (commonWarnEl) {
+    if (excludeCommon && excludeCommon.checked && excludedCommon.length) {
+      const sample = excludedCommon.slice(0, 8).join(', ');
+      commonWarnEl.style.display = 'block';
+      commonWarnEl.innerHTML =
+        `Excluded common words: <span class="common-chip">${sample}</span>` +
+        (excludedCommon.length > 8 ? ' …' : '');
+    } else {
+      commonWarnEl.style.display = 'none';
+      commonWarnEl.textContent = '';
+    }
+  }
+
+  // Metrics
   const t2 = performance.now();
+  const joinedForBytes = kept.join(', ');
   renderMetrics({
     file: filename,
     rows: arr.length,
     considered: raw.length,
     uniqueCount: kept.length,
-    bytes: new Blob([joined]).size,
+    bytes: new Blob([joinedForBytes]).size,
     prepMs: (t1 - t0) | 0,
     cleanMs: (t2 - t1) | 0
   });
 }
+
 
   function renderOutput(){
     const kept = window.__lastKept || [];
