@@ -162,10 +162,10 @@
   }
 
   .pt-card-pill {
-    font-size: 0.7rem;
+    font-size: 0.62rem;
     text-transform: uppercase;
-    letter-spacing: 0.09em;
-    padding: 2px 6px;
+    letter-spacing: 0.08em;
+    padding: 1px 5px;
     border-radius: 999px;
     background: var(--tag-bg);
     color: var(--text-muted);
@@ -216,8 +216,9 @@
   }
 
   .pt-card-desc {
-    font-size: 0.85rem;
-    color: var(--text-muted);
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: var(--muted);
   }
 
   .pt-overview-note {
@@ -563,7 +564,8 @@
   }
 
   .pt-card-footer {
-      margin-top: 4px;
+      margin-top: auto;
+      padding-top: 8px;
       display: inline-flex;
       align-items: center;
       gap: 4px;

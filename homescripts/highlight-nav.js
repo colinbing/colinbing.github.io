@@ -5,8 +5,8 @@
 const navMap = [
   { selector: '#navbar .nav-link[href="#"]',                sectionId: 'intro-section' },
   { selector: '#navbar .nav-link[href="#skills-section"]',  sectionId: 'skills-section' },
-  { selector: '#navbar .nav-link[href="#certification-section"]', sectionId: 'certification-section' },
   { selector: '#navbar .nav-link[href="#experience-section"]',    sectionId: 'experience-section' },
+  { selector: '#navbar .nav-link[href="#certification-section"]', sectionId: 'certification-section' },
   { selector: '#navbar .nav-link[href="#project-section"]',       sectionId: 'project-section' },
   { selector: '#navbar .nav-link[href="#education-section"]',     sectionId: 'education-section' },
   // NOTE: Contact is intentionally NOT in this list, so the bottom of page

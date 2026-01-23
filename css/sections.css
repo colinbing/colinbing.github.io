@@ -633,6 +633,28 @@ section {
 .experience-section .employer-logo{ width:130px; height:auto; display:inline-block; }
 .experience-section .employer-dates{ color:#6b7280; }
 .experience-section hr{ margin:2rem auto; }
+.role-scope{
+  margin: 6px 0 10px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: rgba(29, 78, 216, 0.06);
+  border: 1px solid rgba(29, 78, 216, 0.14);
+  color: var(--text);
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.role-scope-label{
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: var(--text-strong);
+}
+
+[data-theme="dark"] .role-scope{
+  background: rgba(129, 140, 248, 0.14);
+  border-color: rgba(129, 140, 248, 0.28);
+  color: var(--text);
+}
 
 /* stacked roles */
 .role-stack{ display:flex; flex-direction:column; gap:1.25rem; }
