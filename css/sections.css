@@ -886,6 +886,10 @@ section {
   color: var(--muted);
 }
 
+.section-subtitle--single-line {
+  white-space: nowrap;
+}
+
 /* narrower variant for wordier sections like Product Tools */
 .section-heading--narrow {
   max-width: 760px;
