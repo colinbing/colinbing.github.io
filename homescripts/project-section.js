@@ -16,16 +16,51 @@
     const tabs = Array.from(section.querySelectorAll(".pt-tab"));
     const panels = Array.from(section.querySelectorAll(".pt-panel"));
 
-    function scrollToDetailTopIfMobile() {
-      if (window.innerWidth >= 768 || !detail) return;
+    function scrollFocusIntoView(focus, { center = false } = {}) {
+      if (!focus) return;
 
-      const rect = detail.getBoundingClientRect();
-      const targetY = window.scrollY + rect.top - NAV_OFFSET;
+      const rect = focus.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+      const focusHeight = focus.offsetHeight;
+      const availableHeight = viewportHeight - NAV_OFFSET;
+
+      let offset;
+      if (center && focusHeight < availableHeight) {
+        offset = (availableHeight - focusHeight) / 2 + NAV_OFFSET;
+      } else {
+        offset = NAV_OFFSET + 12;
+      }
+
+      const targetY = window.scrollY + rect.top - offset;
 
       window.scrollTo({
-        top: targetY,
+        top: Math.max(targetY, 0),
         behavior: "smooth",
       });
+    }
+
+    function scrollDetailIntoView({ center = false } = {}) {
+      if (!detail) return;
+      const focus = detail.querySelector(".pt-shell") || detail;
+      scrollFocusIntoView(focus, { center });
+    }
+
+    function scrollOverviewIntoView({ center = false } = {}) {
+      if (!overview) return;
+      const focus = overview;
+      scrollFocusIntoView(focus, { center });
+    }
+
+    function ensureDetailVisible() {
+      if (!detail) return;
+      const focus = detail.querySelector(".pt-shell") || detail;
+      const rect = focus.getBoundingClientRect();
+      const topLimit = NAV_OFFSET + 8;
+      const bottomLimit = window.innerHeight - 24;
+
+      if (rect.top < topLimit || rect.bottom > bottomLimit) {
+        scrollDetailIntoView();
+      }
     }
 
     function centerActiveTab(toolId) {
@@ -60,14 +95,19 @@
     function showOverview() {
       overview.classList.remove("is-hidden");
       detail.classList.add("is-hidden");
+      requestAnimationFrame(() => {
+        scrollOverviewIntoView({ center: true });
+      });
     }
 
     function showDetail(toolId) {
       overview.classList.add("is-hidden");
       detail.classList.remove("is-hidden");
       activateTool(toolId);
-      scrollToDetailTopIfMobile();
-      centerActiveTab(toolId);
+      requestAnimationFrame(() => {
+        scrollDetailIntoView({ center: true });
+        centerActiveTab(toolId);
+      });
     }
 
     function activateTool(toolId) {
@@ -96,7 +136,7 @@
       tab.addEventListener("click", () => {
         const toolId = tab.dataset.tool;
         activateTool(toolId);
-        scrollToDetailTopIfMobile();
+        ensureDetailVisible();
         centerActiveTab(toolId);
       });
     });

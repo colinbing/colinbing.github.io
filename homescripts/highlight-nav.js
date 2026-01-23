@@ -22,6 +22,8 @@ const navItems = navMap
   })
   .filter(Boolean);
 
+const navbar = document.getElementById('navbar');
+
 // Bail if something went very wrong
 if (navItems.length) {
   const NAV_OFFSET = document.querySelector('.navbar')?.offsetHeight || 64;
@@ -56,6 +58,10 @@ if (navItems.length) {
       if (!li) return;
       li.classList.toggle('active', idx === activeIndex);
     });
+
+    if (navbar) {
+      navbar.classList.toggle('navbar--compact', scrollY > 24);
+    }
   }
 
   // Run once and on scroll
