@@ -9,8 +9,7 @@ const navMap = [
   { selector: '#navbar .nav-link[href="#certification-section"]', sectionId: 'certification-section' },
   { selector: '#navbar .nav-link[href="#project-section"]',       sectionId: 'project-section' },
   { selector: '#navbar .nav-link[href="#education-section"]',     sectionId: 'education-section' },
-  // NOTE: Contact is intentionally NOT in this list, so the bottom of page
-  // still counts as "Education" for highlighting purposes.
+  { selector: '#navbar .nav-link[href="#contact-section"]',       sectionId: 'contact-section' },
 ];
 
 const navItems = navMap
