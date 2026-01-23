@@ -80,3 +80,21 @@
   .pushable:focus:not(:focus-visible) {
     outline: none;
   }
+
+  .pushable--featured .button-shadow {
+    background: rgba(14, 165, 233, 0.2);
+  }
+
+  .pushable--featured .edge {
+    background: linear-gradient(
+      to left,
+      #0f3a70 0%,
+      #1d4ed8 12%,
+      #1d4ed8 88%,
+      #0f3a70 100%
+    );
+  }
+
+  .pushable--featured .front {
+    background: linear-gradient(135deg, #2563eb, #0ea5e9);
+  }
