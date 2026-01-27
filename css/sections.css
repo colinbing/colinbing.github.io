@@ -304,6 +304,8 @@ section[id] {
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
 }
 
+.intro-chip .chip-text--short{ display:none; }
+
 [data-theme="dark"] .intro-chip{
   background: rgba(255,255,255,0.06);
   border-color: rgba(255,255,255,0.18);
@@ -321,6 +323,9 @@ section[id] {
     padding:4px 8px;
     font-size:0.72rem;
   }
+
+  .intro-chip .chip-text--full{ display:none; }
+  .intro-chip .chip-text--short{ display:inline; }
 }
 
 .intro-target{
@@ -869,11 +874,6 @@ section {
     letter-spacing: 0.01em;
   }
 
-  #navbar .nav-item.active .nav-link::after{
-    left: 0;
-    transform: none;
-    width: 24px;
-  }
 
   /* keep the name/title from feeling crammed */
   #navbar .name {
@@ -1012,6 +1012,14 @@ section {
 
 #navbar.navbar--compact .nav-item.active .nav-link::after {
   bottom: 6px;
+}
+
+@media (max-width: 991.98px) {
+  #navbar .nav-item.active .nav-link::after {
+    left: 0;
+    transform: none;
+    width: 24px;
+  }
 }
 
 /* CONTACT SECTION */
