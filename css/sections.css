@@ -311,6 +311,18 @@ section[id] {
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
 }
 
+@media (max-width:640px){
+  .intro-chips{
+    gap:6px;
+    margin: 8px 0 14px;
+  }
+
+  .intro-chip{
+    padding:4px 8px;
+    font-size:0.72rem;
+  }
+}
+
 .intro-target{
   margin: 0 0 18px;
   padding: 10px 14px;
@@ -749,6 +761,12 @@ section {
   .role{ padding-left:0; }
   .role::before{ display:none; }
 
+  .experience-section .employer:not(.single-role) .role-stack{
+    margin-top:0.5rem;
+    padding-top:0.75rem;
+    border-top:1px solid #e5e7eb;
+  }
+
   /* add a thin separator only between stacked roles */
   .role + .role{ position:relative; padding-top:.75rem; }
   .role + .role::before{
@@ -851,6 +869,12 @@ section {
     letter-spacing: 0.01em;
   }
 
+  #navbar .nav-item.active .nav-link::after{
+    left: 0;
+    transform: none;
+    width: 24px;
+  }
+
   /* keep the name/title from feeling crammed */
   #navbar .name {
     display: block;
@@ -947,6 +971,12 @@ section {
   white-space: nowrap;
 }
 
+@media (max-width:640px){
+  .section-subtitle--single-line {
+    white-space: normal;
+  }
+}
+
 /* narrower variant for wordier sections like Product Tools */
 .section-heading--narrow {
   max-width: 760px;
@@ -1017,6 +1047,21 @@ section {
   font-size: 1rem;
   color: var(--contact-muted);
   line-height: 1.55;
+}
+
+@media (max-width:640px){
+  .contact-section{
+    padding: 56px 16px 64px;
+  }
+
+  .contact-inner{
+    padding: 24px 20px;
+    border-radius: 22px;
+  }
+
+  .contact-tagline{
+    margin-bottom: 20px;
+  }
 }
 
 /* Buttons row */
