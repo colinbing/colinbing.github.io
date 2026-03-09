@@ -81,8 +81,9 @@
       caret-color:auto;             /* allow caret again */
       user-select:text;             /* allow selecting text */
       white-space: pre-wrap;
-      overflow-wrap: normal;
-      word-break: normal;
+      overflow-wrap:anywhere;
+      word-break:break-word;
+      max-height:min(65vh, calc(100vh - 210px));
       cursor:text;                  /* text cursor instead of pointer */
     }
 
@@ -205,6 +206,73 @@
       font-size:12px;
     }
 
+    .label-inline{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+    }
+    .info-wrap{position:relative; display:inline-flex}
+    .info-bubble{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:16px;
+      height:16px;
+      border-radius:50%;
+      border:1px solid var(--border);
+      background:color-mix(in srgb, var(--muted) 18%, transparent);
+      color:var(--muted);
+      font-size:11px;
+      font-weight:700;
+      line-height:1;
+      cursor:help;
+    }
+    .info-pop{
+      position:absolute;
+      left:50%;
+      top:calc(100% + 8px);
+      transform:translateX(-50%);
+      width:min(360px, 85vw);
+      padding:10px;
+      border-radius:8px;
+      border:1px solid var(--border);
+      background:var(--panel);
+      color:var(--text);
+      font-size:12px;
+      line-height:1.35;
+      opacity:0;
+      pointer-events:none;
+      z-index:20;
+      box-shadow:0 8px 20px rgba(0,0,0,.25);
+      transition:opacity .15s;
+    }
+    .info-pop-title{
+      font-weight:700;
+      margin-bottom:4px;
+      color:var(--text);
+    }
+    .info-pop-list{
+      margin:4px 0 0 16px;
+      padding:0;
+    }
+    .info-pop-list li{margin:2px 0}
+    .info-wrap:hover .info-pop,
+    .info-wrap:focus-within .info-pop{
+      opacity:1;
+    }
+
+    .cleaning-details{
+      margin-top:8px;
+      border:1px dashed var(--border);
+      border-radius:10px;
+      padding:8px 10px;
+      font-size:12px;
+      color:var(--muted);
+    }
+    .cleaning-details ul{margin:6px 0 0 16px; padding:0}
+    .cleaning-details li{margin:2px 0}
+    .cleaning-event{display:inline-flex; align-items:center; gap:6px}
+
 
 
   </style>
@@ -228,9 +296,17 @@
         <div class="row">
           <label><input id="hasHeader" type="checkbox" checked /> My list has a header</label>
         </div>
-        <label style="margin-left:8px">
+        <label style="margin-left:8px" class="label-inline">
           <input id="excludeCommon" type="checkbox" checked />
           Exclude common words (recommended)
+          <span class="info-wrap">
+            <span
+              id="commonWordsInfo"
+              class="info-bubble"
+              tabindex="0"
+              aria-label="Common words information">i</span>
+            <div id="commonWordsTooltip" class="info-pop" role="tooltip"></div>
+          </span>
         </label>
         <div class="row">
           <button id="copyBtn" class="btn" disabled>Copy list</button>
@@ -340,6 +416,14 @@
     'to','was','were','what','when','where','which','who','why','with','you','your'
   ]);
 
+  const commonWordsTooltip = document.getElementById('commonWordsTooltip');
+  if (commonWordsTooltip) {
+    commonWordsTooltip.innerHTML =
+      `<div class="info-pop-title">Exclude common words</div>` +
+      `<div>Keeps your list focused by removing exact-match filler words.</div>` +
+      `<ul class="info-pop-list"><li><strong>Current list:</strong> ${Array.from(STOPWORDS).join(', ')}</li></ul>`;
+  }
+
   document.getElementById('runDemo').addEventListener('click', async (e) => {
   e.preventDefault();
   try {
@@ -369,7 +453,7 @@
 
 
   // Fresh state on load/refresh
-  window.addEventListener('load',()=>{fileInput.value='';out.value='';window.__lastSheetArr=null;renderMetricsEmpty();});
+  window.addEventListener('load',()=>{fileInput.value='';out.value='';window.__rawOutput='';window.__lastSheetArr=null;renderMetricsEmpty();});
   // Output: allow scrolling but block click/select focus
   out.setAttribute('tabindex','-1');
 
@@ -419,7 +503,7 @@
   const t1 = performance.now();
 
   // Clean + dedupe + sort (your existing logic)
-  const { kept: cleanedKept } = cleanAndJoin(raw);
+  const { kept: cleanedKept, report } = cleanAndJoin(raw);
 
   // Exclude ultra-common terms (exact matches, case-insensitive) if toggle is on
   let excludedCommon = [];
@@ -436,6 +520,12 @@
     }
     kept = next;
   }
+
+  const cleanupReport = {
+    ...report,
+    excludedCommonCount: excludedCommon.length,
+    excludedCommonSample: excludedCommon.slice(0, 8)
+  };
 
   // Persist for renderOutput() (which applies quotes mode, etc.)
   window.__lastKept = kept;
@@ -471,7 +561,8 @@
     uniqueCount: kept.length,
     bytes: new Blob([joinedForBytes]).size,
     prepMs: (t1 - t0) | 0,
-    cleanMs: (t2 - t1) | 0
+    cleanMs: (t2 - t1) | 0,
+    cleanupReport
   });
 }
 
@@ -488,7 +579,9 @@
       ? filtered.map(s => `"${s}"`)
       : filtered;
 
-    out.value = outArr.join(',');
+    const rawOutput = outArr.join(',');
+    window.__rawOutput = rawOutput;
+    out.value = rawOutput.replace(/,/g, ',\u200B');
 
     // Update count badge
     if (filterCount) {
@@ -502,18 +595,43 @@
   // Cleaning
   function cleanAndJoin(values){
     const seen=new Set(); const kept=[];
+    const report={
+      removedSmartQuotes:0,
+      normalizedDashes:0,
+      removedUnsupportedPunctuation:0,
+      collapsedWhitespace:0,
+      removedEmptyAfterCleaning:0,
+      deduped:0
+    };
     for(const orig of values){
-      let s=String(orig);
-      s=s.replace(/[\u2018\u2019\u201C\u201D]/g,'');      // smart quotes
-      s=s.replace(/[\u2012-\u2015]/g,'-');             // normalize dashes
-      s=s.replace(/[^A-Za-z0-9\- ]+/g,'');             // keep letters, numbers, space, hyphen
-      s=s.replace(/\s+/g,' ').trim();                  // collapse/trim
-      if(!s) continue;
+      const original=String(orig);
+      let s=original;
+      const withoutSmart=s.replace(/[\u2018\u2019\u201C\u201D]/g,'');      // smart quotes
+      if(withoutSmart!==s) report.removedSmartQuotes++;
+      s=withoutSmart;
+
+      const normalizedDash=s.replace(/[\u2012-\u2015]/g,'-');             // normalize dashes
+      if(normalizedDash!==s) report.normalizedDashes++;
+      s=normalizedDash;
+
+      const removedPunct=s.replace(/[^A-Za-z0-9\- ]+/g,'');             // keep letters, numbers, space, hyphen
+      if(removedPunct!==s) report.removedUnsupportedPunctuation++;
+      s=removedPunct;
+
+      const collapsed=s.replace(/\s+/g,' ').trim();                  // collapse/trim
+      if(collapsed!==s) report.collapsedWhitespace++;
+      s=collapsed;
+
+      if(!s) {
+        report.removedEmptyAfterCleaning++;
+        continue;
+      }
       if(!seen.has(s)){ seen.add(s); kept.push(s); }
+      else { report.deduped++; }
     }
     kept.sort((a,b)=>a.localeCompare(b,undefined,{sensitivity:'base',numeric:true}));
     const joined = kept.join(', ');
-    return {kept,joined};
+    return {kept,joined,report};
   }
 
   // Metrics
@@ -534,7 +652,7 @@
     g.append(t, metricLine(['No file']));
     metricsEl.appendChild(g);
   }
-  function renderMetrics({file,rows,considered,uniqueCount,bytes,prepMs,cleanMs}){
+  function renderMetrics({file,rows,considered,uniqueCount,bytes,prepMs,cleanMs,cleanupReport}){
     metricsEl.innerHTML='';
     const kb=(bytes/1024).toFixed(1);
 
@@ -545,10 +663,74 @@
     );
 
     const g2=document.createElement('div'); g2.className='metric-group';
+    const countsLine=metricLine([`Parsed: ${considered}`, `Cleaned unique: ${uniqueCount}`], 1);
     g2.append(
       Object.assign(document.createElement('div'),{className:'metric-title',textContent:'Counts'}),
-      metricLine([`Parsed: ${considered}`, `Cleaned unique: ${uniqueCount}`], 1)
+      countsLine
     );
+    if(cleanupReport){
+      const events=[
+        cleanupReport.removedSmartQuotes>0 ? { text: `Smart quotes removed: ${cleanupReport.removedSmartQuotes}` } : null,
+        cleanupReport.normalizedDashes>0 ? { text: `Dashes normalized: ${cleanupReport.normalizedDashes}` } : null,
+        cleanupReport.removedUnsupportedPunctuation>0
+          ? {
+              text: `Unsupported punctuation removed: ${cleanupReport.removedUnsupportedPunctuation}`,
+              tipTitle: 'Unsupported punctuation',
+              tipBody: 'Removed characters include symbols like ! ? . , @ & / _ and other non-letter/number punctuation.'
+            }
+          : null,
+        cleanupReport.collapsedWhitespace>0 ? { text: `Whitespace normalized: ${cleanupReport.collapsedWhitespace}` } : null,
+        cleanupReport.deduped>0 ? { text: `Duplicates removed: ${cleanupReport.deduped}` } : null,
+        cleanupReport.removedEmptyAfterCleaning>0 ? { text: `Rows emptied by cleaning: ${cleanupReport.removedEmptyAfterCleaning}` } : null,
+        cleanupReport.excludedCommonCount>0 ? { text: `Common words excluded: ${cleanupReport.excludedCommonCount}` } : null
+      ].filter(Boolean);
+
+      if(events.length){
+        const details=document.createElement('div');
+        details.className='cleaning-details';
+        const list=document.createElement('ul');
+        for(const event of events){
+          const li=document.createElement('li');
+          const wrap=document.createElement('span');
+          wrap.className='cleaning-event';
+
+          const label=document.createElement('span');
+          label.textContent=event.text;
+          wrap.appendChild(label);
+
+          if(event.tipTitle && event.tipBody){
+            const infoWrap=document.createElement('span');
+            infoWrap.className='info-wrap';
+
+            const bubble=document.createElement('span');
+            bubble.className='info-bubble';
+            bubble.tabIndex=0;
+            bubble.setAttribute('aria-label', `${event.tipTitle} details`);
+            bubble.textContent='i';
+
+            const pop=document.createElement('div');
+            pop.className='info-pop';
+            pop.setAttribute('role', 'tooltip');
+            pop.innerHTML=`<div class="info-pop-title">${event.tipTitle}</div><div>${event.tipBody}</div>`;
+
+            infoWrap.append(bubble, pop);
+            wrap.appendChild(infoWrap);
+          }
+
+          li.appendChild(wrap);
+          list.appendChild(li);
+        }
+        details.appendChild(list);
+
+        if(cleanupReport.excludedCommonSample?.length){
+          const sample=document.createElement('div');
+          sample.style.marginTop='6px';
+          sample.textContent=`Sample common words removed: ${cleanupReport.excludedCommonSample.join(', ')}`;
+          details.appendChild(sample);
+        }
+        g2.appendChild(details);
+      }
+    }
 
     const g3=document.createElement('div'); g3.className='metric-group';
     g3.append(
@@ -563,7 +745,7 @@
   function showToast(msg='Copied'){toast.textContent=msg;toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),1200)}
   async function copyOutput(){
     if(!out.value) return;
-    let toCopy = out.value;
+    let toCopy = window.__rawOutput || out.value.replace(/\u200B/g, '');
     if (quotesMode.checked) {
       toCopy = toCopy.replace(/",\s+"/g, '","');
     }
@@ -584,6 +766,7 @@
   out.value='';
   window.__lastSheetArr=null;
   window.__lastKept=[];
+  window.__rawOutput='';
   renderMetricsEmpty();
   });
 
@@ -591,8 +774,9 @@
 
   // Download
   downloadBtn.addEventListener('click',()=>{
-    if(!out.value) return;
-    const blob=new Blob([out.value],{type:'text/plain;charset=utf-8'});
+    const rawOutput = window.__rawOutput || out.value.replace(/\u200B/g, '');
+    if(!rawOutput) return;
+    const blob=new Blob([rawOutput],{type:'text/plain;charset=utf-8'});
     const url=URL.createObjectURL(blob);
     const a=document.createElement('a'); a.href=url; a.download='keywords.csv.txt';
     document.body.appendChild(a); a.click();
