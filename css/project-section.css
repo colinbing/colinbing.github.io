@@ -290,13 +290,13 @@
 
   .kumu-feature-main {
     display: grid;
-    grid-template-columns: minmax(0, 0.95fr) minmax(360px, 1.05fr);
-    gap: 32px;
+    grid-template-columns: minmax(0, 1.06fr) minmax(360px, 0.94fr);
+    gap: 40px;
     align-items: center;
   }
 
   .kumu-feature-copy {
-    max-width: 560px;
+    max-width: 660px;
   }
 
   .kumu-eyebrow {
@@ -313,9 +313,9 @@
     padding: 0;
     color: #111827;
     font-family: Georgia, "Iowan Old Style", "New York", serif;
-    font-size: clamp(2.35rem, 5vw, 4.8rem);
+    font-size: clamp(2.35rem, 4.35vw, 4.15rem);
     font-weight: 500;
-    line-height: 0.98;
+    line-height: 1.02;
     letter-spacing: 0;
     text-wrap: balance;
   }
@@ -328,12 +328,10 @@
     line-height: 1.65;
   }
 
-  .kumu-actions {
+  .kumu-visual-actions {
     display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 12px 16px;
-    margin-top: 26px;
+    justify-content: flex-end;
+    padding-top: 14px;
   }
 
   .kumu-primary-link {
@@ -365,12 +363,6 @@
   .kumu-primary-link:focus-visible {
     outline: 3px solid rgba(20, 184, 166, 0.45);
     outline-offset: 4px;
-  }
-
-  .kumu-note {
-    color: #475569;
-    font-size: 0.86rem;
-    font-weight: 600;
   }
 
   .kumu-visual {
@@ -845,6 +837,8 @@
   }
 
   .kumu-proof-card {
+    position: relative;
+    overflow: hidden;
     min-height: 178px;
     padding: 18px;
     border-radius: 8px;
@@ -896,7 +890,7 @@
 
   [data-theme="dark"] .kumu-feature {
     background:
-      linear-gradient(135deg, rgba(17, 24, 39, 0.98) 0%, rgba(15, 23, 42, 0.98) 54%, rgba(19, 78, 74, 0.9) 100%);
+      linear-gradient(135deg, rgba(20, 28, 42, 0.99) 0%, rgba(17, 24, 39, 0.98) 48%, rgba(20, 83, 78, 0.92) 100%);
     border-top-color: rgba(45, 212, 191, 0.18);
     border-bottom-color: rgba(255, 255, 255, 0.1);
   }
@@ -909,8 +903,7 @@
     color: #f8fafc;
   }
 
-  [data-theme="dark"] .kumu-lede,
-  [data-theme="dark"] .kumu-note {
+  [data-theme="dark"] .kumu-lede {
     color: #cbd5e1;
   }
 
@@ -934,9 +927,20 @@
   }
 
   [data-theme="dark"] .kumu-proof-card {
-    background: rgba(15, 23, 42, 0.62);
-    border-color: rgba(255, 255, 255, 0.12);
-    box-shadow: 0 14px 32px rgba(0, 0, 0, 0.28);
+    background:
+      linear-gradient(180deg, rgba(30, 41, 59, 0.96), rgba(15, 23, 42, 0.9));
+    border-color: rgba(94, 234, 212, 0.24);
+    box-shadow:
+      0 18px 44px rgba(0, 0, 0, 0.42),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  }
+
+  [data-theme="dark"] .kumu-proof-card::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto;
+    height: 3px;
+    background: linear-gradient(90deg, #5eead4, rgba(96, 165, 250, 0.84));
   }
 
   [data-theme="dark"] .kumu-proof-label {
@@ -1302,11 +1306,6 @@
     .kumu-lede {
       font-size: 0.95rem;
       line-height: 1.58;
-    }
-
-    .kumu-actions {
-      align-items: stretch;
-      flex-direction: column;
     }
 
     .kumu-primary-link {
