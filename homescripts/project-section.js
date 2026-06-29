@@ -125,9 +125,23 @@
 
     // snapshot cards → detail view
     overviewCards.forEach((card) => {
-      card.addEventListener("click", () => {
+      const title = card.querySelector(".pt-card-title")?.textContent?.trim();
+      card.setAttribute("role", "button");
+      card.setAttribute("tabindex", "0");
+      if (title && !card.hasAttribute("aria-label")) {
+        card.setAttribute("aria-label", `View ${title} project details`);
+      }
+
+      function openCardDetail() {
         const toolId = card.dataset.tool;
         showDetail(toolId);
+      }
+
+      card.addEventListener("click", openCardDetail);
+      card.addEventListener("keydown", (event) => {
+        if (event.key !== "Enter" && event.key !== " ") return;
+        event.preventDefault();
+        openCardDetail();
       });
     });
 

@@ -137,6 +137,11 @@
     border-color: var(--border);
   }
 
+  .pt-card:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 4px;
+  }
+
   .pt-card-logo {
     height: 36px;
     display: flex;

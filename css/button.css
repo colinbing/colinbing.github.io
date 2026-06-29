@@ -1,11 +1,16 @@
 .pushable {
+    display: inline-block;
     position: relative;
     border: none;
     background: transparent;
     padding: 0;
     cursor: pointer;
     outline-offset: 4px;
+    text-decoration: none;
     transition: filter 250ms;
+  }
+  .pushable:hover {
+    text-decoration: none;
   }
   .button-shadow {
     position: absolute;

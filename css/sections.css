@@ -357,6 +357,20 @@ section[id] {
   gap:12px;
   align-items:center;
 }
+
+#myTyper{
+  display:block;
+  min-height:1.35em;
+}
+
+#myTyper .ti-cursor{
+  display:inline-block;
+}
+
+#intro-section hr{
+  margin-top:0.75rem;
+}
+
 .experience-section hr{ max-width:80% }
 
 #footer .copyright{ padding:12px 0 1px }

@@ -1,3 +1,6 @@
+const myTyper = document.getElementById("myTyper");
+
+if (myTyper && window.TypeIt) {
 new TypeIt("#myTyper", {
   speed: 60,
   deleteSpeed: 40,
@@ -17,3 +20,6 @@ new TypeIt("#myTyper", {
   .pause(2000)
   .delete(19)
   .go();
+} else if (myTyper) {
+  myTyper.textContent = "Hi, I'm Colin!";
+}
