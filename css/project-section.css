@@ -270,7 +270,702 @@
     box-shadow: 0 12px 26px rgba(0, 0, 0, 0.5);
     background: rgba(129, 140, 248, 0.26);
   }
+
+  /* Kumu featured case study */
+  .kumu-feature {
+    position: relative;
+    padding: 82px 24px;
+    background:
+      linear-gradient(135deg, rgba(239, 246, 255, 0.96) 0%, rgba(248, 250, 252, 0.98) 48%, rgba(240, 253, 250, 0.92) 100%);
+    border-top: 1px solid rgba(14, 116, 144, 0.12);
+    border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+  }
+
+  .kumu-feature-inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    display: grid;
+    gap: 22px;
+  }
+
+  .kumu-feature-main {
+    display: grid;
+    grid-template-columns: minmax(0, 0.95fr) minmax(360px, 1.05fr);
+    gap: 32px;
+    align-items: center;
+  }
+
+  .kumu-feature-copy {
+    max-width: 560px;
+  }
+
+  .kumu-eyebrow {
+    margin: 0 0 12px;
+    color: #0f766e;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  .kumu-title {
+    margin: 0;
+    padding: 0;
+    color: #111827;
+    font-family: Georgia, "Iowan Old Style", "New York", serif;
+    font-size: clamp(2.35rem, 5vw, 4.8rem);
+    font-weight: 500;
+    line-height: 0.98;
+    letter-spacing: 0;
+    text-wrap: balance;
+  }
+
+  .kumu-lede {
+    max-width: 620px;
+    margin: 20px 0 0;
+    color: #334155;
+    font-size: 1.02rem;
+    line-height: 1.65;
+  }
+
+  .kumu-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 16px;
+    margin-top: 26px;
+  }
+
+  .kumu-primary-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    min-height: 42px;
+    padding: 10px 18px;
+    border-radius: 8px;
+    color: #ffffff;
+    background: #0f172a;
+    border: 1px solid rgba(15, 23, 42, 0.9);
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: 0 16px 32px rgba(15, 23, 42, 0.18);
+    transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
+  }
+
+  .kumu-primary-link:hover {
+    color: #ffffff;
+    background: #111827;
+    text-decoration: none;
+    transform: translateY(-1px);
+    box-shadow: 0 20px 38px rgba(15, 23, 42, 0.24);
+  }
+
+  .kumu-primary-link:focus-visible {
+    outline: 3px solid rgba(20, 184, 166, 0.45);
+    outline-offset: 4px;
+  }
+
+  .kumu-note {
+    color: #475569;
+    font-size: 0.86rem;
+    font-weight: 600;
+  }
+
+  .kumu-visual {
+    border-radius: 8px;
+    padding: 14px;
+    background:
+      linear-gradient(180deg, rgba(15, 23, 42, 0.96), rgba(31, 41, 55, 0.94));
+    border: 1px solid rgba(15, 23, 42, 0.28);
+    box-shadow: 0 28px 70px rgba(15, 23, 42, 0.28);
+    overflow: hidden;
+  }
+
+  .kumu-visual-topline {
+    min-height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 2px 2px 12px;
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .kumu-visual-topline img {
+    max-width: 132px;
+    max-height: 30px;
+    object-fit: contain;
+  }
+
+  .kumu-screenshot-frame {
+    aspect-ratio: 16 / 10;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #f8fafc;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+  }
+
+  .kumu-screenshot-frame img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    object-position: left top;
+  }
+
+  .kumu-stack-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .kumu-demo-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    color: #ffffff;
+    font-size: 0.84rem;
+    letter-spacing: 0.04em;
+  }
+
+  .kumu-demo-mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    color: #0f172a;
+    background: #99f6e4;
+    font-weight: 900;
+    letter-spacing: 0;
+  }
+
+  .kumu-demo-card {
+    min-height: 350px;
+    border-radius: 8px;
+    padding: 16px;
+    color: #dbeafe;
+    background: #0f172a;
+    border: 1px solid rgba(148, 163, 184, 0.28);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  }
+
+  .kumu-demo-status,
+  .kumu-demo-actions,
+  .kumu-demo-chip-answer-shell {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .kumu-demo-status {
+    justify-content: space-between;
+    color: #94a3b8;
+    font-size: 0.76rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .kumu-demo-reset {
+    border: 1px solid rgba(148, 163, 184, 0.3);
+    color: #e0f2fe;
+    background: rgba(15, 23, 42, 0.6);
+    border-radius: 8px;
+    font-size: 0.74rem;
+    font-weight: 800;
+    padding: 7px 10px;
+  }
+
+  .kumu-demo-reset:hover {
+    background: rgba(20, 184, 166, 0.16);
+  }
+
+  .kumu-demo-label {
+    margin: 18px 0 6px;
+    color: #5eead4;
+    font-size: 0.72rem;
+    font-weight: 900;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+  }
+
+  .kumu-demo-prompt {
+    min-height: 54px;
+    margin: 0;
+    color: #ffffff;
+    font-size: clamp(1.35rem, 3vw, 2rem);
+    line-height: 1.14;
+  }
+
+  .kumu-demo-mode-toggle {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    margin: 16px 0 12px;
+    padding: 4px;
+    border-radius: 8px;
+    background: rgba(2, 6, 23, 0.46);
+    border: 1px solid rgba(148, 163, 184, 0.18);
+  }
+
+  .kumu-demo-mode-toggle button {
+    min-height: 36px;
+    border: 0;
+    border-radius: 6px;
+    color: #94a3b8;
+    background: transparent;
+    font-size: 0.8rem;
+    font-weight: 900;
+  }
+
+  .kumu-demo-mode-toggle button.is-active {
+    color: #0f172a;
+    background: #99f6e4;
+  }
+
+  .kumu-demo-chip-bank {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    min-height: 42px;
+  }
+
+  .kumu-demo-chip {
+    min-height: 36px;
+    padding: 7px 11px;
+    border-radius: 8px;
+    color: #f8fafc;
+    background: #1d4ed8;
+    border: 1px solid rgba(147, 197, 253, 0.4);
+    font-size: 0.9rem;
+    font-weight: 900;
+    box-shadow: 0 8px 18px rgba(2, 6, 23, 0.22);
+  }
+
+  .kumu-demo-chip:disabled {
+    color: #94a3b8;
+    background: rgba(51, 65, 85, 0.72);
+    border-color: rgba(148, 163, 184, 0.18);
+    box-shadow: none;
+  }
+
+  .kumu-demo-chip-answer,
+  .kumu-demo-input {
+    width: 100%;
+    margin-top: 10px;
+    border-radius: 8px;
+    color: #f8fafc;
+    background: rgba(2, 6, 23, 0.48);
+    border: 1px solid rgba(148, 163, 184, 0.24);
+    font-size: 0.95rem;
+    line-height: 1.45;
+  }
+
+  .kumu-demo-chip-answer-shell {
+    align-items: stretch;
+    margin-top: 10px;
+  }
+
+  .kumu-demo-chip-answer {
+    display: flex;
+    flex: 1;
+    flex-wrap: wrap;
+    gap: 7px;
+    min-height: 48px;
+    margin-top: 0;
+    padding: 9px;
+  }
+
+  .kumu-demo-chip-answer.is-empty {
+    align-items: center;
+    color: #94a3b8;
+    padding-left: 12px;
+  }
+
+  .kumu-demo-selected-chip {
+    min-height: 30px;
+    padding: 5px 9px;
+    border-radius: 7px;
+    color: #0f172a;
+    background: #bfdbfe;
+    border: 1px solid rgba(191, 219, 254, 0.9);
+    font-size: 0.83rem;
+    font-weight: 900;
+  }
+
+  .kumu-demo-selected-chip:disabled {
+    opacity: 0.72;
+  }
+
+  .kumu-demo-reset {
+    flex: 0 0 auto;
+    width: 64px;
+  }
+
+  .kumu-demo-input-label {
+    display: block;
+    color: #94a3b8;
+    font-size: 0.74rem;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .kumu-demo-input {
+    min-height: 70px;
+    padding: 11px 12px;
+    resize: none;
+  }
+
+  .kumu-demo-input::placeholder {
+    color: #64748b;
+  }
+
+  .kumu-demo-input:focus {
+    outline: 2px solid rgba(94, 234, 212, 0.65);
+    outline-offset: 2px;
+  }
+
+  .kumu-demo-actions {
+    margin-top: 14px;
+  }
+
+  .kumu-submit-btn,
+  .kumu-continue-btn {
+    min-height: 40px;
+    border-radius: 8px;
+    padding: 9px 14px;
+    font-size: 0.84rem;
+    font-weight: 900;
+  }
+
+  .kumu-submit-btn {
+    color: #0f172a;
+    background: #5eead4;
+    border: 1px solid rgba(94, 234, 212, 0.9);
+  }
+
+  .kumu-continue-btn {
+    color: #e0f2fe;
+    background: rgba(37, 99, 235, 0.26);
+    border: 1px solid rgba(96, 165, 250, 0.32);
+  }
+
+  .kumu-submit-btn:disabled,
+  .kumu-continue-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+
+  .kumu-demo-feedback {
+    margin-top: 0;
+    padding: 12px;
+    border-radius: 8px;
+    background: rgba(15, 23, 42, 0.78);
+    border: 1px solid rgba(148, 163, 184, 0.22);
+  }
+
+  .kumu-demo-feedback.is-accepted {
+    border-color: rgba(45, 212, 191, 0.52);
+  }
+
+  .kumu-demo-feedback.is-rejected {
+    border-color: rgba(248, 113, 113, 0.5);
+  }
+
+  .kumu-feedback-topline {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+
+  .kumu-feedback-status {
+    margin: 0;
+    color: #f8fafc;
+    font-size: 0.9rem;
+    font-weight: 900;
+  }
+
+  .kumu-audio-playback {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+
+  .kumu-audio-playback audio {
+    display: none;
+  }
+
+  .kumu-audio-button {
+    display: inline-grid;
+    place-items: center;
+    width: 44px;
+    min-width: 44px;
+    height: 44px;
+    min-height: 44px;
+    padding: 0;
+    border: 1px solid rgba(94, 234, 212, 0.5);
+    border-radius: 999px;
+    color: #99f6e4;
+    background: rgba(20, 184, 166, 0.14);
+    transition: transform 0.16s ease, border-color 0.16s ease, background 0.16s ease, color 0.16s ease;
+  }
+
+  .kumu-audio-button:hover,
+  .kumu-audio-button:focus-visible {
+    border-color: rgba(94, 234, 212, 0.82);
+    background: rgba(20, 184, 166, 0.24);
+    color: #ccfbf1;
+    outline: 2px solid rgba(94, 234, 212, 0.28);
+    outline-offset: 2px;
+  }
+
+  .kumu-audio-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.58;
+  }
+
+  .kumu-audio-button.is-playing {
+    border-color: rgba(94, 234, 212, 0.95);
+    background: rgba(94, 234, 212, 0.22);
+    animation: kumu-audio-pulse 1.2s ease-in-out infinite;
+  }
+
+  .kumu-audio-speaker-icon {
+    display: inline-grid;
+    position: relative;
+    place-items: center;
+    width: 24px;
+    height: 24px;
+  }
+
+  .kumu-audio-speaker-icon svg {
+    width: 22px;
+    height: 22px;
+    fill: none;
+    stroke: currentcolor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 2.1;
+  }
+
+  .kumu-audio-speaker-icon svg path:first-child {
+    fill: rgba(153, 246, 228, 0.14);
+  }
+
+  .kumu-audio-wave {
+    opacity: 0.78;
+    transform-origin: 14px 12px;
+  }
+
+  .kumu-audio-wave-outer {
+    opacity: 0.58;
+  }
+
+  .kumu-audio-speaker-icon.is-playing .kumu-audio-wave-inner {
+    animation: kumu-audio-wave-inner 860ms ease-in-out infinite alternate;
+  }
+
+  .kumu-audio-speaker-icon.is-playing .kumu-audio-wave-outer {
+    animation: kumu-audio-wave-outer 860ms ease-in-out infinite alternate;
+  }
+
+  .kumu-audio-status {
+    color: #94a3b8;
+    font-size: 0.72rem;
+    font-weight: 800;
+    white-space: nowrap;
+  }
+
+  .kumu-feedback-grid {
+    display: grid;
+    grid-template-columns: minmax(74px, auto) minmax(0, 1fr);
+    gap: 6px 10px;
+    color: #94a3b8;
+    font-size: 0.74rem;
+  }
+
+  .kumu-feedback-grid strong {
+    min-width: 0;
+    color: #e0f2fe;
+    font-size: 0.82rem;
+    overflow-wrap: anywhere;
+  }
+
+  @keyframes kumu-audio-pulse {
+    0%,
+    100% {
+      box-shadow: 0 0 0 0 rgba(94, 234, 212, 0);
+    }
+
+    50% {
+      box-shadow: 0 0 0 5px rgba(94, 234, 212, 0.18);
+    }
+  }
+
+  @keyframes kumu-audio-wave-inner {
+    from {
+      opacity: 0.58;
+      transform: scale(0.92);
+    }
+
+    to {
+      opacity: 1;
+      transform: scale(1.04);
+    }
+  }
+
+  @keyframes kumu-audio-wave-outer {
+    from {
+      opacity: 0.36;
+      transform: scale(0.9);
+    }
+
+    to {
+      opacity: 0.9;
+      transform: scale(1.08);
+    }
+  }
+
+  .kumu-proof-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+  }
+
+  .kumu-proof-card {
+    min-height: 178px;
+    padding: 18px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.74);
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    box-shadow: 0 14px 32px rgba(15, 23, 42, 0.08);
+  }
+
+  .kumu-proof-label {
+    display: inline-flex;
+    margin-bottom: 12px;
+    padding: 4px 8px;
+    border-radius: 8px;
+    color: #0f766e;
+    background: rgba(20, 184, 166, 0.12);
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .kumu-proof-card h3 {
+    margin: 0 0 8px;
+    color: #111827;
+    font-size: 1rem;
+    line-height: 1.25;
+  }
+
+  .kumu-proof-card p {
+    margin: 0;
+    color: #475569;
+    font-size: 0.88rem;
+    line-height: 1.55;
+  }
+
+  .kumu-stack-row {
+    padding-top: 2px;
+  }
+
+  .kumu-stack-row span {
+    padding: 5px 10px;
+    border-radius: 8px;
+    color: #334155;
+    background: rgba(255, 255, 255, 0.7);
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    font-size: 0.76rem;
+    font-weight: 700;
+  }
+
+  [data-theme="dark"] .kumu-feature {
+    background:
+      linear-gradient(135deg, rgba(17, 24, 39, 0.98) 0%, rgba(15, 23, 42, 0.98) 54%, rgba(19, 78, 74, 0.9) 100%);
+    border-top-color: rgba(45, 212, 191, 0.18);
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+  }
+
+  [data-theme="dark"] .kumu-eyebrow {
+    color: #5eead4;
+  }
+
+  [data-theme="dark"] .kumu-title {
+    color: #f8fafc;
+  }
+
+  [data-theme="dark"] .kumu-lede,
+  [data-theme="dark"] .kumu-note {
+    color: #cbd5e1;
+  }
+
+  [data-theme="dark"] .kumu-primary-link {
+    color: #0f172a;
+    background: #f8fafc;
+    border-color: rgba(248, 250, 252, 0.9);
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.4);
+  }
+
+  [data-theme="dark"] .kumu-primary-link:hover {
+    color: #0f172a;
+    background: #ffffff;
+  }
+
+  [data-theme="dark"] .kumu-visual {
+    background:
+      linear-gradient(180deg, rgba(3, 7, 18, 0.94), rgba(15, 23, 42, 0.94));
+    border-color: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 28px 70px rgba(0, 0, 0, 0.58);
+  }
+
+  [data-theme="dark"] .kumu-proof-card {
+    background: rgba(15, 23, 42, 0.62);
+    border-color: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 14px 32px rgba(0, 0, 0, 0.28);
+  }
+
+  [data-theme="dark"] .kumu-proof-label {
+    color: #99f6e4;
+    background: rgba(20, 184, 166, 0.16);
+  }
+
+  [data-theme="dark"] .kumu-proof-card h3 {
+    color: #f8fafc;
+  }
+
+  [data-theme="dark"] .kumu-proof-card p {
+    color: #cbd5e1;
+  }
+
+  [data-theme="dark"] .kumu-stack-row span {
+    color: #dbeafe;
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.12);
+  }
   
+
+  @media (prefers-reduced-motion: reduce) {
+    .kumu-audio-button.is-playing,
+    .kumu-audio-speaker-icon.is-playing .kumu-audio-wave-inner,
+    .kumu-audio-speaker-icon.is-playing .kumu-audio-wave-outer {
+      animation: none;
+    }
+  }
 
   /* DETAIL MODE */
 
@@ -561,6 +1256,23 @@
     .product-tools {
       padding: 44px 16px;
     }
+
+    .kumu-feature {
+      padding: 58px 16px;
+    }
+
+    .kumu-feature-main,
+    .kumu-proof-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .kumu-feature-main {
+      gap: 24px;
+    }
+
+    .kumu-feature-copy {
+      max-width: 720px;
+    }
   
     .pt-panel-body {
       grid-template-columns: minmax(0, 1fr);
@@ -578,6 +1290,90 @@
   
 
   @media (max-width: 640px) {
+    .kumu-feature {
+      padding: 48px 14px;
+    }
+
+    .kumu-title {
+      font-size: 2.45rem;
+      line-height: 1.02;
+    }
+
+    .kumu-lede {
+      font-size: 0.95rem;
+      line-height: 1.58;
+    }
+
+    .kumu-actions {
+      align-items: stretch;
+      flex-direction: column;
+    }
+
+    .kumu-primary-link {
+      width: 100%;
+    }
+
+    .kumu-visual {
+      padding: 10px;
+    }
+
+    .kumu-visual-topline {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .kumu-screenshot-frame {
+      aspect-ratio: 4 / 3;
+    }
+
+    .kumu-demo-card {
+      min-height: 0;
+      padding: 13px;
+    }
+
+    .kumu-demo-status,
+    .kumu-demo-chip-answer-shell {
+      align-items: stretch;
+      flex-direction: column;
+    }
+
+    .kumu-demo-reset,
+    .kumu-submit-btn,
+    .kumu-continue-btn {
+      width: 100%;
+    }
+
+    .kumu-feedback-topline {
+      grid-template-columns: minmax(0, 1fr) auto;
+    }
+
+    .kumu-audio-button {
+      width: 42px;
+      min-width: 42px;
+      height: 42px;
+      min-height: 42px;
+    }
+
+    .kumu-demo-actions {
+      display: grid;
+      grid-template-columns: 1fr;
+    }
+
+    .kumu-demo-prompt {
+      min-height: 0;
+      font-size: 1.36rem;
+    }
+
+    .kumu-feedback-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .kumu-proof-card {
+      min-height: 0;
+      padding: 16px;
+    }
+
     .pt-header h2 {
       font-size: 1.6rem;
     }
