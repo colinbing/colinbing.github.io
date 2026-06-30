@@ -328,10 +328,10 @@
     line-height: 1.65;
   }
 
-  .kumu-visual-actions {
+  .kumu-actions {
     display: flex;
-    justify-content: flex-end;
-    padding-top: 14px;
+    align-items: center;
+    margin-top: 24px;
   }
 
   .kumu-primary-link {
@@ -409,12 +409,6 @@
     display: block;
     object-fit: cover;
     object-position: left top;
-  }
-
-  .kumu-stack-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
   }
 
   .kumu-demo-brand {
@@ -874,20 +868,6 @@
     line-height: 1.55;
   }
 
-  .kumu-stack-row {
-    padding-top: 2px;
-  }
-
-  .kumu-stack-row span {
-    padding: 5px 10px;
-    border-radius: 8px;
-    color: #334155;
-    background: rgba(255, 255, 255, 0.7);
-    border: 1px solid rgba(15, 23, 42, 0.08);
-    font-size: 0.76rem;
-    font-weight: 700;
-  }
-
   [data-theme="dark"] .kumu-feature {
     background:
       linear-gradient(135deg, rgba(20, 28, 42, 0.99) 0%, rgba(17, 24, 39, 0.98) 48%, rgba(20, 83, 78, 0.92) 100%);
@@ -955,13 +935,6 @@
   [data-theme="dark"] .kumu-proof-card p {
     color: #cbd5e1;
   }
-
-  [data-theme="dark"] .kumu-stack-row span {
-    color: #dbeafe;
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255, 255, 255, 0.12);
-  }
-  
 
   @media (prefers-reduced-motion: reduce) {
     .kumu-audio-button.is-playing,
