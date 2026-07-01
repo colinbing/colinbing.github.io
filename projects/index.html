@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Projects | Colin Bingham</title>
+  <meta name="description" content="A focused index of tools, product systems, and workflow utilities built by Colin Bingham.">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicons/favicon-16x16.png">
+  <link rel="manifest" href="/images/favicons/site.webmanifest">
+  <link rel="mask-icon" href="/images/favicons/safari-pinned-tab.svg" color="#2a3442">
+  <link rel="shortcut icon" href="/images/favicons/favicon.ico">
+  <link rel="stylesheet" href="/css/project-section.css?v=featured-20260701-3">
+  <link rel="stylesheet" href="/css/projects-page.css?v=20260701-2">
+</head>
+<body>
+  <header class="projects-nav">
+    <a class="brand-link" href="/" aria-label="Back to Colin Bingham homepage">
+      <span>Colin Bingham</span>
+      <small>Projects</small>
+    </a>
+    <nav aria-label="Projects page navigation">
+      <a href="#featured-work">Featured</a>
+      <a href="#project-index">Index</a>
+      <a href="/">Main site</a>
+    </nav>
+    <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to dark mode" aria-pressed="false">
+      <span class="theme-toggle__icon" aria-hidden="true"></span>
+      <span data-theme-toggle-label>Dark</span>
+    </button>
+  </header>
+
+  <main>
+    <section class="projects-hero">
+      <div class="projects-hero__copy">
+        <p class="eyebrow">Projects / Tools / Product Systems</p>
+        <h1>Tools for turning workflow friction into usable systems.</h1>
+        <p>
+          A selected archive of tools I have built across ad tech operations, learning UX, product planning, and day-to-day workflow automation.
+        </p>
+        <div class="hero-actions">
+          <a class="primary-link" href="#featured-work">View featured work</a>
+          <a class="secondary-link" href="#project-index">Browse project index</a>
+        </div>
+      </div>
+
+      <div class="projects-hero__panel" aria-label="Build process summary">
+        <div class="signal-card">
+          <span>01</span>
+          <strong>Find friction</strong>
+          <p>Repeated checks, scattered docs, unclear workflows, and manual handoffs.</p>
+        </div>
+        <div class="signal-card">
+          <span>02</span>
+          <strong>Shape the system</strong>
+          <p>Turn requests and edge cases into screens, states, rules, and useful defaults.</p>
+        </div>
+        <div class="signal-card">
+          <span>03</span>
+          <strong>Build the path</strong>
+          <p>Prototype against real use, then harden the parts that make the workflow repeatable.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="proof-strip" aria-label="Project focus areas">
+      <span>Product systems</span>
+      <span>Ad tech operations</span>
+      <span>Learning UX</span>
+      <span>Workflow tooling</span>
+      <span>Technical translation</span>
+    </section>
+
+    <section id="featured-work" class="section-block featured-work">
+      <div class="section-head">
+        <p class="eyebrow">Featured Case Studies</p>
+        <h2>The highest-signal builds.</h2>
+        <p>Three projects that show the range: personal product building, client-facing product discovery, and structured project planning.</p>
+      </div>
+
+      <article id="featured-kumu" class="feature-case feature-case--kumu">
+        <div class="feature-case__copy">
+          <p class="case-kicker">Kumu / Japanese sentence practice</p>
+          <h3>Turn vocabulary study into sentence production.</h3>
+          <p>
+            Kumu is a login-free, mobile-first practice tool for Japanese learners who can recognize vocabulary and grammar but need focused reps producing real sentences.
+          </p>
+          <div class="case-proof">
+            <div>
+              <span>Problem</span>
+              <strong>Recognition was not enough.</strong>
+              <p>Flashcards helped vocabulary stick, but I wanted a focused production loop.</p>
+            </div>
+            <div>
+              <span>Built</span>
+              <strong>A tight sentence loop.</strong>
+              <p>Prompts, chips, typing, deterministic feedback, audio, packs, and local progress.</p>
+            </div>
+            <div>
+              <span>Signal</span>
+              <strong>Grew into a product system.</strong>
+              <p>Practice flow, content systems, reviewed audio, catalog tools, and protected admin paths.</p>
+            </div>
+          </div>
+          <div class="case-actions">
+            <a href="https://practice-jp.colinbing.com/" target="_blank" rel="noopener">Open Kumu <span>↗</span></a>
+          </div>
+        </div>
+
+        <aside class="kumu-visual project-live-module" aria-label="Interactive Kumu practice preview">
+          <div class="kumu-visual-topline">
+            <div class="kumu-demo-brand" aria-label="Kumu">
+              <span class="kumu-demo-mark" aria-hidden="true">文</span>
+              <span>Kumu</span>
+            </div>
+            <span>Try a 3-rep loop</span>
+          </div>
+
+          <div class="kumu-demo-card" data-kumu-demo>
+            <div class="kumu-demo-status">
+              <span data-kumu-step>Sentence 1 of 3</span>
+            </div>
+            <p class="kumu-demo-label">Prompt</p>
+            <h3 class="kumu-demo-prompt" data-kumu-prompt>I like this cafe.</h3>
+            <div class="kumu-demo-mode-toggle" data-kumu-mode-toggle aria-label="Choose practice mode">
+              <button type="button" class="is-active" data-kumu-mode="chips" aria-pressed="true">Chips</button>
+              <button type="button" data-kumu-mode="typing" aria-pressed="false">Typing</button>
+            </div>
+            <div class="kumu-demo-workspace">
+              <div class="kumu-demo-panel" data-kumu-panel="chips">
+                <div class="kumu-demo-chip-bank" data-kumu-chip-bank aria-label="Available answer chips"></div>
+                <div class="kumu-demo-chip-answer-shell">
+                  <div class="kumu-demo-chip-answer" data-kumu-chip-answer aria-live="polite">
+                    <span>Select chips to build the sentence.</span>
+                  </div>
+                  <button type="button" class="kumu-demo-reset" data-kumu-reset>Clear</button>
+                </div>
+              </div>
+              <div class="kumu-demo-panel" data-kumu-panel="typing" hidden>
+                <label class="kumu-demo-input-label" for="projects-kumu-demo-answer">Romaji or Japanese answer</label>
+                <textarea id="projects-kumu-demo-answer" class="kumu-demo-input" data-kumu-input rows="2" spellcheck="false" placeholder="Type your answer here"></textarea>
+              </div>
+              <div class="kumu-demo-feedback" data-kumu-feedback aria-live="polite" hidden></div>
+            </div>
+            <div class="kumu-demo-actions">
+              <button type="button" class="kumu-submit-btn" data-kumu-submit>Submit</button>
+              <button type="button" class="kumu-continue-btn" data-kumu-continue disabled>Continue</button>
+            </div>
+          </div>
+        </aside>
+      </article>
+
+      <article id="featured-spotlight" class="feature-case feature-case--spotlight">
+        <div class="feature-case__copy">
+          <p class="case-kicker">Washington Post / Ad product discovery</p>
+          <h3>Turn scattered ad product specs into a guided pitch tool.</h3>
+          <p>
+            I consolidated scattered PDFs, decks, specs, previews, and recommendation logic into an interactive microsite for custom ad products across device breakpoints.
+          </p>
+          <div class="case-proof">
+            <div>
+              <span>Problem</span>
+              <strong>Sales materials were scattered.</strong>
+              <p>Product information lived across docs, examples, and team knowledge.</p>
+            </div>
+            <div>
+              <span>Built</span>
+              <strong>A recommendation system.</strong>
+              <p>Responsive previews, product specs, and a best-fit selector in one experience.</p>
+            </div>
+            <div>
+              <span>Signal</span>
+              <strong>Bridges sales and execution.</strong>
+              <p>Useful UI that helps teams explain complex ad products clearly.</p>
+            </div>
+          </div>
+          <div class="case-actions">
+            <a href="https://spotlight-mocks.netlify.app/" target="_blank" rel="noopener">Open full demo <span>↗</span></a>
+          </div>
+        </div>
+
+        <aside class="kumu-visual spotlight-visual project-live-module" aria-label="Interactive Spotlight product recommendation preview">
+          <div class="kumu-visual-topline">
+            <div class="spotlight-demo-brand" aria-label="Spotlight Collection">
+              <span class="spotlight-demo-mark" aria-hidden="true">↘</span>
+              <span>Spotlight Collection</span>
+            </div>
+            <span>Recommendation tool</span>
+          </div>
+          <div class="spotlight-demo-card" data-spotlight-demo>
+            <div class="spotlight-demo-header">
+              <p>Find the right format</p>
+              <span data-spotlight-count>4 matches</span>
+            </div>
+            <div class="spotlight-demo-question">
+              <p>What would you like to feature?</p>
+              <div class="spotlight-demo-options" data-spotlight-options="assetPackage"></div>
+            </div>
+            <div class="spotlight-demo-question">
+              <p>How much supporting copy should the ad carry?</p>
+              <div class="spotlight-demo-options" data-spotlight-options="messageStyle"></div>
+            </div>
+            <button class="spotlight-demo-submit" type="button" data-spotlight-submit>Get product recommendations</button>
+            <div class="spotlight-demo-results" data-spotlight-results aria-live="polite"></div>
+            <button class="spotlight-demo-reset" type="button" data-spotlight-reset hidden>Reset selections</button>
+          </div>
+        </aside>
+      </article>
+
+      <article id="featured-workshop" class="feature-case feature-case--workshop">
+        <div class="feature-case__copy">
+          <p class="case-kicker">Workshop / Product planning workspace</p>
+          <h3>Plan, track, and explain projects in one place.</h3>
+          <p>
+            Workshop is a local-first PRD and roadmap workspace for turning side-project ideas into scoped builds with clearer phases, features, and execution paths.
+          </p>
+          <div class="case-proof">
+            <div>
+              <span>Problem</span>
+              <strong>Ideas sprawled.</strong>
+              <p>Project notes, scope, priorities, and status lived in too many places.</p>
+            </div>
+            <div>
+              <span>Built</span>
+              <strong>A planning system.</strong>
+              <p>PRDs, roadmaps, phase tracking, drag-and-drop organization, and export paths.</p>
+            </div>
+            <div>
+              <span>Signal</span>
+              <strong>Shows product judgment.</strong>
+              <p>It turns ambiguous ideas into structured plans that are easier to explain and execute.</p>
+            </div>
+          </div>
+          <div class="case-actions">
+            <a href="https://www.colinbing.com/workshop/" target="_blank" rel="noopener">Open Workshop <span>↗</span></a>
+          </div>
+        </div>
+        <aside class="image-preview" aria-label="Workshop preview">
+          <img src="/images/project-mocks/workshop-preview.png" alt="Workshop project planning preview">
+        </aside>
+      </article>
+    </section>
+
+    <section id="project-index" class="section-block project-index">
+      <div class="section-head section-head--split">
+        <div>
+          <p class="eyebrow">Project Index</p>
+          <h2>Browse the work.</h2>
+        </div>
+        <p>Filter by the signal you want to inspect. Cards stay compact; case-study depth opens in one focused panel below the grid.</p>
+      </div>
+
+      <div class="filter-bar" role="toolbar" aria-label="Project filters">
+        <button class="filter-button is-active" type="button" data-filter="all">All</button>
+        <button class="filter-button" type="button" data-filter="featured">Featured</button>
+        <button class="filter-button" type="button" data-filter="adops">Ad Ops</button>
+        <button class="filter-button" type="button" data-filter="workflow">Workflow</button>
+        <button class="filter-button" type="button" data-filter="learning">Learning</button>
+        <button class="filter-button" type="button" data-filter="creative">Creative</button>
+      </div>
+
+      <div class="project-grid">
+        <article class="project-card" data-categories="featured learning product">
+          <div class="project-card-logo project-card-logo--mark">文</div>
+          <div class="card-topline"><span>Featured</span><span>Live</span></div>
+          <h3>Kumu</h3>
+          <p>Mobile-first Japanese sentence practice for turning recognition into production.</p>
+          <div class="tag-row"><span>Learning UX</span><span>Product Design</span><span>Content Systems</span></div>
+          <div class="project-card-actions">
+            <a class="case-jump-link" href="#featured-kumu">Featured view</a>
+            <a href="https://practice-jp.colinbing.com/" target="_blank" rel="noopener">Open ↗</a>
+          </div>
+        </article>
+
+        <article class="project-card" data-categories="featured adops workflow product">
+          <div class="project-card-logo project-card-logo--wapo"><img class="wapo-logo" src="/images/icons/wapo-logo-black.png" alt=""></div>
+          <div class="card-topline"><span>Featured</span><span>Demo</span></div>
+          <h3><span class="spotlight-title-mark" aria-hidden="true">↘</span> Spotlight Showcase</h3>
+          <p>Client-facing custom ad product discovery and recommendation microsite.</p>
+          <div class="tag-row"><span>Ad Products</span><span>Sales Enablement</span><span>Responsive UI</span></div>
+          <div class="project-card-actions">
+            <a class="case-jump-link" href="#featured-spotlight">Featured view</a>
+            <a href="https://spotlight-mocks.netlify.app/" target="_blank" rel="noopener">Open ↗</a>
+          </div>
+        </article>
+
+        <article class="project-card" data-categories="featured workflow product">
+          <div class="project-card-logo"><img class="workshop-logo" src="/images/logos/workshop_logo.png" alt=""></div>
+          <div class="card-topline"><span>Featured</span><span>Live</span></div>
+          <h3>Workshop</h3>
+          <p>Local-first planning workspace for PRDs, roadmaps, and phased project execution.</p>
+          <div class="tag-row"><span>Planning</span><span>UX Systems</span><span>Product Thinking</span></div>
+          <div class="project-card-actions">
+            <a class="case-jump-link" href="#featured-workshop">Featured view</a>
+            <a href="https://www.colinbing.com/workshop/" target="_blank" rel="noopener">Open ↗</a>
+          </div>
+        </article>
+
+        <article class="project-card" data-categories="featured adops workflow" data-case-card="tagsafe">
+          <div class="project-card-logo"><img class="tagsafe-logo" src="/images/logos/tagsafe-logo.PNG" alt=""></div>
+          <div class="card-topline"><span>Ad Ops</span><span>Prototype</span></div>
+          <h3>TagSafe</h3>
+          <p>Third-party tag validation and preview prototype for faster QA checks.</p>
+          <div class="tag-row"><span>Tag QA</span><span>Validation</span><span>Preview</span></div>
+          <div class="project-card-actions">
+            <button type="button" data-case-trigger="tagsafe">Case study</button>
+            <a href="/tagSafe/" target="_blank" rel="noopener">Open ↗</a>
+          </div>
+        </article>
+
+        <article class="project-card" data-categories="adops creative workflow" data-case-card="adbuilder">
+          <div class="project-card-logo"><img class="adbuilder-logo" src="/images/logos/adbuilder-logo.png" alt=""></div>
+          <div class="card-topline"><span>Creative Ops</span><span>Live</span></div>
+          <h3>AdBuilder</h3>
+          <p>Generate and QA multi-size display layouts from one asset set.</p>
+          <div class="tag-row"><span>Layout Engine</span><span>Creative QA</span><span>Display Ads</span></div>
+          <div class="project-card-actions">
+            <button type="button" data-case-trigger="adbuilder">Case study</button>
+            <a href="/adbuilder/" target="_blank" rel="noopener">Open ↗</a>
+          </div>
+        </article>
+
+        <article class="project-card" data-categories="adops workflow" data-case-card="vast2mp4">
+          <div class="project-card-logo"><img class="vast2mp4-logo" src="/images/logos/vast2mp4-logo.png" alt=""></div>
+          <div class="card-topline"><span>Utility</span><span>Live</span></div>
+          <h3>Vast2MP4</h3>
+          <p>Extract MP4 files and tracker details from VAST tags when the tag itself is not usable.</p>
+          <div class="tag-row"><span>Video</span><span>VAST</span><span>Debugging</span></div>
+          <div class="project-card-actions">
+            <button type="button" data-case-trigger="vast2mp4">Case study</button>
+            <a href="/vast2mp4/" target="_blank" rel="noopener">Open ↗</a>
+          </div>
+        </article>
+
+        <article class="project-card" data-categories="featured adops workflow" data-case-card="pageid">
+          <div class="project-card-logo"><img class="pageid-scraper-logo" src="/images/logos/pageID-scraper-logo.png" alt=""></div>
+          <div class="card-topline"><span>Ad Ops</span><span>Live</span></div>
+          <h3>PageID Scraper</h3>
+          <p>Convert IAS URL exports into GAM page IDs for faster blocking workflows.</p>
+          <div class="tag-row"><span>Brand Safety</span><span>CMS</span><span>Automation</span></div>
+          <div class="project-card-actions">
+            <button type="button" data-case-trigger="pageid">Case study</button>
+            <a href="/pageid-scraper/" target="_blank" rel="noopener">Open ↗</a>
+          </div>
+        </article>
+
+        <article class="project-card" data-categories="adops workflow" data-case-card="blocklist">
+          <div class="project-card-logo"><img class="blocklist-logo" src="/images/logos/blocklist-logo.png" alt=""></div>
+          <div class="card-topline"><span>Brand Safety</span><span>Live</span></div>
+          <h3>BlockList</h3>
+          <p>Turn unsafe URL exports into structured keyword blocklists for GAM.</p>
+          <div class="tag-row"><span>Keywording</span><span>Brand Safety</span><span>Workflow</span></div>
+          <div class="project-card-actions">
+            <button type="button" data-case-trigger="blocklist">Case study</button>
+            <a href="/blocklist/" target="_blank" rel="noopener">Open ↗</a>
+          </div>
+        </article>
+
+        <article class="project-card" data-categories="adops workflow" data-case-card="collate">
+          <div class="project-card-logo"><img class="collate-logo" src="/images/logos/collate-logo.png" alt=""></div>
+          <div class="card-topline"><span>Micro Tool</span><span>Live</span></div>
+          <h3>Collate</h3>
+          <p>Clean spreadsheet columns into ready-to-paste targeting strings.</p>
+          <div class="tag-row"><span>Spreadsheets</span><span>Cleanup</span><span>Micro Tool</span></div>
+          <div class="project-card-actions">
+            <button type="button" data-case-trigger="collate">Case study</button>
+            <a href="/collate/" target="_blank" rel="noopener">Open ↗</a>
+          </div>
+        </article>
+
+        <article class="project-card" data-categories="creative workflow" data-case-card="outline">
+          <div class="project-card-logo"><img class="outline-logo" src="/images/logos/outline-logo.PNG" alt=""></div>
+          <div class="card-topline"><span>Micro Tool</span><span>Live</span></div>
+          <h3>Outline</h3>
+          <p>Add policy-compliant borders to creatives in seconds without opening Photoshop.</p>
+          <div class="tag-row"><span>Creative Ops</span><span>Image Utility</span><span>Compliance</span></div>
+          <div class="project-card-actions">
+            <button type="button" data-case-trigger="outline">Case study</button>
+            <a href="/outline/" target="_blank" rel="noopener">Open ↗</a>
+          </div>
+        </article>
+      </div>
+
+      <div class="case-drawer" data-case-drawer hidden>
+        <div class="case-drawer__top">
+          <p class="eyebrow">Case Study</p>
+          <button type="button" data-case-close>Close</button>
+        </div>
+
+        <article class="case-panel" data-case-panel="tagsafe">
+          <header class="case-panel__header">
+            <div class="case-panel__logo"><img class="tagsafe-logo" src="/images/logos/tagsafe-logo.PNG" alt=""></div>
+            <div>
+              <p>TagSafe / Tag validator prototype</p>
+              <h3>Compress third-party tag QA into one screen.</h3>
+              <span>Internal prototype for validating third-party display tags with bulk upload, previews, and spec checks.</span>
+            </div>
+          </header>
+          <div class="case-panel__body">
+            <div class="case-panel__text">
+              <p>Our QA teams rely on paid validators plus dev tools to review third-party tags. That works, but it is license-bound and slow when you just want to sanity-check a tagsheet.</p>
+              <div class="case-points">
+                <div><span>Problem</span><p>Core checks lived across multiple tools and a vendor platform. There was no lightweight way to scan a full tagsheet quickly across vendors.</p></div>
+                <div><span>Solution</span><p>Built a browser page where ad ops can paste a tag or upload a tagsheet, auto-detect vendors, render previews, and surface load time, requests, size, dimensions, vendor, placement ID, and landing-page response.</p></div>
+                <div><span>Impact</span><p>Shipped a working proof-of-concept that recreates our most-used AdValidation checks in-house and shows a path to reducing validator licensing costs.</p></div>
+              </div>
+              <div class="tag-row"><span>HTML</span><span>CSS</span><span>JavaScript</span><span>Ad QA</span></div>
+            </div>
+            <img src="/images/project-mocks/tagsafe-preview.png" alt="TagSafe preview">
+          </div>
+        </article>
+
+        <article class="case-panel" data-case-panel="adbuilder">
+          <header class="case-panel__header">
+            <div class="case-panel__logo"><img class="adbuilder-logo" src="/images/logos/adbuilder-logo.png" alt=""></div>
+            <div>
+              <p>AdBuilder / Layout engine prototype</p>
+              <h3>Map one asset set across multiple display sizes.</h3>
+              <span>Internal prototype that turns a single set of assets into PNG creatives across standard display formats.</span>
+            </div>
+          </header>
+          <div class="case-panel__body">
+            <div class="case-panel__text">
+              <p>Many local advertisers bring photos and copy but do not have design resources. Simple campaigns can stall while every size is built by hand.</p>
+              <div class="case-points">
+                <div><span>Problem</span><p>Producing standard units from one concept meant recreating layouts in a design tool one size at a time.</p></div>
+                <div><span>Solution</span><p>Built a browser layout engine where users paste headline, description, CTA, and upload images once. It renders the size set, supports per-size copy tweaks, and exports PNGs.</p></div>
+                <div><span>Impact</span><p>Demonstrates how non-designers could generate full creative sets without art software, reducing friction for simple campaigns.</p></div>
+              </div>
+              <div class="tag-row"><span>HTML</span><span>CSS</span><span>JavaScript</span><span>Creative QA</span></div>
+            </div>
+            <img src="/images/project-mocks/adbuilder-preview.png" alt="AdBuilder preview">
+          </div>
+        </article>
+
+        <article class="case-panel" data-case-panel="vast2mp4">
+          <header class="case-panel__header">
+            <div class="case-panel__logo"><img class="vast2mp4-logo" src="/images/logos/vast2mp4-logo.png" alt=""></div>
+            <div>
+              <p>Vast2MP4 / Video utility</p>
+              <h3>See what is inside a VAST tag at a glance.</h3>
+              <span>Pulls MP4 files and trackers from VAST XML for export and validation.</span>
+            </div>
+          </header>
+          <div class="case-panel__body">
+            <div class="case-panel__text">
+              <p>Some custom video placements cannot accept VAST tags; they need standalone MP4 files and 1x1 trackers.</p>
+              <div class="case-points">
+                <div><span>Problem</span><p>Agencies often send only a VAST tag, leaving no time to request new files. Extracting assets manually from XML or network tools is slow and brittle.</p></div>
+                <div><span>Solution</span><p>Built a browser tool where anyone can paste a VAST tag, preview metadata, download the MP4 asset, and export impression/click trackers.</p></div>
+                <div><span>Impact</span><p>Used by ad ops and account teams to keep campaigns live without going back to clients, including formats that normally cannot accept VAST.</p></div>
+              </div>
+              <div class="tag-row"><span>JavaScript</span><span>VAST</span><span>Video QA</span></div>
+            </div>
+            <img src="/images/project-mocks/vast2mp4-preview.png" alt="Vast2MP4 preview">
+          </div>
+        </article>
+
+        <article class="case-panel" data-case-panel="pageid">
+          <header class="case-panel__header">
+            <div class="case-panel__logo"><img class="pageid-scraper-logo" src="/images/logos/pageID-scraper-logo.png" alt=""></div>
+            <div>
+              <p>PageID Scraper / CMS helper</p>
+              <h3>Bridge CMS URLs and ad server targeting.</h3>
+              <span>Operational tool that turns article URLs into page IDs for faster brand-safety blocking.</span>
+            </div>
+          </header>
+          <div class="case-panel__body">
+            <div class="case-panel__text">
+              <p>Brand-safety reports arrive as long lists of article URLs and hits, but the ad server targets on internal page IDs.</p>
+              <div class="case-points">
+                <div><span>Problem</span><p>Excluding unsafe articles meant opening every URL, finding the pageID in markup, and copy/pasting it into a blocklist.</p></div>
+                <div><span>Solution</span><p>Built a tool that ingests URLs, normalizes and dedupes them, rolls up impression counts, applies a threshold, and returns pageIDs for high-impact pages.</p></div>
+                <div><span>Impact</span><p>Turns a multi-hour CMS task into a paste-and-download workflow used regularly by ad ops.</p></div>
+              </div>
+              <div class="tag-row"><span>JavaScript</span><span>Automation</span><span>Brand Safety</span><span>Ad Server</span></div>
+            </div>
+            <img src="/images/project-mocks/pageid-scraper-preview.png" alt="PageID Scraper preview">
+          </div>
+        </article>
+
+        <article class="case-panel" data-case-panel="blocklist">
+          <header class="case-panel__header">
+            <div class="case-panel__logo"><img class="blocklist-logo" src="/images/logos/blocklist-logo.png" alt=""></div>
+            <div>
+              <p>BlockList / Brand safety</p>
+              <h3>Turn messy URLs into usable blocklists.</h3>
+              <span>Operational tool that builds negative keyword lists from unsafe article URLs.</span>
+            </div>
+          </header>
+          <div class="case-panel__body">
+            <div class="case-panel__text">
+              <p>IAS reports arrive as hundreds of URLs and impression counts, but GAM blocklists rely on keywords and key-values.</p>
+              <div class="case-points">
+                <div><span>Problem</span><p>Ad ops had to review each URL, decide what it meant, extract terms by hand, and build negative keyword lists in spreadsheets.</p></div>
+                <div><span>Solution</span><p>Built a tool that ingests URLs, extracts hyphenated terms, dedupes them, surfaces frequency and impression impact, and lets users build a custom blocklist interactively.</p></div>
+                <div><span>Impact</span><p>Converts a subjective spreadsheet process into a consistent 5-10 minute workflow with export-ready GAM exclusion terms.</p></div>
+              </div>
+              <div class="tag-row"><span>JavaScript</span><span>Brand Safety</span><span>Workflow</span><span>Ad Server</span></div>
+            </div>
+            <img src="/images/project-mocks/blocklist-preview.png" alt="BlockList preview">
+          </div>
+        </article>
+
+        <article class="case-panel" data-case-panel="collate">
+          <header class="case-panel__header">
+            <div class="case-panel__logo"><img class="collate-logo" src="/images/logos/collate-logo.png" alt=""></div>
+            <div>
+              <p>Collate / Spreadsheet helper</p>
+              <h3>Convert a column into a clean list in one click.</h3>
+              <span>Drag-and-drop keyword cleaner that outputs ready-to-use targeting strings.</span>
+            </div>
+          </header>
+          <div class="case-panel__body">
+            <div class="case-panel__text">
+              <p>Brand-safety keyword lists often arrive as long columns from Excel exports. Cleaning them manually takes time and introduces errors.</p>
+              <div class="case-points">
+                <div><span>Problem</span><p>Turning thousands of spreadsheet rows into a usable negative keyword list meant hunting duplicates and checking stray formatting issues by hand.</p></div>
+                <div><span>Solution</span><p>Collate auto-detects keyword columns, removes duplicates, strips punctuation, flags high-risk stopwords, sorts terms, and outputs a clean string or text file.</p></div>
+                <div><span>Impact</span><p>Turns a 10-15 minute Excel chore into a five-second drop-and-copy step.</p></div>
+              </div>
+              <div class="tag-row"><span>JavaScript</span><span>Spreadsheet</span><span>Brand Safety</span><span>Micro Tool</span></div>
+            </div>
+            <img src="/images/project-mocks/collate-preview.png" alt="Collate preview">
+          </div>
+        </article>
+
+        <article class="case-panel" data-case-panel="outline">
+          <header class="case-panel__header">
+            <div class="case-panel__logo"><img class="outline-logo" src="/images/logos/outline-logo.PNG" alt=""></div>
+            <div>
+              <p>Outline / Image border tool</p>
+              <h3>Make white-edge creatives compliant in seconds.</h3>
+              <span>Used by account managers, ad ops, and a trafficking vendor at the Post.</span>
+            </div>
+          </header>
+          <div class="case-panel__body">
+            <div class="case-panel__text">
+              <p>Many client assets arrive with white edges. Policy requires a visible border so ads are not confused with article imagery.</p>
+              <div class="case-points">
+                <div><span>Problem</span><p>Adding borders meant re-requesting assets or opening each creative in Photoshop or Canva. Several concepts across six or more sizes could become a 10-20 minute chore.</p></div>
+                <div><span>Solution</span><p>Built a browser tool where anyone can upload standard display assets, apply a policy-compliant border, and download renamed files.</p></div>
+                <div><span>Impact</span><p>Turned a license-dependent, one-minute-per-asset step into a roughly 15-second process for the full creative set.</p></div>
+              </div>
+              <div class="tag-row"><span>HTML</span><span>CSS</span><span>JavaScript</span><span>Creative Workflow</span></div>
+            </div>
+            <img src="/images/project-mocks/outline-preview.png" alt="Outline preview">
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="projects-footer">
+    <a href="/">Back to main site</a>
+    <a href="mailto:colin@colinbing.com">Contact</a>
+  </footer>
+
+  <script src="/homescripts/featured-builds.js"></script>
+  <script src="/homescripts/projects-page.js"></script>
+</body>
+</html>

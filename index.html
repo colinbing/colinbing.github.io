@@ -1965,6 +1965,7 @@
       (() => {
         const root = document.querySelector("[data-kumu-demo]");
         if (!root) return;
+        if (root.dataset.kumuInitialized === "true") return;
 
         const sentences = [
           {

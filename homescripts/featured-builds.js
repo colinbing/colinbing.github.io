@@ -44,6 +44,281 @@
 })();
 
 (() => {
+  const roots = Array.from(document.querySelectorAll("[data-kumu-demo]"));
+  if (!roots.length) return;
+
+  const sentences = [
+    {
+      prompt: "I like this cafe.",
+      japanese: "私はこのカフェが好きです。",
+      romaji: "watashi wa kono kafe ga suki desu",
+      audio: "/audio/kumu-preview/n5-alpha-0215.v1.mp3",
+      chips: ["私は", "この", "カフェ", "が", "好き", "です"],
+    },
+    {
+      prompt: "I watched a movie yesterday.",
+      japanese: "昨日映画を見ました。",
+      romaji: "kinou eiga o mimashita",
+      audio: "/audio/kumu-preview/n5-proto-0013.v1.mp3",
+      chips: ["昨日", "映画", "を", "見ました"],
+    },
+    {
+      prompt: "I study Japanese at school.",
+      japanese: "学校で日本語を勉強します。",
+      romaji: "gakkou de nihongo o benkyou shimasu",
+      audio: "/audio/kumu-preview/n5-alpha-0094.v1.mp3",
+      chips: ["学校で", "日本語", "を", "勉強します"],
+    },
+  ];
+
+  function normalizeRomaji(value) {
+    return String(value || "")
+      .toLowerCase()
+      .replace(/[.,!?。、！？]/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
+  function normalizeJapanese(value) {
+    return String(value || "").replace(/[\s.,!?。、！？]/g, "").trim();
+  }
+
+  roots.forEach((root) => {
+    if (root.dataset.kumuInitialized === "true") return;
+    root.dataset.kumuInitialized = "true";
+
+    const state = {
+      index: 0,
+      mode: "chips",
+      selectedChipIndexes: [],
+      submitted: false,
+      feedbackAudio: null,
+    };
+
+    const stepEl = root.querySelector("[data-kumu-step]");
+    const promptEl = root.querySelector("[data-kumu-prompt]");
+    const modeToggleEl = root.querySelector("[data-kumu-mode-toggle]");
+    const chipBankEl = root.querySelector("[data-kumu-chip-bank]");
+    const chipAnswerEl = root.querySelector("[data-kumu-chip-answer]");
+    const inputEl = root.querySelector("[data-kumu-input]");
+    const feedbackEl = root.querySelector("[data-kumu-feedback]");
+    const submitBtn = root.querySelector("[data-kumu-submit]");
+    const continueBtn = root.querySelector("[data-kumu-continue]");
+    const resetBtn = root.querySelector("[data-kumu-reset]");
+    const modeButtons = Array.from(root.querySelectorAll("[data-kumu-mode]"));
+    const panels = Array.from(root.querySelectorAll("[data-kumu-panel]"));
+
+    function currentSentence() {
+      return sentences[state.index];
+    }
+
+    function builtJapanese() {
+      const sentence = currentSentence();
+      return state.selectedChipIndexes.map((index) => sentence.chips[index]).join("");
+    }
+
+    function setMode(nextMode) {
+      if (state.submitted) return;
+      state.mode = nextMode;
+      modeButtons.forEach((button) => {
+        const isActive = button.dataset.kumuMode === state.mode;
+        button.classList.toggle("is-active", isActive);
+        button.setAttribute("aria-pressed", isActive ? "true" : "false");
+      });
+      panels.forEach((panel) => {
+        panel.hidden = panel.dataset.kumuPanel !== state.mode;
+      });
+    }
+
+    function resetAnswer() {
+      if (state.feedbackAudio) {
+        state.feedbackAudio.pause();
+        state.feedbackAudio = null;
+      }
+      state.selectedChipIndexes = [];
+      state.submitted = false;
+      if (inputEl) inputEl.value = "";
+      if (feedbackEl) {
+        feedbackEl.hidden = true;
+        feedbackEl.innerHTML = "";
+        feedbackEl.className = "kumu-demo-feedback";
+      }
+      if (modeToggleEl) modeToggleEl.hidden = false;
+      panels.forEach((panel) => {
+        panel.hidden = panel.dataset.kumuPanel !== state.mode;
+      });
+      if (continueBtn) continueBtn.disabled = true;
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.hidden = false;
+      }
+      renderChips();
+      renderChipAnswer();
+    }
+
+    function renderChipAnswer() {
+      if (!chipAnswerEl) return;
+      chipAnswerEl.innerHTML = "";
+      chipAnswerEl.classList.toggle("is-empty", state.selectedChipIndexes.length === 0);
+
+      if (!state.selectedChipIndexes.length) {
+        const placeholder = document.createElement("span");
+        placeholder.textContent = "Select chips to build the sentence.";
+        chipAnswerEl.appendChild(placeholder);
+        return;
+      }
+
+      const sentence = currentSentence();
+      state.selectedChipIndexes.forEach((chipIndex, selectedIndex) => {
+        const chip = document.createElement("button");
+        chip.type = "button";
+        chip.className = "kumu-demo-selected-chip";
+        chip.textContent = sentence.chips[chipIndex];
+        chip.disabled = state.submitted;
+        chip.addEventListener("click", () => {
+          if (state.submitted) return;
+          state.selectedChipIndexes.splice(selectedIndex, 1);
+          renderChips();
+          renderChipAnswer();
+        });
+        chipAnswerEl.appendChild(chip);
+      });
+    }
+
+    function renderChips() {
+      if (!chipBankEl) return;
+      const sentence = currentSentence();
+      chipBankEl.innerHTML = "";
+      sentence.chips.forEach((chipText, index) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "kumu-demo-chip";
+        button.textContent = chipText;
+        button.disabled = state.selectedChipIndexes.includes(index) || state.submitted;
+        button.addEventListener("click", () => {
+          if (state.submitted) return;
+          state.selectedChipIndexes.push(index);
+          renderChips();
+          renderChipAnswer();
+        });
+        chipBankEl.appendChild(button);
+      });
+    }
+
+    function renderSentence() {
+      const sentence = currentSentence();
+      if (stepEl) stepEl.textContent = `Sentence ${state.index + 1} of ${sentences.length}`;
+      if (promptEl) promptEl.textContent = sentence.prompt;
+      if (continueBtn) continueBtn.textContent = state.index === sentences.length - 1 ? "Restart" : "Continue";
+      resetAnswer();
+    }
+
+    function isAccepted() {
+      const sentence = currentSentence();
+      if (state.mode === "chips") {
+        return normalizeJapanese(builtJapanese()) === normalizeJapanese(sentence.japanese);
+      }
+
+      const value = inputEl?.value || "";
+      return (
+        normalizeRomaji(value) === normalizeRomaji(sentence.romaji) ||
+        normalizeJapanese(value) === normalizeJapanese(sentence.japanese)
+      );
+    }
+
+    function submitAnswer() {
+      if (!feedbackEl || !submitBtn || !continueBtn) return;
+      const sentence = currentSentence();
+      const accepted = isAccepted();
+      const typed = state.mode === "chips" ? builtJapanese() : (inputEl?.value || "").trim();
+
+      state.submitted = true;
+      submitBtn.hidden = true;
+      continueBtn.disabled = false;
+      if (modeToggleEl) modeToggleEl.hidden = true;
+      panels.forEach((panel) => {
+        panel.hidden = true;
+      });
+      renderChips();
+      renderChipAnswer();
+      feedbackEl.hidden = false;
+      feedbackEl.className = `kumu-demo-feedback ${accepted ? "is-accepted" : "is-rejected"}`;
+      feedbackEl.innerHTML = `
+        <div class="kumu-feedback-topline">
+          <p class="kumu-feedback-status">${accepted ? "Accepted" : "Not the expected answer"}</p>
+          <div class="kumu-audio-playback">
+            <audio data-kumu-feedback-audio preload="none" src="${sentence.audio}"></audio>
+            <button class="kumu-audio-button" type="button" data-kumu-feedback-audio-button aria-label="Play approved audio">
+              <span class="kumu-audio-speaker-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" focusable="false">
+                  <path d="M4 9.5h4.4L14 5v14l-5.6-4.5H4z"></path>
+                  <path class="kumu-audio-wave kumu-audio-wave-inner" d="M17 9.5a4 4 0 0 1 0 5"></path>
+                  <path class="kumu-audio-wave kumu-audio-wave-outer" d="M19.5 7a7.5 7.5 0 0 1 0 10"></path>
+                </svg>
+              </span>
+            </button>
+            <span class="kumu-audio-status" data-kumu-audio-status></span>
+          </div>
+        </div>
+        <div class="kumu-feedback-grid">
+          <span>Your answer</span>
+          <strong>${typed || "No answer yet"}</strong>
+          <span>Expected</span>
+          <strong>${sentence.japanese}</strong>
+          <span>Romaji</span>
+          <strong>${sentence.romaji}</strong>
+        </div>
+      `;
+      configureFeedbackAudio();
+    }
+
+    function configureFeedbackAudio() {
+      if (!feedbackEl) return;
+      const audio = feedbackEl.querySelector("[data-kumu-feedback-audio]");
+      const button = feedbackEl.querySelector("[data-kumu-feedback-audio-button]");
+      const icon = feedbackEl.querySelector(".kumu-audio-speaker-icon");
+      const status = feedbackEl.querySelector("[data-kumu-audio-status]");
+
+      if (!audio || !button || !icon || !status) return;
+
+      state.feedbackAudio = audio;
+
+      function setPlaybackState(nextState) {
+        const isPlaying = nextState === "playing";
+        const isUnavailable = nextState === "unavailable";
+        button.classList.toggle("is-playing", isPlaying);
+        icon.classList.toggle("is-playing", isPlaying);
+        button.disabled = false;
+        status.textContent = isUnavailable ? "Audio blocked here" : "";
+      }
+
+      audio.addEventListener("ended", () => setPlaybackState("idle"));
+      audio.addEventListener("pause", () => setPlaybackState("idle"));
+      audio.addEventListener("error", () => setPlaybackState("unavailable"));
+      button.addEventListener("click", () => {
+        audio.currentTime = 0;
+        setPlaybackState("playing");
+        audio.play().catch(() => setPlaybackState("unavailable"));
+      });
+    }
+
+    function continuePractice() {
+      state.index = (state.index + 1) % sentences.length;
+      renderSentence();
+    }
+
+    modeButtons.forEach((button) => {
+      button.addEventListener("click", () => setMode(button.dataset.kumuMode));
+    });
+    resetBtn?.addEventListener("click", resetAnswer);
+    submitBtn?.addEventListener("click", submitAnswer);
+    continueBtn?.addEventListener("click", continuePractice);
+
+    renderSentence();
+  });
+})();
+
+(() => {
   const root = document.querySelector("[data-spotlight-demo]");
   if (!root) return;
 
