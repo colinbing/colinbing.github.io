@@ -286,6 +286,8 @@
     --featured-accent: #111827;
     --featured-accent-2: #263141;
     --featured-accent-rgb: 17, 24, 39;
+    --featured-proof-accent: #0f766e;
+    --featured-proof-accent-rgb: 15, 118, 110;
     isolation: isolate;
     background:
       linear-gradient(135deg, rgba(239, 246, 255, 0.96) 0%, rgba(248, 250, 252, 0.98) 50%, rgba(240, 253, 250, 0.92) 100%);
@@ -321,7 +323,9 @@
     --featured-accent: #111827;
     --featured-accent-2: #2f2a22;
     --featured-accent-rgb: 17, 24, 39;
-    border-top-color: rgba(161, 98, 7, 0.16);
+    --featured-proof-accent: #fde047;
+    --featured-proof-accent-rgb: 253, 224, 71;
+    border-top-color: rgba(253, 224, 71, 0.18);
   }
 
   .featured-builds[data-active-build="spotlight"]::before,
@@ -334,7 +338,13 @@
     --featured-accent: #0f766e;
     --featured-accent-2: #0f172a;
     --featured-accent-rgb: 15, 118, 110;
+    --featured-proof-accent: #0f766e;
+    --featured-proof-accent-rgb: 15, 118, 110;
     border-top-color: rgba(20, 184, 166, 0.2);
+  }
+
+  .featured-builds[data-active-build="spotlight"] .kumu-eyebrow {
+    color: #111827;
   }
 
   .kumu-feature-inner {
@@ -1317,12 +1327,18 @@
     width: 20px;
     height: 20px;
     border-radius: 999px;
-    color: #0f766e;
-    background: rgba(20, 184, 166, 0.14);
-    border: 1px solid rgba(20, 184, 166, 0.22);
+    color: var(--featured-proof-accent, #0f766e);
+    background: rgba(var(--featured-proof-accent-rgb, 15, 118, 110), 0.13);
+    border: 1px solid rgba(var(--featured-proof-accent-rgb, 15, 118, 110), 0.22);
     font-size: 0.68rem;
     font-weight: 900;
     line-height: 1;
+  }
+
+  .featured-builds[data-active-build="spotlight"] .kumu-proof-card::before {
+    color: #111827;
+    background: rgba(253, 224, 71, 0.42);
+    border-color: rgba(253, 224, 71, 0.62);
   }
 
   .kumu-proof-label {
@@ -1330,12 +1346,16 @@
     align-items: center;
     min-height: 20px;
     margin: 0;
-    color: #0f766e;
+    color: var(--featured-proof-accent, #0f766e);
     background: transparent;
     font-size: 0.7rem;
     font-weight: 800;
     letter-spacing: 0.12em;
     text-transform: uppercase;
+  }
+
+  .featured-builds[data-active-build="spotlight"] .kumu-proof-label {
+    color: #111827;
   }
 
   .kumu-proof-card h3 {
@@ -1372,6 +1392,15 @@
     background:
       linear-gradient(120deg, rgba(120, 113, 108, 0.18) 0%, rgba(15, 23, 42, 0.1) 48%, rgba(51, 65, 85, 0.18) 100%),
       linear-gradient(135deg, rgba(24, 22, 20, 0.99) 0%, rgba(17, 24, 39, 0.98) 54%, rgba(30, 41, 59, 0.92) 100%);
+  }
+
+  [data-theme="dark"] .featured-builds[data-active-build="spotlight"] {
+    background: #090909;
+  }
+
+  [data-theme="dark"] .featured-builds[data-active-build="spotlight"]::before {
+    background:
+      linear-gradient(180deg, rgba(11, 11, 10, 0.99), rgba(7, 7, 7, 0.99));
   }
 
   [data-theme="dark"] .featured-builds::after {
@@ -1419,6 +1448,10 @@
     color: #5eead4;
   }
 
+  [data-theme="dark"] .featured-builds[data-active-build="spotlight"] .kumu-eyebrow {
+    color: #fde047;
+  }
+
   [data-theme="dark"] .kumu-title {
     color: #f8fafc;
   }
@@ -1449,7 +1482,7 @@
   [data-theme="dark"] .kumu-proof-grid {
     background:
       linear-gradient(135deg, rgba(30, 41, 59, 0.74), rgba(15, 23, 42, 0.68));
-    border-color: rgba(94, 234, 212, 0.24);
+    border-color: rgba(var(--featured-proof-accent-rgb, 15, 118, 110), 0.3);
     box-shadow:
       0 18px 44px rgba(0, 0, 0, 0.42),
       inset 0 1px 0 rgba(255, 255, 255, 0.08);
@@ -1460,14 +1493,24 @@
   }
 
   [data-theme="dark"] .kumu-proof-card::before {
-    color: #99f6e4;
-    background: rgba(20, 184, 166, 0.16);
-    border-color: rgba(94, 234, 212, 0.26);
+    color: color-mix(in srgb, var(--featured-proof-accent, #0f766e) 42%, #ffffff);
+    background: rgba(var(--featured-proof-accent-rgb, 15, 118, 110), 0.18);
+    border-color: rgba(var(--featured-proof-accent-rgb, 15, 118, 110), 0.32);
+  }
+
+  [data-theme="dark"] .featured-builds[data-active-build="spotlight"] .kumu-proof-card::before {
+    color: #111827;
+    background: #fde047;
+    border-color: rgba(253, 224, 71, 0.84);
   }
 
   [data-theme="dark"] .kumu-proof-label {
-    color: #99f6e4;
+    color: color-mix(in srgb, var(--featured-proof-accent, #0f766e) 42%, #ffffff);
     background: transparent;
+  }
+
+  [data-theme="dark"] .featured-builds[data-active-build="spotlight"] .kumu-proof-label {
+    color: #fde047;
   }
 
   [data-theme="dark"] .kumu-proof-card h3 {
