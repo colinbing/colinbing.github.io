@@ -15,10 +15,10 @@
     </script>
 
     <link rel="stylesheet" href="css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/sections.css">
+    <link rel="stylesheet" href="css/sections.css?v=featured-20260701">
     <link rel="stylesheet" href="css/button.css">
     <link rel="stylesheet" href="css/gallery.css" />
-    <link rel="stylesheet" href="css/project-section.css?v=kumu-20260629" />
+    <link rel="stylesheet" href="css/project-section.css?v=featured-20260701" />
 
     <!-- for FF, Chrome, Opera -->
     <link rel="apple-touch-icon" sizes="180x180" href="images/favicons/apple-touch-icon.png">
@@ -1694,95 +1694,189 @@
                         </div>
                       </section>
 
-          <section id="kumu-section" class="kumu-feature">
+          <section id="featured-builds-section" class="kumu-feature featured-builds">
             <div class="kumu-feature-inner">
-              <div class="kumu-feature-main">
-                <div class="kumu-feature-copy">
-                  <p class="kumu-eyebrow">Featured Build · KUMU</p>
-                  <h2 class="kumu-title">Turn vocabulary study into sentence production.</h2>
-                  <p class="kumu-lede">
-                    Built from my own study workflow, Kumu is a login-free, mobile-first Japanese practice tool for learners who can recognize vocabulary and grammar but need focused reps producing real sentences.
-                  </p>
-                  <div class="kumu-actions">
-                    <a class="kumu-primary-link" href="https://practice-jp.colinbing.com/" target="_blank" rel="noopener">
-                      Open Kumu <span>↗</span>
-                    </a>
-                  </div>
+              <header class="section-heading section-heading--narrow featured-builds-heading">
+                <div class="section-kicker">Featured Builds</div>
+                <h2>Product Systems in Practice</h2>
+              </header>
+
+              <div class="featured-builds-shell">
+                <div class="featured-build-tabs" role="tablist" aria-label="Featured builds">
+                  <button class="featured-build-tab is-active" type="button" role="tab" id="featured-tab-spotlight" data-build-tab="spotlight" aria-selected="true" aria-controls="featured-panel-spotlight">
+                    <span>Spotlight</span>
+                    <small>Ad product discovery</small>
+                  </button>
+                  <button class="featured-build-tab" type="button" role="tab" id="featured-tab-kumu" data-build-tab="kumu" aria-selected="false" aria-controls="featured-panel-kumu">
+                    <span>Kumu</span>
+                    <small>Japanese sentence practice</small>
+                  </button>
                 </div>
 
-                <aside class="kumu-visual" aria-label="Interactive Kumu practice preview">
-                  <div class="kumu-visual-topline">
-                    <div class="kumu-demo-brand" aria-label="Kumu">
-                      <span class="kumu-demo-mark" aria-hidden="true">文</span>
-                      <span>Kumu</span>
-                    </div>
-                    <span>Try a 3-rep loop</span>
-                  </div>
-
-                  <div class="kumu-demo-card" data-kumu-demo>
-                    <div class="kumu-demo-status">
-                      <span data-kumu-step>Sentence 1 of 3</span>
-                    </div>
-
-                    <p class="kumu-demo-label">Prompt</p>
-                    <h3 class="kumu-demo-prompt" data-kumu-prompt>I like this cafe.</h3>
-
-                    <div class="kumu-demo-mode-toggle" data-kumu-mode-toggle aria-label="Choose practice mode">
-                      <button type="button" class="is-active" data-kumu-mode="chips" aria-pressed="true">Chips</button>
-                      <button type="button" data-kumu-mode="typing" aria-pressed="false">Typing</button>
-                    </div>
-
-                    <div class="kumu-demo-workspace">
-                      <div class="kumu-demo-panel" data-kumu-panel="chips">
-                        <div class="kumu-demo-chip-bank" data-kumu-chip-bank aria-label="Available answer chips"></div>
-                        <div class="kumu-demo-chip-answer-shell">
-                          <div class="kumu-demo-chip-answer" data-kumu-chip-answer aria-live="polite">
-                            <span>Select chips to build the sentence.</span>
-                          </div>
-                          <button type="button" class="kumu-demo-reset" data-kumu-reset>Clear</button>
+                <div class="featured-builds-stage">
+                  <article class="featured-build-panel is-active" id="featured-panel-spotlight" data-build-panel="spotlight" role="tabpanel" aria-labelledby="featured-tab-spotlight">
+                    <div class="kumu-feature-main spotlight-feature-main">
+                      <div class="kumu-feature-copy">
+                        <p class="kumu-eyebrow">Spotlight Product Showcase</p>
+                        <h2 class="kumu-title">Make custom ad products easier to pitch, compare, and choose.</h2>
+                        <p class="kumu-lede">
+                          I consolidated scattered PDFs, decks, specs, previews, and recommendation logic into an interactive microsite for custom ad products across device breakpoints.
+                        </p>
+                        <div class="kumu-actions">
+                          <a class="kumu-primary-link" href="https://spotlight-mocks.netlify.app/" target="_blank" rel="noopener">
+                            Open full demo <span>↗</span>
+                          </a>
                         </div>
                       </div>
 
-                      <div class="kumu-demo-panel" data-kumu-panel="typing" hidden>
-                        <label class="kumu-demo-input-label" for="kumu-demo-answer">Romaji or Japanese answer</label>
-                        <textarea id="kumu-demo-answer" class="kumu-demo-input" data-kumu-input rows="2" spellcheck="false" placeholder="Type your answer here"></textarea>
+                      <aside class="kumu-visual spotlight-visual" aria-label="Interactive Spotlight product recommendation preview">
+                        <div class="kumu-visual-topline">
+                          <div class="spotlight-demo-brand" aria-label="Spotlight Collection">
+                            <span class="spotlight-demo-mark" aria-hidden="true">↘</span>
+                            <span>Spotlight Collection</span>
+                          </div>
+                          <span>Recommendation tool</span>
+                        </div>
+
+                        <div class="spotlight-demo-card" data-spotlight-demo>
+                          <div class="spotlight-demo-header">
+                            <p>Find the right format</p>
+                            <span data-spotlight-count>4 matches</span>
+                          </div>
+
+                          <div class="spotlight-demo-question">
+                            <p>What would you like to feature?</p>
+                            <div class="spotlight-demo-options" data-spotlight-options="assetPackage"></div>
+                          </div>
+
+                          <div class="spotlight-demo-question">
+                            <p>How much supporting copy should the ad carry?</p>
+                            <div class="spotlight-demo-options" data-spotlight-options="messageStyle"></div>
+                          </div>
+
+                          <button class="spotlight-demo-submit" type="button" data-spotlight-submit>Get product recommendations</button>
+
+                          <div class="spotlight-demo-results" data-spotlight-results aria-live="polite"></div>
+                          <button class="spotlight-demo-reset" type="button" data-spotlight-reset hidden>Reset selections</button>
+                        </div>
+                      </aside>
+                    </div>
+
+                    <div class="kumu-proof-grid">
+                      <article class="kumu-proof-card">
+                        <span class="kumu-proof-label">Problem</span>
+                        <h3>Sales materials were scattered.</h3>
+                        <p>
+                          Custom product information lived across PDFs, decks, examples, and team knowledge, making it harder to match client assets to the right format.
+                        </p>
+                      </article>
+                      <article class="kumu-proof-card">
+                        <span class="kumu-proof-label">Solution</span>
+                        <h3>An interactive product system.</h3>
+                        <p>
+                          The microsite centralizes specs, examples, responsive previews, and a best-fit recommendation tool into one polished client-facing experience.
+                        </p>
+                      </article>
+                      <article class="kumu-proof-card">
+                        <span class="kumu-proof-label">Signal</span>
+                        <h3>Bridges sales and execution.</h3>
+                        <p>
+                          It shows my taste for useful UI: translating product complexity into a tool that helps marketing and sales teams explain options clearly.
+                        </p>
+                      </article>
+                    </div>
+                  </article>
+
+                  <article class="featured-build-panel" id="featured-panel-kumu" data-build-panel="kumu" role="tabpanel" aria-labelledby="featured-tab-kumu" hidden>
+                    <div class="kumu-feature-main">
+                      <div class="kumu-feature-copy">
+                        <p class="kumu-eyebrow">Featured Build · KUMU</p>
+                        <h2 class="kumu-title">Turn vocabulary study into sentence production.</h2>
+                        <p class="kumu-lede">
+                          Built from my own study workflow, Kumu is a login-free, mobile-first Japanese practice tool for learners who can recognize vocabulary and grammar but need focused reps producing real sentences.
+                        </p>
+                        <div class="kumu-actions">
+                          <a class="kumu-primary-link" href="https://practice-jp.colinbing.com/" target="_blank" rel="noopener">
+                            Open Kumu <span>↗</span>
+                          </a>
+                        </div>
                       </div>
 
-                      <div class="kumu-demo-feedback" data-kumu-feedback aria-live="polite" hidden></div>
+                  <aside class="kumu-visual" aria-label="Interactive Kumu practice preview">
+                    <div class="kumu-visual-topline">
+                      <div class="kumu-demo-brand" aria-label="Kumu">
+                        <span class="kumu-demo-mark" aria-hidden="true">文</span>
+                        <span>Kumu</span>
+                      </div>
+                      <span>Try a 3-rep loop</span>
                     </div>
 
-                    <div class="kumu-demo-actions">
-                      <button type="button" class="kumu-submit-btn" data-kumu-submit>Submit</button>
-                      <button type="button" class="kumu-continue-btn" data-kumu-continue disabled>Continue</button>
+                    <div class="kumu-demo-card" data-kumu-demo>
+                      <div class="kumu-demo-status">
+                        <span data-kumu-step>Sentence 1 of 3</span>
+                      </div>
+
+                      <p class="kumu-demo-label">Prompt</p>
+                      <h3 class="kumu-demo-prompt" data-kumu-prompt>I like this cafe.</h3>
+
+                      <div class="kumu-demo-mode-toggle" data-kumu-mode-toggle aria-label="Choose practice mode">
+                        <button type="button" class="is-active" data-kumu-mode="chips" aria-pressed="true">Chips</button>
+                        <button type="button" data-kumu-mode="typing" aria-pressed="false">Typing</button>
+                      </div>
+
+                      <div class="kumu-demo-workspace">
+                        <div class="kumu-demo-panel" data-kumu-panel="chips">
+                          <div class="kumu-demo-chip-bank" data-kumu-chip-bank aria-label="Available answer chips"></div>
+                          <div class="kumu-demo-chip-answer-shell">
+                            <div class="kumu-demo-chip-answer" data-kumu-chip-answer aria-live="polite">
+                              <span>Select chips to build the sentence.</span>
+                            </div>
+                            <button type="button" class="kumu-demo-reset" data-kumu-reset>Clear</button>
+                          </div>
+                        </div>
+
+                        <div class="kumu-demo-panel" data-kumu-panel="typing" hidden>
+                          <label class="kumu-demo-input-label" for="kumu-demo-answer">Romaji or Japanese answer</label>
+                          <textarea id="kumu-demo-answer" class="kumu-demo-input" data-kumu-input rows="2" spellcheck="false" placeholder="Type your answer here"></textarea>
+                        </div>
+
+                        <div class="kumu-demo-feedback" data-kumu-feedback aria-live="polite" hidden></div>
+                      </div>
+
+                      <div class="kumu-demo-actions">
+                        <button type="button" class="kumu-submit-btn" data-kumu-submit>Submit</button>
+                        <button type="button" class="kumu-continue-btn" data-kumu-continue disabled>Continue</button>
+                      </div>
                     </div>
-                  </div>
+                  </aside>
+                </div>
 
-                </aside>
-              </div>
-
-              <div class="kumu-proof-grid">
-                <article class="kumu-proof-card">
-                  <span class="kumu-proof-label">Problem</span>
-                  <h3>Recognition was not enough.</h3>
-                  <p>
-                    Flashcards helped vocabulary stick, but I wanted a focused place to assemble words into complete Japanese sentences without another account, course, or dashboard.
-                  </p>
-                </article>
-                <article class="kumu-proof-card">
-                  <span class="kumu-proof-label">Solution</span>
-                  <h3>A tight production loop.</h3>
-                  <p>
-                    See a prompt, build or type the answer, submit, get deterministic feedback, hear the sentence, and keep moving through focused practice.
-                  </p>
-                </article>
-                <article class="kumu-proof-card">
-                  <span class="kumu-proof-label">System</span>
-                  <h3>Grew into a product.</h3>
-                  <p>
-                    Kumu now includes packs, local progress, Core study controls, a sentence catalog, reviewed audio, sentence-mining intake, and protected admin tools.
-                  </p>
-                </article>
-              </div>
+                <div class="kumu-proof-grid">
+                  <article class="kumu-proof-card">
+                    <span class="kumu-proof-label">Problem</span>
+                    <h3>Recognition was not enough.</h3>
+                    <p>
+                      Flashcards helped vocabulary stick, but I wanted a focused place to assemble words into complete Japanese sentences without another account, course, or dashboard.
+                    </p>
+                  </article>
+                  <article class="kumu-proof-card">
+                    <span class="kumu-proof-label">Solution</span>
+                    <h3>A tight production loop.</h3>
+                    <p>
+                      See a prompt, build or type the answer, submit, get deterministic feedback, hear the sentence, and keep moving through focused practice.
+                    </p>
+                  </article>
+                  <article class="kumu-proof-card">
+                    <span class="kumu-proof-label">System</span>
+                    <h3>Grew into a product.</h3>
+                    <p>
+                      Kumu now includes packs, local progress, Core study controls, a sentence catalog, reviewed audio, sentence-mining intake, and protected admin tools.
+                    </p>
+                  </article>
+                </div>
+              </article>
+            </div>
+            </div>
             </div>
           </section>
 
@@ -1874,6 +1968,7 @@
     <script src="homescripts/gallery-script.js"></script>
     <script src="https://unpkg.com/typeit@8.7.1/dist/index.umd.js"></script>
     <script src="homescripts/project-section.js"></script>
+    <script src="homescripts/featured-builds.js"></script>
     <script src="homescripts/typer.js"></script>
     <script>
       (() => {

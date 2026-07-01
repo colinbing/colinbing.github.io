@@ -107,6 +107,12 @@ p,li{ font-size:.9rem; color:var(--text) }
 /* Reserve space for fixed navbar */
 .main {
   padding-top: var(--nav-h);
+  overflow-x: hidden;
+}
+
+.main .row {
+  margin-left: 0;
+  margin-right: 0;
 }
 
 /* All in-page sections scroll to just below the navbar */
