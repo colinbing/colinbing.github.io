@@ -4,10 +4,10 @@
 // and which section they correspond to.
 const navMap = [
   { selector: '#navbar .nav-link[href="#"]',                sectionId: 'intro-section' },
-  { selector: '#navbar .nav-link[href="#skills-section"]',  sectionId: 'skills-section' },
+  { selector: '#navbar .nav-link[href="#featured-builds-section"]', sectionId: 'featured-builds-section' },
   { selector: '#navbar .nav-link[href="#experience-section"]',    sectionId: 'experience-section' },
+  { selector: '#navbar .nav-link[href="#skills-section"]',  sectionId: 'skills-section' },
   { selector: '#navbar .nav-link[href="#certification-section"]', sectionId: 'certification-section' },
-  { selector: '#navbar .nav-link[href="#project-section"]',       sectionId: 'project-section' },
   { selector: '#navbar .nav-link[href="#education-section"]',     sectionId: 'education-section' },
   { selector: '#navbar .nav-link[href="#contact-section"]',       sectionId: 'contact-section' },
 ];
@@ -26,6 +26,7 @@ const navbar = document.getElementById('navbar');
 // Bail if something went very wrong
 if (navItems.length) {
   const NAV_OFFSET = document.querySelector('.navbar')?.offsetHeight || 64;
+  const ACTIVE_OFFSET = NAV_OFFSET + 96;
 
   function setActiveFromScroll() {
     const scrollY = window.scrollY;
@@ -43,7 +44,7 @@ if (navItems.length) {
       // Walk through sections in order and find the last one we've
       // scrolled past the top of (minus a small offset for nav height).
       for (let i = 0; i < navItems.length; i++) {
-        const secTop = navItems[i].section.offsetTop - NAV_OFFSET - 40;
+        const secTop = navItems[i].section.offsetTop - ACTIVE_OFFSET;
         if (scrollY >= secTop) {
           activeIndex = i;
         } else {

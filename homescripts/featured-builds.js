@@ -834,8 +834,10 @@
       if (!product?.livePreview) return;
 
       const dimensions = getRenderableFrameDimensions(product);
+      const previewShell = mount.parentElement;
       const maxWidth = Math.max(1, mount.clientWidth || 240);
-      const maxHeight = product.height === "Tall" ? 210 : 200;
+      const shellHeight = previewShell instanceof HTMLElement ? previewShell.getBoundingClientRect().height : 0;
+      const maxHeight = Math.max(1, shellHeight || mount.clientHeight || (product.height === "Tall" ? 250 : 220));
       const scale = Math.min(1, maxWidth / dimensions.width, maxHeight / dimensions.height);
       const displayWidth = Math.round(dimensions.width * scale);
       const displayHeight = Math.round(dimensions.height * scale);
@@ -890,15 +892,19 @@
     }
 
     cards.forEach((card) => {
-      card.addEventListener("click", () => {
-        card.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "start" });
+      const focusCard = () => {
+        const targetLeft = card.offsetLeft - track.offsetLeft;
+        track.scrollTo({ left: targetLeft, behavior: "smooth" });
         window.setTimeout(updateActiveCard, 260);
+      };
+
+      card.addEventListener("click", () => {
+        focusCard();
       });
       card.addEventListener("keydown", (event) => {
         if (!["Enter", " "].includes(event.key)) return;
         event.preventDefault();
-        card.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "start" });
-        window.setTimeout(updateActiveCard, 260);
+        focusCard();
       });
     });
 
@@ -922,7 +928,7 @@
       submitBtn.textContent = isReady ? "Get product recommendations" : `Choose ${questions.length - selections} more`;
     }
     if (resetBtn) {
-      resetBtn.hidden = !isResults;
+      resetBtn.hidden = true;
     }
     if (countEl) {
       if (isResults) {
@@ -982,6 +988,7 @@
     resultsEl.innerHTML = `
       <div class="spotlight-results-head">
         <h3>Recommended products <span>${matches.length} ${matches.length === 1 ? "match" : "matches"}</span></h3>
+        <button class="spotlight-demo-reset spotlight-demo-reset-inline" type="button" data-spotlight-reset-inline>Reset</button>
       </div>
       <div class="spotlight-results-track" data-spotlight-results-track tabindex="0" aria-label="Recommended Spotlight products">
         ${matches
@@ -1008,8 +1015,12 @@
       </div>
     `;
 
-    renderTagPreviews();
+    resultsEl.querySelector("[data-spotlight-reset-inline]")?.addEventListener("click", resetSelections);
     configureResultsCarousel();
+    window.cancelAnimationFrame(resizeFrame);
+    resizeFrame = window.requestAnimationFrame(() => {
+      renderTagPreviews();
+    });
   }
 
   function showResults() {

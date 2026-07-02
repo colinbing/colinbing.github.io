@@ -6,10 +6,10 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
 
     <link rel="stylesheet" href="css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/sections.css?v=featured-20260701">
+    <link rel="stylesheet" href="css/sections.css?v=projects-dropdown-20260702">
     <link rel="stylesheet" href="css/button.css">
     <link rel="stylesheet" href="css/gallery.css" />
-    <link rel="stylesheet" href="css/project-section.css?v=featured-20260701-3" />
+    <link rel="stylesheet" href="css/project-section.css?v=featured-20260702-wp-emblem" />
 
     <!-- for FF, Chrome, Opera -->
     <link rel="apple-touch-icon" sizes="180x180" href="images/favicons/apple-touch-icon.png">
@@ -64,32 +64,41 @@
                     <li class="nav-item active">
                         <a class="nav-link" href="#"  >About</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#skills-section"  >Skills</a>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link" href="#featured-builds-section">Projects <img class="stars" src="/images/favicons/star-rarity.svg" alt="" aria-hidden="true"></a>
+                        <div class="dropdown-menu projects-menu">
+                            <a class="dropdown-feature" href="/projects/">
+                                <span>
+                                    <span class="dropdown-feature-label">Project Index</span>
+                                    <span class="dropdown-feature-copy">Browse the full project archive</span>
+                                </span>
+                                <span class="dropdown-feature-arrow" aria-hidden="true">↗</span>
+                            </a>
+                            <span class="dropdown-section-label">Tools and builds</span>
+                            <div class="dropdown-project-grid">
+                                <a class="dropdown-item" href="outline/" target="_blank" rel="noopener">OutLine</a>
+                                <a class="dropdown-item" href="tagSafe/" target="_blank" rel="noopener">TagSafe</a>
+                                <a class="dropdown-item" href="adbuilder/" target="_blank" rel="noopener">AdBuilder</a>
+                                <a class="dropdown-item" href="vast2mp4/" target="_blank" rel="noopener">Vast2MP4</a>
+                                <a class="dropdown-item" href="blocklist/" target="_blank" rel="noopener">BlockList</a>
+                                <a class="dropdown-item" href="collate/" target="_blank" rel="noopener">Collate</a>
+                                <a class="dropdown-item" href="pageid-scraper/" target="_blank" rel="noopener">PageID Scraper</a>
+                                <a class="dropdown-item" href="workshop/" target="_blank" rel="noopener">Workshop</a>
+                                <a class="dropdown-item" href="https://practice-jp.colinbing.com/" target="_blank" rel="noopener">Kumu</a>
+                                <a class="dropdown-item" href="appledemo/" target="_blank" rel="noopener">Apple Demo Site</a>
+                            </div>
+                        </div>
                     </li>
+
                     <li class="nav-item">
                         <a class="nav-link" href="#experience-section"  >Experience</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="#skills-section"  >Skills</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="#certification-section"  >Certifications</a>
                     </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link" href="#project-section">Projects <img class="stars" src="/images/favicons/star-rarity.svg" alt="" aria-hidden="true"></a>
-                        <div class="dropdown-menu">
-                            <a class="dropdown-item" href="outline/" target="_blank" rel="noopener">OutLine</a>
-                            <a class="dropdown-item" href="tagSafe/" target="_blank" rel="noopener">TagSafe</a>
-                            <a class="dropdown-item" href="adbuilder/" target="_blank" rel="noopener">AdBuilder</a>
-                            <a class="dropdown-item" href="vast2mp4/" target="_blank" rel="noopener">Vast2MP4</a>
-                            <a class="dropdown-item" href="blocklist/" target="_blank" rel="noopener">BlockList</a>
-                            <a class="dropdown-item" href="collate/" target="_blank" rel="noopener">Collate</a>
-                            <a class="dropdown-item" href="pageid-scraper/" target="_blank" rel="noopener">PageID Scraper</a>
-                            <a class="dropdown-item" href="workshop/" target="_blank" rel="noopener">Workshop</a>
-                            <a class="dropdown-item" href="https://practice-jp.colinbing.com/" target="_blank" rel="noopener">Kumu</a>
-                            <a class="dropdown-item" href="appledemo/" target="_blank" rel="noopener">Apple Demo Site</a>
-                            <!-- Add more projects here -->
-                        </div>
-                    </li>
-
                     <li class="nav-item">
                         <a class="nav-link" href="#education-section"  >Education</a>
                     </li>
@@ -153,7 +162,7 @@
                                 <strong>Resume</strong>
                             </span>
                         </a>
-                        <a class="resume-button pushable pushable--featured" href="#featured-tools-section">
+                        <a class="resume-button pushable pushable--featured" href="#featured-builds-section">
                             <span class="button-shadow"></span>
                             <span class="edge"></span>
                             <span class="front">
@@ -165,6 +174,243 @@
             </div>
         </section>
 
+          <section id="featured-builds-section" class="kumu-feature featured-builds">
+            <div class="kumu-feature-inner">
+              <div class="featured-builds-shell">
+                <header class="section-heading section-heading--narrow featured-builds-heading">
+                  <h2>Showcase Projects</h2>
+                </header>
+                <div class="featured-build-tabs" role="tablist" aria-label="Featured builds">
+                  <button class="featured-build-tab is-active" type="button" role="tab" id="featured-tab-spotlight" data-build-tab="spotlight" aria-selected="true" aria-controls="featured-panel-spotlight">
+                    <span>Spotlight</span>
+                    <small>Ad product discovery</small>
+                  </button>
+                  <button class="featured-build-tab" type="button" role="tab" id="featured-tab-kumu" data-build-tab="kumu" aria-selected="false" aria-controls="featured-panel-kumu">
+                    <span>Kumu</span>
+                    <small>Japanese sentence practice</small>
+                  </button>
+                </div>
+
+                <div class="featured-builds-stage">
+                  <article class="featured-build-panel is-active" id="featured-panel-spotlight" data-build-panel="spotlight" role="tabpanel" aria-labelledby="featured-tab-spotlight">
+                    <div class="kumu-feature-main spotlight-feature-main">
+                      <div class="kumu-feature-copy">
+                        <p class="kumu-eyebrow">Washington Post · Ad Product Discovery</p>
+                        <h2 class="kumu-title">Turn scattered ad product specs into a guided pitch tool.</h2>
+                        <p class="kumu-lede">
+                          I consolidated scattered PDFs, decks, specs, previews, and recommendation logic into an interactive microsite for custom ad products across device breakpoints.
+                        </p>
+                        <div class="kumu-actions">
+                          <a class="kumu-primary-link" href="https://spotlight-mocks.netlify.app/" target="_blank" rel="noopener">
+                            Open full demo <span>↗</span>
+                          </a>
+                        </div>
+                        <div class="kumu-proof-grid">
+                          <article class="kumu-proof-card">
+                            <span class="kumu-proof-label">Problem</span>
+                            <h3>Specs lived in too many places.</h3>
+                            <p>
+                              Decks, PDFs, examples, and guidance were scattered.
+                            </p>
+                          </article>
+                          <article class="kumu-proof-card">
+                            <span class="kumu-proof-label">Solution</span>
+                            <h3>One guided product surface.</h3>
+                            <p>
+                              Specs, previews, breakpoints, and recommendations live together.
+                            </p>
+                          </article>
+                          <article class="kumu-proof-card">
+                            <span class="kumu-proof-label">Signal</span>
+                            <h3>Turns complexity into a pitch path.</h3>
+                            <p>
+                              Sales can match client assets to formats before handoff.
+                            </p>
+                          </article>
+                        </div>
+                      </div>
+
+                      <aside class="kumu-visual spotlight-visual" aria-label="Interactive Spotlight product recommendation preview">
+                        <div class="kumu-visual-topline">
+                          <div class="spotlight-demo-brand" aria-label="Spotlight Collection">
+                            <span class="spotlight-demo-mark" aria-hidden="true">↘</span>
+                            <img class="spotlight-demo-emblem" src="/images/icons/washington-post-emblem.png" alt="" aria-hidden="true">
+                            <span>Spotlight Collection</span>
+                          </div>
+                          <span>Recommendation tool</span>
+                        </div>
+
+                        <div class="spotlight-demo-card" data-spotlight-demo>
+                          <div class="spotlight-demo-header">
+                            <p>Find the right format</p>
+                            <span data-spotlight-count>4 matches</span>
+                          </div>
+
+                          <div class="spotlight-demo-question">
+                            <p>What would you like to feature?</p>
+                            <div class="spotlight-demo-options" data-spotlight-options="assetPackage"></div>
+                          </div>
+
+                          <div class="spotlight-demo-question">
+                            <p>How much supporting copy should the ad carry?</p>
+                            <div class="spotlight-demo-options" data-spotlight-options="messageStyle"></div>
+                          </div>
+
+                          <button class="spotlight-demo-submit" type="button" data-spotlight-submit>Get product recommendations</button>
+
+                          <div class="spotlight-demo-results" data-spotlight-results aria-live="polite"></div>
+                          <button class="spotlight-demo-reset" type="button" data-spotlight-reset hidden>Reset selections</button>
+                        </div>
+                      </aside>
+                    </div>
+
+                  </article>
+
+                  <article class="featured-build-panel" id="featured-panel-kumu" data-build-panel="kumu" role="tabpanel" aria-labelledby="featured-tab-kumu" hidden>
+                    <div class="kumu-feature-main">
+                      <div class="kumu-feature-copy">
+                        <p class="kumu-eyebrow">Kumu · Japanese Sentence Practice</p>
+                        <h2 class="kumu-title">Turn vocabulary study into sentence production.</h2>
+                        <p class="kumu-lede">
+                          Built from my own study workflow, Kumu is a login-free, mobile-first Japanese practice tool for learners who can recognize vocabulary and grammar but need focused reps producing real sentences.
+                        </p>
+                        <div class="kumu-actions">
+                          <a class="kumu-primary-link" href="https://practice-jp.colinbing.com/" target="_blank" rel="noopener">
+                            Open Kumu <span>↗</span>
+                          </a>
+                        </div>
+                        <div class="kumu-proof-grid">
+                          <article class="kumu-proof-card">
+                            <span class="kumu-proof-label">Problem</span>
+                            <h3>Recognition was not enough.</h3>
+                            <p>
+                              I needed reps building full Japanese sentences, not only recalling words.
+                            </p>
+                          </article>
+                          <article class="kumu-proof-card">
+                            <span class="kumu-proof-label">Solution</span>
+                            <h3>A focused production loop.</h3>
+                            <p>
+                              Build or type answers, get feedback, hear audio, and repeat.
+                            </p>
+                          </article>
+                          <article class="kumu-proof-card">
+                            <span class="kumu-proof-label">System</span>
+                            <h3>Grew into a product.</h3>
+                            <p>
+                              Packs, progress, catalog tooling, audio review, and admin paths.
+                            </p>
+                          </article>
+                        </div>
+                      </div>
+
+                  <aside class="kumu-visual" aria-label="Interactive Kumu practice preview">
+                    <div class="kumu-visual-topline">
+                      <div class="kumu-demo-brand" aria-label="Kumu">
+                        <span class="kumu-demo-mark" aria-hidden="true">文</span>
+                        <span>Kumu</span>
+                      </div>
+                      <span>Try a 3-rep loop</span>
+                    </div>
+
+                    <div class="kumu-demo-card" data-kumu-demo>
+                      <div class="kumu-demo-status">
+                        <span data-kumu-step>Sentence 1 of 3</span>
+                      </div>
+
+                      <p class="kumu-demo-label">Prompt</p>
+                      <h3 class="kumu-demo-prompt" data-kumu-prompt>I like this cafe.</h3>
+
+                      <div class="kumu-demo-mode-toggle" data-kumu-mode-toggle aria-label="Choose practice mode">
+                        <button type="button" class="is-active" data-kumu-mode="chips" aria-pressed="true">Chips</button>
+                        <button type="button" data-kumu-mode="typing" aria-pressed="false">Typing</button>
+                      </div>
+
+                      <div class="kumu-demo-workspace">
+                        <div class="kumu-demo-panel" data-kumu-panel="chips">
+                          <div class="kumu-demo-chip-bank" data-kumu-chip-bank aria-label="Available answer chips"></div>
+                          <div class="kumu-demo-chip-answer-shell">
+                            <div class="kumu-demo-chip-answer" data-kumu-chip-answer aria-live="polite">
+                              <span>Select chips to build the sentence.</span>
+                            </div>
+                            <button type="button" class="kumu-demo-reset" data-kumu-reset>Clear</button>
+                          </div>
+                        </div>
+
+                        <div class="kumu-demo-panel" data-kumu-panel="typing" hidden>
+                          <label class="kumu-demo-input-label" for="kumu-demo-answer">Romaji or Japanese answer</label>
+                          <textarea id="kumu-demo-answer" class="kumu-demo-input" data-kumu-input rows="2" spellcheck="false" placeholder="Type your answer here"></textarea>
+                        </div>
+
+                        <div class="kumu-demo-feedback" data-kumu-feedback aria-live="polite" hidden></div>
+                      </div>
+
+                      <div class="kumu-demo-actions">
+                        <button type="button" class="kumu-submit-btn" data-kumu-submit>Submit</button>
+                        <button type="button" class="kumu-continue-btn" data-kumu-continue disabled>Continue</button>
+                      </div>
+                    </div>
+                  </aside>
+                </div>
+
+              </article>
+            </div>
+            </div>
+            </div>
+          </section>
+
+          <section class="project-compact-section" aria-labelledby="project-compact-title" hidden>
+            <div class="project-compact-inner">
+              <header class="project-compact-header">
+                <div>
+                  <div class="section-kicker">More tools from the same pattern</div>
+                  <h2 id="project-compact-title">Focused utilities built around real workflow friction.</h2>
+                </div>
+                <a class="project-compact-all-link" href="/projects/">
+                  View all projects <span>↗</span>
+                </a>
+              </header>
+
+              <div class="project-compact-grid">
+                <a class="project-compact-card" href="/tagSafe/" target="_blank" rel="noopener">
+                  <span class="project-compact-logo">
+                    <img src="/images/logos/tagsafe-logo.PNG" alt="TagSafe logo" class="tagsafe-logo">
+                  </span>
+                  <span class="project-compact-meta">Ad QA</span>
+                  <strong>TagSafe</strong>
+                  <span>Validate third-party tags, previews, dimensions, and landing-page checks in one focused QA surface.</span>
+                </a>
+
+                <a class="project-compact-card" href="/pageid-scraper/" target="_blank" rel="noopener">
+                  <span class="project-compact-logo">
+                    <img src="/images/logos/pageID-scraper-logo.png" alt="PageID Scraper logo" class="pageid-scraper-logo">
+                  </span>
+                  <span class="project-compact-meta">Brand Safety</span>
+                  <strong>PageID Scraper</strong>
+                  <span>Convert IAS URL exports into GAM page IDs so article exclusions can move faster.</span>
+                </a>
+
+                <a class="project-compact-card" href="/vast2mp4/" target="_blank" rel="noopener">
+                  <span class="project-compact-logo">
+                    <img src="/images/logos/vast2mp4-logo.png" alt="Vast2MP4 logo" class="vast2mp4-logo">
+                  </span>
+                  <span class="project-compact-meta">Video Utility</span>
+                  <strong>Vast2MP4</strong>
+                  <span>Extract MP4 files and trackers from VAST tags when a placement needs standalone assets.</span>
+                </a>
+
+                <a class="project-compact-card" href="https://www.colinbing.com/workshop/" target="_blank" rel="noopener">
+                  <span class="project-compact-logo">
+                    <img src="/images/logos/workshop_logo.png" alt="Workshop logo" class="workshop-logo">
+                  </span>
+                  <span class="project-compact-meta">Planning</span>
+                  <strong>Workshop</strong>
+                  <span>Plan side projects with PRDs, roadmaps, phases, and clearer execution paths.</span>
+                </a>
+              </div>
+            </div>
+          </section>
+
         <section id="featured-tools-section" class="product-tools">
                         <div class="product-tools-inner">
                           <header class="section-heading section-heading--narrow">
@@ -174,7 +420,7 @@
                               Each tool started as a real workflow problem in ad ops and became a focused
                               product: scoped MVP, shipped quickly, and iterated as I used it in my own work.
                             </p>
-                          </header>                  
+                          </header>
 
                           <!-- OVERVIEW (grid) -->
                           <div class="pt-overview" id="ft-overview">
@@ -193,7 +439,7 @@
                                 <div class="pt-card-footer">
                                   <span class="pt-card-footer-label">Learn more</span>
                                   <span class="pt-card-arrow">↗</span>
-                                </div>          
+                                </div>
                               </div>
 
 
@@ -212,7 +458,7 @@
                                 <div class="pt-card-footer">
                                   <span class="pt-card-footer-label">Learn more</span>
                                   <span class="pt-card-arrow">↗</span>
-                                </div>          
+                                </div>
                               </div>
 
                               <div class="pt-card" data-tool="pageid">
@@ -229,7 +475,7 @@
                                 <div class="pt-card-footer">
                                   <span class="pt-card-footer-label">Learn more</span>
                                   <span class="pt-card-arrow">↗</span>
-                                </div>          
+                                </div>
                               </div>
 
 
@@ -256,7 +502,7 @@
                     Click any tool to see how I scoped the problem, solution, and impact.
                   </div>
                   <div class="pt-featured-cta">
-                    <a class="pt-featured-btn" href="#project-section">View all tools</a>
+                    <a class="pt-featured-btn" href="/projects/">View all tools</a>
                   </div>
                 </div>
 
@@ -499,7 +745,7 @@
                                       </a>
                                     </div>
                                   </div>
-                                </article>                        
+                                </article>
 
                                 <!-- BlockList -->
 
@@ -573,6 +819,160 @@
 
                         </div>
                       </section>
+
+
+            <section id="experience-section" class="experience-section">
+                <div class="container-fluid">
+                    <header class="section-heading">
+                      <h2>Professional Experience</h2>
+                      <p class="section-subtitle">
+                        Publisher-side ad operations, QA ownership, and workflow tooling across direct, newsletter, and programmatic campaigns.
+                      </p>
+                    </header>
+
+                  <!-- Washington Post: one company, two roles -->
+                  <article class="row employer">
+                    <div class="col-md-4 text-center my-auto employer-header">
+                      <a target="_blank" rel="noopener" href="https://www.washingtonpost.com/">
+                        <img class="employer-logo wapo-logo" src="images/icons/wapo-logo-black.png" alt="The Washington Post logo">
+                      </a>
+                      <h4>Washington Post</h4>
+                      <h6 class="employer-dates">December 2022 – Current</h6>
+                    </div>
+
+                    <div class="col-md-8 text-left my-auto">
+                      <div class="role-stack">
+                        <!-- Current role -->
+                        <section class="role">
+                          <header class="role-header">
+                            <h5 class="role-title">Ad Operations &amp; QA Specialist</h5>
+                            <span class="role-dates">June 2024 – Present</span>
+                          </header>
+                          <p class="role-scope">
+                            <span class="role-scope-label">Scope:</span>
+                            Primary POC for newsletter ad ops (Zeta/LiveIntent) and cross-platform ad delivery QA across GAM, Apple News, and The Trade Desk.
+                          </p>
+                          <ul class="role-list">
+                            <li><p><strong>Execute:</strong> Lead execution of ~15–20 campaigns/week in <strong>Google Ad Manager (GAM)</strong>; manage targeting, flighting, pacing, and trafficking QA to maintain a <strong>&lt;2% error rate</strong>.</p></li>
+                            <li><p><strong>Key-values:</strong> Own key-value governance (presets, packages, placement strategy) across direct-sold, programmatic, and newsletter inventory to keep targeting clean and scalable.</p></li>
+                            <li><p><strong>Newsletter ops:</strong> Lead sponsorship and newsletter campaign operations in <strong>Zeta/LiveIntent</strong>, including audience/targeting setup, troubleshooting, and coordination with Sales/AMs on technical activations.</p></li>
+                            <li><p><strong>QA & troubleshooting:</strong> Perform advanced QA on display/video and third-party tags/pixels; troubleshoot tracking, request behavior, and delivery issues across vendors and environments.</p></li>
+                            <li><p><strong>Tooling:</strong> Build lightweight workflow tools (tag validation, keyword parsing, QA helpers) to reduce repeat checks and speed trafficking/QA handoffs.</p></li>
+                            <li><p><strong>Test pages:</strong> Create custom ad units and test pages when needed; enforce specs and brand rules across formats and responsive breakpoints (plus light asset edits in Photoshop).</p></li>
+                        </section>
+
+                        <!-- Prior role -->
+                        <section class="role role-previous">
+                          <header class="role-header">
+                            <h5 class="role-title">Digital Advertising Trafficking Coordinator</h5>
+                            <span class="role-dates">December 2022 – June 2024</span>
+                          </header>
+                          <ul class="role-list">
+                            <li><p><strong>Trafficking:</strong> Trafficked display/video campaigns in <strong>GAM</strong> with audience/geo/section targeting; monitored delivery and resolved ad-serving, tracking, and reporting issues while maintaining a <strong>&lt;2% error rate</strong>.</p></li>
+                            <li><p><strong>Tag QA:</strong> QA’d third-party tags and <strong>1×1</strong> trackers; verified tag firing and reconciled discrepancies.</p></li>
+                            <li><p><strong>Newsletter ownership:</strong> Served as <strong>Apple News</strong> SME and <strong>Zeta/LiveIntent</strong> platform lead for newsletters; completed an inventory audit that removed <strong>83</strong> redundant units and standardized templates/workflows.</p></li>
+                            <li><p><strong>Inventory hygiene:</strong> Built scheduled reports, maintained keyword presets/placements, and surfaced delivery and optimization opportunities.</p></li>
+                            <li><p><strong>Complex executions:</strong> Managed campaigns for high-profile clients (e.g., Meta, Amazon, Samsung), coordinating complex setups under tight specs and brand guidelines.</p></li>
+
+                        </div>
+                    </div>
+                  </article>
+
+                  <hr>
+
+                  <!-- nContext -->
+                  <article class="row employer single-role">
+                    <div class="col-md-4 text-center my-auto employer-header">
+                      <a target="_blank" rel="noopener" href="https://www.ncontext.com/">
+                        <img class="employer-logo ncontext-logo" src="/images/icons/nContext-black.png" alt="nContext logo">
+                      </a>
+                      <h4>nContext</h4>
+                      <h6 class="employer-dates">July 2021 – December 2022</h6>
+                    </div>
+
+                    <div class="col-md-8 text-left my-auto">
+                      <div class="role-stack">
+                        <section class="role">
+                          <header class="role-header">
+                            <h5 class="role-title">Digital Advertising Specialist</h5>
+                            <span class="role-dates">July 2021 – December 2022</span>
+                          </header>
+                          <ul class="role-list">
+                            <li><p><strong>Account ownership:</strong> Managed 5–6 client accounts across entertainment, arts, and cultural institutions; handled short-cycle launches and higher-budget campaigns.</p></li>
+                            <li><p><strong>Strategy:</strong> Built post-contract media plans (channel mix, audience segmentation, budget allocations) across paid social, search, and programmatic.</p></li>
+                            <li><p><strong>Experimentation:</strong> Wrote targeted creative, launched/optimized campaigns, and ran A/B tests to improve ROI and engagement.</p></li>
+                            <li><p><strong>Reporting:</strong> Built dashboards for real-time monitoring and led weekly/biweekly client reviews with recommendations and performance readouts.</p></li>
+                            <li><p><strong>Lifecycle:</strong> Managed email workflows (<strong>Mailchimp</strong>) to connect upper-funnel efforts with retention and sustained results.</p></li>
+                          </ul>
+                        </section>
+                      </div>
+                    </div>
+                  </article>
+
+                  <hr>
+
+                  <!-- Tecore Networks -->
+                  <article class="row employer single-role">
+                    <div class="col-md-4 text-center my-auto employer-header">
+                      <a target="_blank" rel="noopener" href="https://www.tecore.com">
+                        <img class="employer-logo tecore-logo" src="images/icons/tecore-logo-blue.png" alt="Tecore Networks logo">
+                      </a>
+                      <h4>Tecore Networks</h4>
+                      <h6 class="employer-dates">July 2019 – July 2021</h6>
+                    </div>
+
+                    <div class="col-md-8 text-left my-auto">
+                      <div class="role-stack">
+                        <section class="role">
+                          <header class="role-header">
+                            <h5 class="role-title">Digital Marketing Specialist</h5>
+                            <span class="role-dates">July 2019 – July 2021</span>
+                          </header>
+                          <ul class="role-list">
+                            <li><p><strong>Web optimization:</strong> Led homepage improvements; increased average session duration <strong>52%</strong> (2:08 → 3:14) and monthly conversions <strong>13%</strong> (32 → 36) over a 3-month period.</p></li>
+                            <li><p><strong>Measurement:</strong> Implemented <strong>Google Tag Manager</strong> tracking (scroll depth, PDF downloads, and inquiry actions) to improve visibility into user behavior.</p></li>
+                            <li><p><strong>SEO:</strong> Managed on-page SEO and site health (metadata, headers, alt text, sitemap, mobile responsiveness, and speed).</p></li>
+                            <li><p><strong>Reporting:</strong> Produced monthly analytics reports and recommendations to improve channel and on-site KPIs.</p></li>
+                            <li><p><strong>Content:</strong> Identified telecom market trends and shipped WordPress pages/content to support organic growth.</p></li>
+
+                          </ul>
+                        </section>
+                      </div>
+                    </div>
+                  </article>
+
+                  <hr>
+
+                  <!-- Phantasy Tour -->
+                  <article class="row employer single-role">
+                    <div class="col-md-4 text-center my-auto employer-header">
+                      <a target="_blank" rel="noopener" href="https://www.phantasytour.com">
+                        <img class="employer-logo pt-logo" src="images/icons/pt-logo.png" alt="Phantasy Tour logo">
+                      </a>
+                      <h4>Phantasy Tour</h4>
+                      <h6 class="employer-dates">January 2019 – July 2019</h6>
+                    </div>
+
+                    <div class="col-md-8 text-left my-auto">
+                      <div class="role-stack">
+                        <section class="role">
+                          <header class="role-header">
+                            <h5 class="role-title">Advertising Operations Intern</h5>
+                            <span class="role-dates">January 2019 – July 2019</span>
+                          </header>
+                          <ul class="role-list">
+                            <li><p><strong>Execution:</strong> Supported advertisers across display, email, social, and sweepstakes campaigns for 4 clients on a site with ~10M monthly impressions.</p></li>
+                            <li><p><strong>Planning:</strong> Scoped client needs and campaign setups to hit delivery and KPI requirements.</p></li>
+                            <li><p><strong>Client comms:</strong> Coordinated with clients throughout flights and provided weekly/monthly performance updates.</p></li>
+                            <li><p><strong>Project tracking:</strong> Tracked deliverables across channels to ensure full delivery and on-time launches.</p></li>
+                            <li><p><strong>Creative support:</strong> Created/edited basic campaign creatives in Photoshop/Illustrator and built two WordPress landing pages with basic on-page SEO.</p></li>
+                          </ul>
+                        </section>
+                      </div>
+                    </div>
+                  </article>
+                </div>
+              </section>
 
 
         <section id="skills-section" class="skills-section">
@@ -681,160 +1081,6 @@
             </div>
             </section>
 
-        
-
-
-            <section id="experience-section" class="experience-section">
-                <div class="container-fluid">
-                    <header class="section-heading">
-                      <h2>Professional Experience</h2>
-                    </header>             
-              
-                  <!-- Washington Post: one company, two roles -->
-                  <article class="row employer">
-                    <div class="col-md-4 text-center my-auto employer-header">
-                      <a target="_blank" rel="noopener" href="https://www.washingtonpost.com/">
-                        <img class="employer-logo wapo-logo" src="images/icons/wapo-logo-black.png" alt="The Washington Post logo">
-                      </a>
-                      <h4>Washington Post</h4>
-                      <h6 class="employer-dates">December 2022 – Current</h6>
-                    </div>
-              
-                    <div class="col-md-8 text-left my-auto">
-                      <div class="role-stack">
-                        <!-- Current role -->
-                        <section class="role">
-                          <header class="role-header">
-                            <h5 class="role-title">Ad Operations &amp; QA Specialist</h5>
-                            <span class="role-dates">June 2024 – Present</span>
-                          </header>
-                          <p class="role-scope">
-                            <span class="role-scope-label">Scope:</span>
-                            Primary POC for newsletter ad ops (Zeta/LiveIntent) and cross-platform ad delivery QA across GAM, Apple News, and The Trade Desk.
-                          </p>
-                          <ul class="role-list">
-                            <li><p><strong>Execute:</strong> Lead execution of ~15–20 campaigns/week in <strong>Google Ad Manager (GAM)</strong>; manage targeting, flighting, pacing, and trafficking QA to maintain a <strong>&lt;2% error rate</strong>.</p></li>
-                            <li><p><strong>Key-values:</strong> Own key-value governance (presets, packages, placement strategy) across direct-sold, programmatic, and newsletter inventory to keep targeting clean and scalable.</p></li>
-                            <li><p><strong>Newsletter ops:</strong> Lead sponsorship and newsletter campaign operations in <strong>Zeta/LiveIntent</strong>, including audience/targeting setup, troubleshooting, and coordination with Sales/AMs on technical activations.</p></li>
-                            <li><p><strong>QA & troubleshooting:</strong> Perform advanced QA on display/video and third-party tags/pixels; troubleshoot tracking, request behavior, and delivery issues across vendors and environments.</p></li>
-                            <li><p><strong>Tooling:</strong> Build lightweight workflow tools (tag validation, keyword parsing, QA helpers) to reduce repeat checks and speed trafficking/QA handoffs.</p></li>
-                            <li><p><strong>Test pages:</strong> Create custom ad units and test pages when needed; enforce specs and brand rules across formats and responsive breakpoints (plus light asset edits in Photoshop).</p></li>
-                        </section>
-              
-                        <!-- Prior role -->
-                        <section class="role role-previous">
-                          <header class="role-header">
-                            <h5 class="role-title">Digital Advertising Trafficking Coordinator</h5>
-                            <span class="role-dates">December 2022 – June 2024</span>
-                          </header>
-                          <ul class="role-list">
-                            <li><p><strong>Trafficking:</strong> Trafficked display/video campaigns in <strong>GAM</strong> with audience/geo/section targeting; monitored delivery and resolved ad-serving, tracking, and reporting issues while maintaining a <strong>&lt;2% error rate</strong>.</p></li>
-                            <li><p><strong>Tag QA:</strong> QA’d third-party tags and <strong>1×1</strong> trackers; verified tag firing and reconciled discrepancies.</p></li>
-                            <li><p><strong>Newsletter ownership:</strong> Served as <strong>Apple News</strong> SME and <strong>Zeta/LiveIntent</strong> platform lead for newsletters; completed an inventory audit that removed <strong>83</strong> redundant units and standardized templates/workflows.</p></li>
-                            <li><p><strong>Inventory hygiene:</strong> Built scheduled reports, maintained keyword presets/placements, and surfaced delivery and optimization opportunities.</p></li>
-                            <li><p><strong>Complex executions:</strong> Managed campaigns for high-profile clients (e.g., Meta, Amazon, Samsung), coordinating complex setups under tight specs and brand guidelines.</p></li>
-
-                        </div>
-                    </div>
-                  </article>
-              
-                  <hr>
-              
-                  <!-- nContext -->
-                  <article class="row employer single-role">
-                    <div class="col-md-4 text-center my-auto employer-header">
-                      <a target="_blank" rel="noopener" href="https://www.ncontext.com/">
-                        <img class="employer-logo ncontext-logo" src="/images/icons/nContext-black.png" alt="nContext logo">
-                      </a>
-                      <h4>nContext</h4>
-                      <h6 class="employer-dates">July 2021 – December 2022</h6>
-                    </div>
-                  
-                    <div class="col-md-8 text-left my-auto">
-                      <div class="role-stack">
-                        <section class="role">
-                          <header class="role-header">
-                            <h5 class="role-title">Digital Advertising Specialist</h5>
-                            <span class="role-dates">July 2021 – December 2022</span>
-                          </header>
-                          <ul class="role-list">
-                            <li><p><strong>Account ownership:</strong> Managed 5–6 client accounts across entertainment, arts, and cultural institutions; handled short-cycle launches and higher-budget campaigns.</p></li>
-                            <li><p><strong>Strategy:</strong> Built post-contract media plans (channel mix, audience segmentation, budget allocations) across paid social, search, and programmatic.</p></li>
-                            <li><p><strong>Experimentation:</strong> Wrote targeted creative, launched/optimized campaigns, and ran A/B tests to improve ROI and engagement.</p></li>
-                            <li><p><strong>Reporting:</strong> Built dashboards for real-time monitoring and led weekly/biweekly client reviews with recommendations and performance readouts.</p></li>
-                            <li><p><strong>Lifecycle:</strong> Managed email workflows (<strong>Mailchimp</strong>) to connect upper-funnel efforts with retention and sustained results.</p></li>
-                          </ul>
-                        </section>
-                      </div>
-                    </div>
-                  </article>                  
-              
-                  <hr>
-              
-                  <!-- Tecore Networks -->
-                  <article class="row employer single-role">
-                    <div class="col-md-4 text-center my-auto employer-header">
-                      <a target="_blank" rel="noopener" href="https://www.tecore.com">
-                        <img class="employer-logo tecore-logo" src="images/icons/tecore-logo-blue.png" alt="Tecore Networks logo">
-                      </a>
-                      <h4>Tecore Networks</h4>
-                      <h6 class="employer-dates">July 2019 – July 2021</h6>
-                    </div>
-                  
-                    <div class="col-md-8 text-left my-auto">
-                      <div class="role-stack">
-                        <section class="role">
-                          <header class="role-header">
-                            <h5 class="role-title">Digital Marketing Specialist</h5>
-                            <span class="role-dates">July 2019 – July 2021</span>
-                          </header>
-                          <ul class="role-list">
-                            <li><p><strong>Web optimization:</strong> Led homepage improvements; increased average session duration <strong>52%</strong> (2:08 → 3:14) and monthly conversions <strong>13%</strong> (32 → 36) over a 3-month period.</p></li>
-                            <li><p><strong>Measurement:</strong> Implemented <strong>Google Tag Manager</strong> tracking (scroll depth, PDF downloads, and inquiry actions) to improve visibility into user behavior.</p></li>
-                            <li><p><strong>SEO:</strong> Managed on-page SEO and site health (metadata, headers, alt text, sitemap, mobile responsiveness, and speed).</p></li>
-                            <li><p><strong>Reporting:</strong> Produced monthly analytics reports and recommendations to improve channel and on-site KPIs.</p></li>
-                            <li><p><strong>Content:</strong> Identified telecom market trends and shipped WordPress pages/content to support organic growth.</p></li>
-
-                          </ul>
-                        </section>
-                      </div>
-                    </div>
-                  </article>                  
-              
-                  <hr>
-              
-                  <!-- Phantasy Tour -->
-                  <article class="row employer single-role">
-                    <div class="col-md-4 text-center my-auto employer-header">
-                      <a target="_blank" rel="noopener" href="https://www.phantasytour.com">
-                        <img class="employer-logo pt-logo" src="images/icons/pt-logo.png" alt="Phantasy Tour logo">
-                      </a>
-                      <h4>Phantasy Tour</h4>
-                      <h6 class="employer-dates">January 2019 – July 2019</h6>
-                    </div>
-                  
-                    <div class="col-md-8 text-left my-auto">
-                      <div class="role-stack">
-                        <section class="role">
-                          <header class="role-header">
-                            <h5 class="role-title">Advertising Operations Intern</h5>
-                            <span class="role-dates">January 2019 – July 2019</span>
-                          </header>
-                          <ul class="role-list">
-                            <li><p><strong>Execution:</strong> Supported advertisers across display, email, social, and sweepstakes campaigns for 4 clients on a site with ~10M monthly impressions.</p></li>
-                            <li><p><strong>Planning:</strong> Scoped client needs and campaign setups to hit delivery and KPI requirements.</p></li>
-                            <li><p><strong>Client comms:</strong> Coordinated with clients throughout flights and provided weekly/monthly performance updates.</p></li>
-                            <li><p><strong>Project tracking:</strong> Tracked deliverables across channels to ensure full delivery and on-time launches.</p></li>
-                            <li><p><strong>Creative support:</strong> Created/edited basic campaign creatives in Photoshop/Illustrator and built two WordPress landing pages with basic on-page SEO.</p></li>
-                          </ul>
-                        </section>
-                      </div>
-                    </div>
-                  </article>                  
-                </div>
-              </section>
-              
-
                       <section class="certification-section" id="certification-section">
             <div class="cert-wrap">
               <header class="section-heading">
@@ -842,7 +1088,7 @@
                 <p class="section-subtitle section-subtitle--single-line">
                   Industry credentials across analytics, measurement, and ad platforms.
                 </p>
-              </header>           
+              </header>
                 <ul class="cert-grid" aria-label="Professional certifications">
                 <!-- GA4 -->
                 <li class="cert-card">
@@ -893,7 +1139,7 @@
                     </figure>
                     </a>
                 </li>
-                
+
 
                 <!-- Amazon Ads Foundations -->
                     <li class="cert-card">
@@ -932,12 +1178,12 @@
             </div>
             </section>
 
-<section id="project-section" class="product-tools">
+<section id="project-section" class="product-tools homepage-legacy-projects" hidden>
                         <div class="product-tools-inner">
                           <header class="section-heading section-heading--narrow">
                             <div class="section-kicker">Tools I’ve built to remove ad-ops friction</div>
                             <h2>All Projects</h2>
-                          </header>                  
+                          </header>
 
                           <!-- OVERVIEW (grid) -->
                           <div class="pt-overview" id="pt-overview">
@@ -957,7 +1203,7 @@
                                 <div class="pt-card-footer">
                                   <span class="pt-card-footer-label">Learn more</span>
                                   <span class="pt-card-arrow">↗</span>
-                                </div>          
+                                </div>
                               </div>
 
                               <div class="pt-card" data-tool="outline">
@@ -974,7 +1220,7 @@
                                 <div class="pt-card-footer">
                                   <span class="pt-card-footer-label">Learn more</span>
                                   <span class="pt-card-arrow">↗</span>
-                                </div>          
+                                </div>
                               </div>
 
                               <div class="pt-card" data-tool="adbuilder">
@@ -991,7 +1237,7 @@
                                 <div class="pt-card-footer">
                                   <span class="pt-card-footer-label">Learn more</span>
                                   <span class="pt-card-arrow">↗</span>
-                                </div>          
+                                </div>
                               </div>
 
                               <div class="pt-card" data-tool="vast2mp4">
@@ -1009,7 +1255,7 @@
                                 <div class="pt-card-footer">
                                   <span class="pt-card-footer-label">Learn more</span>
                                   <span class="pt-card-arrow">↗</span>
-                                </div>          
+                                </div>
                               </div>
 
                               <div class="pt-card" data-tool="pageid">
@@ -1027,7 +1273,7 @@
                                 <div class="pt-card-footer">
                                   <span class="pt-card-footer-label">Learn more</span>
                                   <span class="pt-card-arrow">↗</span>
-                                </div>          
+                                </div>
                               </div>
 
                               <div class="pt-card" data-tool="blocklist">
@@ -1044,7 +1290,7 @@
                                 <div class="pt-card-footer">
                                   <span class="pt-card-footer-label">Learn more</span>
                                   <span class="pt-card-arrow">↗</span>
-                                </div>          
+                                </div>
                               </div>
 
                               <div class="pt-card" data-tool="collate">
@@ -1061,7 +1307,7 @@
                                 <div class="pt-card-footer">
                                   <span class="pt-card-footer-label">Learn more</span>
                                   <span class="pt-card-arrow">↗</span>
-                                </div>          
+                                </div>
                               </div>
 
                               <div class="pt-card" data-tool="workshop">
@@ -1340,7 +1586,7 @@
                                       </a>
                                     </div>
                                   </div>
-                                </article>                        
+                                </article>
 
                                 <!-- Vast2MP4 -->
                                 <article class="pt-panel" data-tool="vast2mp4">
@@ -1479,7 +1725,7 @@
                                       </a>
                                     </div>
                                   </div>
-                                </article>                        
+                                </article>
 
                                 <!-- BlockList -->
                                 <article class="pt-panel" data-tool="blocklist">
@@ -1547,7 +1793,7 @@
                                       </a>
                                     </div>
                                   </div>
-                                </article>                        
+                                </article>
 
                                 <!-- Collate -->
                                 <article class="pt-panel" data-tool="collate">
@@ -1614,7 +1860,7 @@
                                       </a>
                                     </div>
                                   </div>
-                                </article>                        
+                                </article>
 
                                 <!-- Workshop -->
                                 <article class="pt-panel" data-tool="workshop">
@@ -1685,192 +1931,6 @@
                         </div>
                       </section>
 
-          <section id="featured-builds-section" class="kumu-feature featured-builds">
-            <div class="kumu-feature-inner">
-              <header class="section-heading section-heading--narrow featured-builds-heading">
-                <div class="section-kicker">Featured Builds</div>
-                <h2>Product Systems in Practice</h2>
-              </header>
-
-              <div class="featured-builds-shell">
-                <div class="featured-build-tabs" role="tablist" aria-label="Featured builds">
-                  <button class="featured-build-tab is-active" type="button" role="tab" id="featured-tab-spotlight" data-build-tab="spotlight" aria-selected="true" aria-controls="featured-panel-spotlight">
-                    <span>Spotlight</span>
-                    <small>Ad product discovery</small>
-                  </button>
-                  <button class="featured-build-tab" type="button" role="tab" id="featured-tab-kumu" data-build-tab="kumu" aria-selected="false" aria-controls="featured-panel-kumu">
-                    <span>Kumu</span>
-                    <small>Japanese sentence practice</small>
-                  </button>
-                </div>
-
-                <div class="featured-builds-stage">
-                  <article class="featured-build-panel is-active" id="featured-panel-spotlight" data-build-panel="spotlight" role="tabpanel" aria-labelledby="featured-tab-spotlight">
-                    <div class="kumu-feature-main spotlight-feature-main">
-                      <div class="kumu-feature-copy">
-                        <p class="kumu-eyebrow">Washington Post · Ad Product Discovery</p>
-                        <h2 class="kumu-title">Turn scattered ad product specs into a guided pitch tool.</h2>
-                        <p class="kumu-lede">
-                          I consolidated scattered PDFs, decks, specs, previews, and recommendation logic into an interactive microsite for custom ad products across device breakpoints.
-                        </p>
-                        <div class="kumu-actions">
-                          <a class="kumu-primary-link" href="https://spotlight-mocks.netlify.app/" target="_blank" rel="noopener">
-                            Open full demo <span>↗</span>
-                          </a>
-                        </div>
-                      </div>
-
-                      <aside class="kumu-visual spotlight-visual" aria-label="Interactive Spotlight product recommendation preview">
-                        <div class="kumu-visual-topline">
-                          <div class="spotlight-demo-brand" aria-label="Spotlight Collection">
-                            <span class="spotlight-demo-mark" aria-hidden="true">↘</span>
-                            <span>Spotlight Collection</span>
-                          </div>
-                          <span>Recommendation tool</span>
-                        </div>
-
-                        <div class="spotlight-demo-card" data-spotlight-demo>
-                          <div class="spotlight-demo-header">
-                            <p>Find the right format</p>
-                            <span data-spotlight-count>4 matches</span>
-                          </div>
-
-                          <div class="spotlight-demo-question">
-                            <p>What would you like to feature?</p>
-                            <div class="spotlight-demo-options" data-spotlight-options="assetPackage"></div>
-                          </div>
-
-                          <div class="spotlight-demo-question">
-                            <p>How much supporting copy should the ad carry?</p>
-                            <div class="spotlight-demo-options" data-spotlight-options="messageStyle"></div>
-                          </div>
-
-                          <button class="spotlight-demo-submit" type="button" data-spotlight-submit>Get product recommendations</button>
-
-                          <div class="spotlight-demo-results" data-spotlight-results aria-live="polite"></div>
-                          <button class="spotlight-demo-reset" type="button" data-spotlight-reset hidden>Reset selections</button>
-                        </div>
-                      </aside>
-                    </div>
-
-                    <div class="kumu-proof-grid">
-                      <article class="kumu-proof-card">
-                        <span class="kumu-proof-label">Problem</span>
-                        <h3>Sales materials were scattered.</h3>
-                        <p>
-                          Custom product information lived across PDFs, decks, examples, and team knowledge, making it harder to match client assets to the right format.
-                        </p>
-                      </article>
-                      <article class="kumu-proof-card">
-                        <span class="kumu-proof-label">Solution</span>
-                        <h3>An interactive product system.</h3>
-                        <p>
-                          The microsite centralizes specs, examples, responsive previews, and a best-fit recommendation tool into one polished client-facing experience.
-                        </p>
-                      </article>
-                      <article class="kumu-proof-card">
-                        <span class="kumu-proof-label">Signal</span>
-                        <h3>Bridges sales and execution.</h3>
-                        <p>
-                          It shows my taste for useful UI: translating product complexity into a tool that helps marketing and sales teams explain options clearly.
-                        </p>
-                      </article>
-                    </div>
-                  </article>
-
-                  <article class="featured-build-panel" id="featured-panel-kumu" data-build-panel="kumu" role="tabpanel" aria-labelledby="featured-tab-kumu" hidden>
-                    <div class="kumu-feature-main">
-                      <div class="kumu-feature-copy">
-                        <p class="kumu-eyebrow">Kumu · Japanese Sentence Practice</p>
-                        <h2 class="kumu-title">Turn vocabulary study into sentence production.</h2>
-                        <p class="kumu-lede">
-                          Built from my own study workflow, Kumu is a login-free, mobile-first Japanese practice tool for learners who can recognize vocabulary and grammar but need focused reps producing real sentences.
-                        </p>
-                        <div class="kumu-actions">
-                          <a class="kumu-primary-link" href="https://practice-jp.colinbing.com/" target="_blank" rel="noopener">
-                            Open Kumu <span>↗</span>
-                          </a>
-                        </div>
-                      </div>
-
-                  <aside class="kumu-visual" aria-label="Interactive Kumu practice preview">
-                    <div class="kumu-visual-topline">
-                      <div class="kumu-demo-brand" aria-label="Kumu">
-                        <span class="kumu-demo-mark" aria-hidden="true">文</span>
-                        <span>Kumu</span>
-                      </div>
-                      <span>Try a 3-rep loop</span>
-                    </div>
-
-                    <div class="kumu-demo-card" data-kumu-demo>
-                      <div class="kumu-demo-status">
-                        <span data-kumu-step>Sentence 1 of 3</span>
-                      </div>
-
-                      <p class="kumu-demo-label">Prompt</p>
-                      <h3 class="kumu-demo-prompt" data-kumu-prompt>I like this cafe.</h3>
-
-                      <div class="kumu-demo-mode-toggle" data-kumu-mode-toggle aria-label="Choose practice mode">
-                        <button type="button" class="is-active" data-kumu-mode="chips" aria-pressed="true">Chips</button>
-                        <button type="button" data-kumu-mode="typing" aria-pressed="false">Typing</button>
-                      </div>
-
-                      <div class="kumu-demo-workspace">
-                        <div class="kumu-demo-panel" data-kumu-panel="chips">
-                          <div class="kumu-demo-chip-bank" data-kumu-chip-bank aria-label="Available answer chips"></div>
-                          <div class="kumu-demo-chip-answer-shell">
-                            <div class="kumu-demo-chip-answer" data-kumu-chip-answer aria-live="polite">
-                              <span>Select chips to build the sentence.</span>
-                            </div>
-                            <button type="button" class="kumu-demo-reset" data-kumu-reset>Clear</button>
-                          </div>
-                        </div>
-
-                        <div class="kumu-demo-panel" data-kumu-panel="typing" hidden>
-                          <label class="kumu-demo-input-label" for="kumu-demo-answer">Romaji or Japanese answer</label>
-                          <textarea id="kumu-demo-answer" class="kumu-demo-input" data-kumu-input rows="2" spellcheck="false" placeholder="Type your answer here"></textarea>
-                        </div>
-
-                        <div class="kumu-demo-feedback" data-kumu-feedback aria-live="polite" hidden></div>
-                      </div>
-
-                      <div class="kumu-demo-actions">
-                        <button type="button" class="kumu-submit-btn" data-kumu-submit>Submit</button>
-                        <button type="button" class="kumu-continue-btn" data-kumu-continue disabled>Continue</button>
-                      </div>
-                    </div>
-                  </aside>
-                </div>
-
-                <div class="kumu-proof-grid">
-                  <article class="kumu-proof-card">
-                    <span class="kumu-proof-label">Problem</span>
-                    <h3>Recognition was not enough.</h3>
-                    <p>
-                      Flashcards helped vocabulary stick, but I wanted a focused place to assemble words into complete Japanese sentences without another account, course, or dashboard.
-                    </p>
-                  </article>
-                  <article class="kumu-proof-card">
-                    <span class="kumu-proof-label">Solution</span>
-                    <h3>A tight production loop.</h3>
-                    <p>
-                      See a prompt, build or type the answer, submit, get deterministic feedback, hear the sentence, and keep moving through focused practice.
-                    </p>
-                  </article>
-                  <article class="kumu-proof-card">
-                    <span class="kumu-proof-label">System</span>
-                    <h3>Grew into a product.</h3>
-                    <p>
-                      Kumu now includes packs, local progress, Core study controls, a sentence catalog, reviewed audio, sentence-mining intake, and protected admin tools.
-                    </p>
-                  </article>
-                </div>
-              </article>
-            </div>
-            </div>
-            </div>
-          </section>
-
           <section class="project-section container-fluid">
             <header class="section-heading">
               <h2>Graphic Design</h2>
@@ -1909,6 +1969,9 @@
           <div class="container-fluid">
             <header class="section-heading">
               <h2>Education</h2>
+              <p class="section-subtitle">
+                Business and marketing foundation behind the operational and product work.
+              </p>
             </header>
                 </div>
                 <div class="row">
@@ -1926,40 +1989,52 @@
 
         <section id="contact-section" class="contact-section">
           <div class="contact-inner">
-            <h2>Contact</h2>
-            <p class="contact-tagline">
-              Open to ad ops, ad-tech, and product-adjacent roles — or talking about tools.
-            </p>
-            <div class="contact-actions">
+            <div class="contact-copy">
+              <p class="contact-kicker">Contact</p>
+              <h2>Open to the right role or conversation.</h2>
+              <p class="contact-tagline">
+                I’m especially interested in roles where ad operations, technical QA, and product-minded tooling overlap.
+              </p>
+              <div class="contact-signals" aria-label="Areas of interest">
+                <span>Ad tech ops</span>
+                <span>QA systems</span>
+                <span>Workflow tooling</span>
+              </div>
+            </div>
+            <div class="contact-methods" aria-label="Contact options">
               <a href="mailto:colinm.bingham@gmail.com"
-                 class="contact-btn contact-btn--primary">
-                Email me
+                 class="contact-method contact-method--primary">
+                <span class="contact-method-label">Email</span>
+                <strong>colinm.bingham@gmail.com</strong>
+                <span class="contact-method-action">Start a conversation ↗</span>
               </a>
               <a href="https://www.linkedin.com/in/bingham-colin/"
                  target="_blank" rel="noopener"
-                 class="contact-btn contact-btn--ghost">
-                Connect on LinkedIn
+                 class="contact-method">
+                <span class="contact-method-label">LinkedIn</span>
+                <strong>Colin Bingham</strong>
+                <span class="contact-method-action">Connect professionally ↗</span>
               </a>
             </div>
           </div>
         </section>
-        
+
 
         <footer id="footer">
             <div class="col-md-12 text-center copyright bg-dark my-auto">
               <p>&copy;2026 Colin Bingham | Built in GitHub Pages</p>
             </div>
           </footer>
-    </main>    
+    </main>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="./homescripts/bootstrap.min.js"></script>
     <script src="./homescripts/dark-mode-switch.min.js"></script>
-    <script src="/homescripts/highlight-nav.js"></script>
+    <script src="/homescripts/highlight-nav.js?v=homepage-reorder-20260701"></script>
     <script src="/homescripts/slider.js"></script>
     <script src="homescripts/gallery-script.js"></script>
     <script src="https://unpkg.com/typeit@8.7.1/dist/index.umd.js"></script>
     <script src="homescripts/project-section.js"></script>
-    <script src="homescripts/featured-builds.js"></script>
+    <script src="homescripts/featured-builds.js?v=spotlight-final-polish-20260702"></script>
     <script src="homescripts/typer.js"></script>
     <script>
       (() => {
