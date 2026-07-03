@@ -2289,6 +2289,21 @@
 
     .spotlight-result-card {
       flex-basis: min(282px, 92%);
+      grid-template-rows: minmax(62px, auto) minmax(190px, 1fr);
+      min-height: 286px;
+    }
+
+    .spotlight-demo-card.is-results {
+      min-height: 380px;
+    }
+
+    .spotlight-results-track {
+      align-items: stretch;
+      padding-bottom: 16px;
+    }
+
+    .spotlight-live-preview-shell {
+      min-height: 190px;
     }
 
     .kumu-title {

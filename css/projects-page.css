@@ -1160,4 +1160,28 @@ main {
   .case-panel__header {
     grid-template-columns: minmax(0, 1fr);
   }
+
+  .project-live-module {
+    height: auto;
+    min-height: 0;
+    overflow: visible;
+  }
+
+  .project-live-module .kumu-demo-card,
+  .project-live-module.spotlight-visual .spotlight-demo-card {
+    flex: 0 0 auto;
+    min-height: 0;
+  }
+
+  .project-live-module .kumu-demo-workspace {
+    flex: 0 0 auto;
+  }
+
+  .project-live-module .spotlight-result-card {
+    min-height: 292px;
+  }
+
+  .project-live-module .spotlight-live-preview-shell {
+    min-height: 196px;
+  }
 }
