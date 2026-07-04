@@ -383,6 +383,22 @@ section[id] {
   border-top: 1px solid var(--border-subtle);
   border-bottom: 1px solid var(--border-subtle);
 }
+
+.intro-heading{
+  margin:0;
+  color:var(--text-strong);
+  font-size:2rem;
+  line-height:1.1;
+  font-weight:700;
+}
+
+.intro-role{
+  margin:8px 0 0;
+  color:var(--text-muted);
+  font-size:1.05rem;
+  font-weight:600;
+}
+
 .intro-chips{
   display:flex;
   flex-wrap:wrap;
@@ -414,6 +430,14 @@ section[id] {
 }
 
 @media (max-width:640px){
+  .intro-heading{
+    font-size:1.75rem;
+  }
+
+  .intro-role{
+    font-size:0.98rem;
+  }
+
   .intro-chips{
     gap:6px;
     margin: 8px 0 14px;
@@ -451,20 +475,66 @@ section[id] {
   color: var(--text);
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
 }
+
+.intro-start{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:8px;
+  margin:0 0 18px;
+  font-size:0.86rem;
+}
+
+.intro-start-label{
+  color:var(--text-muted);
+  font-weight:700;
+}
+
+.intro-start a{
+  display:inline-flex;
+  align-items:center;
+  min-height:32px;
+  padding:6px 10px;
+  border-radius:10px;
+  background:var(--surface-2);
+  border:1px solid var(--border-subtle);
+  color:var(--text-strong);
+  font-weight:700;
+  text-decoration:none;
+  transition:transform 160ms ease, border-color 160ms ease, background 160ms ease;
+}
+
+.intro-start a:hover,
+.intro-start a:focus{
+  transform:translateY(-1px);
+  border-color:rgba(37, 99, 235, 0.35);
+  text-decoration:none;
+}
+
+[data-theme="dark"] .intro-start a{
+  background:rgba(255,255,255,0.06);
+  border-color:rgba(255,255,255,0.16);
+  color:var(--text);
+}
+
+@media (max-width:640px){
+  .intro-start{
+    align-items:flex-start;
+    flex-direction:column;
+    gap:6px;
+  }
+
+  .intro-start a{
+    width:100%;
+    justify-content:center;
+  }
+}
+
 .intro-actions{
   display:flex;
   flex-wrap:wrap;
   gap:12px;
   align-items:center;
-}
-
-#myTyper{
-  display:block;
-  min-height:1.35em;
-}
-
-#myTyper .ti-cursor{
-  display:inline-block;
 }
 
 #intro-section hr{
@@ -745,9 +815,6 @@ footer .row{ left:0; right:0 }
 .skill-card-3{ background-color:#2A3442 }
 
 .stars{ padding:2px 2px 8px 2px }
-.ti-cursor{ font-size:1.5rem; margin-left:.2em; vertical-align:.05em; animation:blink 1s step-start infinite }
-#myTyper{ font-size:26px }
-
 /* ========= LIGHT/DARK SECTION OVERRIDES YOU REQUESTED ========= */
 /* If you ever want entire sections to take your three anchors in LIGHT mode too, uncomment as needed:
 .skills-section{ background:var(--sec-blue) }
