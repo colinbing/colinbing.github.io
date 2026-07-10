@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
 
     <link rel="stylesheet" href="css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/sections.css?v=intro-refresh-20260703">
+    <link rel="stylesheet" href="css/sections.css?v=intro-clean-20260710">
     <link rel="stylesheet" href="css/button.css">
     <link rel="stylesheet" href="css/gallery.css" />
     <link rel="stylesheet" href="css/project-section.css?v=mobile-widget-fix-20260703" />
@@ -65,7 +65,7 @@
                         <a class="nav-link" href="#"  >About</a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link" href="#featured-builds-section">Projects <img class="stars" src="/images/favicons/star-rarity.svg" alt="" aria-hidden="true"></a>
+                        <a class="nav-link" href="#featured-tools-section">Projects <img class="stars" src="/images/favicons/star-rarity.svg" alt="" aria-hidden="true"></a>
                         <div class="dropdown-menu projects-menu">
                             <a class="dropdown-feature" href="/projects/">
                                 <span>
@@ -121,11 +121,11 @@
 
     <main class="main">
         <section id="intro-section" class="intro-section container-fluid">
-            <div class="row ">
-                <div class="col-md-4 text-center my-auto">
+            <div class="row intro-layout">
+                <div class="col-md-4 text-center my-auto intro-profile">
                     <img class="selfie" src="/images/colin_headshot_2026.png" alt="Colin Bingham headshot">
                 </div>
-                <div class="col-md-8 text-left my-auto">
+                <div class="col-md-8 text-left my-auto intro-copy">
                 <h1 class="intro-heading">Hi, I’m Colin.</h1>
                 <p class="intro-role">I work in ad ops, QA, and workflow tooling.</p>
                 <hr>
@@ -155,31 +155,412 @@
                         <span class="intro-target-label">Target roles:</span>
                         Ad Tech Solutions / Product Ops / Technical Account / Monetization Tooling — QA systems, workflow tooling, publisher ad platforms.
                     </p>
-                    <div class="intro-start">
-                        <span class="intro-start-label">Start here:</span>
-                        <a href="/projects/#featured-spotlight">Spotlight Showcase</a>
-                        <a href="/projects/#project-tagsafe">TagSafe</a>
-                        <a href="/projects/#project-pageid">PageID Scraper</a>
-                    </div>
-                    <div class="intro-actions">
-                        <a class="resume-button pushable" target="_blank" rel="noopener" href="images/resumes/Resume_2026.pdf">
-                            <span class="button-shadow"></span>
-                            <span class="edge"></span>
-                            <span class="front">
-                                <strong>Resume</strong>
-                            </span>
-                        </a>
-                        <a class="resume-button pushable pushable--featured" href="/projects/">
-                            <span class="button-shadow"></span>
-                            <span class="edge"></span>
-                            <span class="front">
-                                <strong>View Projects</strong>
-                            </span>
-                        </a>
-                    </div>
+                </div>
+                <div class="intro-actions intro-actions-panel">
+                    <a class="resume-button pushable" target="_blank" rel="noopener" href="images/resumes/Resume_2026.pdf">
+                        <span class="button-shadow"></span>
+                        <span class="edge"></span>
+                        <span class="front">
+                            <strong>Resume</strong>
+                        </span>
+                    </a>
+                    <a class="resume-button pushable pushable--featured" href="/projects/">
+                        <span class="button-shadow"></span>
+                        <span class="edge"></span>
+                        <span class="front">
+                            <strong>View Projects</strong>
+                        </span>
+                    </a>
                 </div>
             </div>
         </section>
+
+        <section id="featured-tools-section" class="product-tools">
+                        <div class="product-tools-inner">
+                          <header class="section-heading section-heading--narrow">
+                            <div class="section-kicker">Tools I’ve built to remove ad-ops friction</div>
+                            <h2>Featured Projects</h2>
+                            <p class="section-subtitle">
+                              Each tool started as a real workflow problem in ad ops and became a focused
+                              product: scoped MVP, shipped quickly, and iterated as I used it in my own work.
+                            </p>
+                          </header>
+
+                          <!-- OVERVIEW (grid) -->
+                          <div class="pt-overview" id="ft-overview">
+                            <div class="pt-grid">
+                              <div class="pt-card" data-tool="pageid">
+                                <div class="pt-card-logo">
+                                  <img src="/images/logos/pageID-scraper-logo.png" alt="PageID Scraper logo" class="pageid-scraper-logo"/>
+                                </div>
+                                <div class="pt-card-title-row">
+                                  <div class="pt-card-title">PageID Scraper</div>
+                                  <div class="pt-card-pill">CMS</div>
+                                </div>
+                                <div class="pt-card-desc">
+                                  Convert IAS URL exports into GAM pageIDs for faster blocking.
+                                </div>
+                                <div class="pt-card-footer">
+                                  <span class="pt-card-footer-label">Learn more</span>
+                                  <span class="pt-card-arrow">↗</span>
+                                </div>
+                              </div>
+
+                              <div class="pt-card" data-tool="blocklist">
+                                <div class="pt-card-logo">
+                                  <img src="/images/logos/blocklist-logo.png" alt="BlockList logo" class="blocklist-logo"/>
+                                </div>
+                                <div class="pt-card-title-row">
+                                  <div class="pt-card-title">BlockList</div>
+                                  <div class="pt-card-pill">Safety</div>
+                                </div>
+                                <div class="pt-card-desc">
+                                  Turn unsafe URL exports into structured keyword blocklists for GAM.
+                                </div>
+                                <div class="pt-card-footer">
+                                  <span class="pt-card-footer-label">Learn more</span>
+                                  <span class="pt-card-arrow">↗</span>
+                                </div>
+                              </div>
+
+                              <div class="pt-card" data-tool="collate">
+                                <div class="pt-card-logo">
+                                  <img src="/images/logos/collate-logo.png" alt="Collate logo" class="collate-logo"/>
+                                </div>
+                                <div class="pt-card-title-row">
+                                  <div class="pt-card-title">Collate</div>
+                                  <div class="pt-card-pill">Micro tool</div>
+                                </div>
+                                <div class="pt-card-desc">
+                                  Clean large spreadsheet columns into ready-to-paste targeting strings.
+                                </div>
+                                <div class="pt-card-footer">
+                                  <span class="pt-card-footer-label">Learn more</span>
+                                  <span class="pt-card-arrow">↗</span>
+                                </div>
+                              </div>
+
+                              <div class="pt-card" data-tool="outline">
+                                <div class="pt-card-logo">
+                                  <img src="/images/logos/outline-logo.PNG" alt="Outline logo" class="outline-logo"/>
+                                </div>
+                                <div class="pt-card-title-row">
+                                  <div class="pt-card-title">Outline</div>
+                                  <div class="pt-card-pill">Creative ops</div>
+                                </div>
+                                <div class="pt-card-desc">
+                                  Batch-apply policy-compliant borders to ad creatives without Photoshop.
+                                </div>
+                                <div class="pt-card-footer">
+                                  <span class="pt-card-footer-label">Learn more</span>
+                                  <span class="pt-card-arrow">↗</span>
+                                </div>
+                              </div>
+                            </div>
+
+                  <div class="pt-overview-note">
+                    Click any tool to see how I scoped the problem, solution, and impact.
+                  </div>
+                  <div class="pt-featured-cta">
+                    <a class="pt-featured-btn" href="/projects/">View all tools</a>
+                  </div>
+                </div>
+
+                          <!-- DETAIL (tabs + panels) -->
+                          <div class="pt-detail is-hidden" id="ft-detail">
+                            <div class="pt-detail-top">
+                              <button class="pt-back" type="button" id="ft-back-button">Featured tools</button>
+                            </div>
+
+                            <div class="pt-tabs-row">
+                              <div class="pt-tabs" role="tablist" aria-label="Ad tools">
+                                <button class="pt-tab" data-tool="pageid" role="tab" aria-selected="false">
+                                  <span class="pt-tab-label">PageID Scraper</span>
+                                  <span class="pt-tab-pill">CMS</span>
+                                </button>
+                                <button class="pt-tab" data-tool="blocklist" role="tab" aria-selected="false">
+                                  <span class="pt-tab-label">BlockList</span>
+                                  <span class="pt-tab-pill">Safety</span>
+                                </button>
+                                <button class="pt-tab" data-tool="collate" role="tab" aria-selected="false">
+                                  <span class="pt-tab-label">Collate</span>
+                                  <span class="pt-tab-pill">Micro tool</span>
+                                </button>
+                                <button class="pt-tab" data-tool="outline" role="tab" aria-selected="false">
+                                  <span class="pt-tab-label">Outline</span>
+                                  <span class="pt-tab-pill">Creative ops</span>
+                                </button>
+                              </div>
+                            </div>
+
+                            <div class="pt-shell">
+                              <div class="pt-panels">
+                                <!-- Outline -->
+                                <article class="pt-panel" data-tool="outline">
+                                  <header class="pt-panel-header">
+                                    <div class="pt-panel-logo">
+                                      <img src="/images/logos/outline-logo.PNG" alt="Outline logo" class="outline-logo" />
+                                    </div>
+                                    <div class="pt-panel-header-text">
+                                      <p class="pt-panel-kicker">Outline · Creative compliance</p>
+                                      <h3 class="pt-panel-title">Batch-fix white-edge creatives without Photoshop</h3>
+                                      <p class="pt-panel-meta">
+                                        Browser tool used by account managers and ad ops to add policy-compliant borders to ad creatives.
+                                      </p>
+                                    </div>
+                                  </header>
+
+                                  <div class="pt-panel-body">
+                                    <div class="pt-panel-text">
+                                      <p>
+                                        Client creatives with white edges need a visible border before they can run on-site. Doing that manually meant opening each asset in design software, adding a stroke, exporting, and renaming files one by one.
+                                      </p>
+                                      <ul class="pt-bullets">
+                                        <li>
+                                          <span class="pt-bullet-label">Problem:</span>
+                                          <span class="pt-bullet-text">
+                                            A campaign with multiple concepts and sizes could turn a simple compliance fix into a 15-20 minute Photoshop task.
+                                          </span>
+                                        </li>
+                                        <li>
+                                          <span class="pt-bullet-label">Solution:</span>
+                                          <span class="pt-bullet-text">
+                                            Built a browser tool where users upload one or many creatives, preview the border in real time, and download renamed files with the border marker appended.
+                                          </span>
+                                        </li>
+                                        <li>
+                                          <span class="pt-bullet-label">Impact:</span>
+                                          <span class="pt-bullet-text">
+                                            Turns batch creative compliance into an upload-preview-export workflow that usually takes under a minute.
+                                          </span>
+                                        </li>
+                                      </ul>
+                                      <div class="pt-chip-row">
+                                        <span class="pt-chip">JavaScript</span>
+                                        <span class="pt-chip">Creative ops</span>
+                                        <span class="pt-chip">Batch export</span>
+                                        <span class="pt-chip">Compliance</span>
+                                      </div>
+                                    </div>
+
+                                    <div class="pt-panel-image">
+                                      <img
+                                        src="/images/project-mocks/outline-preview.png"
+                                        alt="Outline tool showing a creative with a border applied"
+                                        class="pt-panel-screenshot"
+                                      />
+                                    </div>
+                                    <div class="pt-panel-footer">
+                                      <a class="pt-panel-link" href="outline/" target="_blank" rel="noopener">
+                                        Open Outline <span>↗</span>
+                                      </a>
+                                    </div>
+                                  </div>
+                                </article>
+
+                                <!-- PageID Scraper -->
+                                <article class="pt-panel" data-tool="pageid">
+                                  <header class="pt-panel-header">
+                                    <div class="pt-panel-logo">
+                                      <img src="/images/logos/pageID-scraper-logo.png" alt="PageID Scraper logo" class="pageid-scraper-logo" />
+                                    </div>
+                                    <div class="pt-panel-header-text">
+                                      <p class="pt-panel-kicker">PageID Scraper · CMS helper</p>
+                                      <h3 class="pt-panel-title">Bridge CMS URLs and ad server targeting</h3>
+                                      <p class="pt-panel-meta">
+                                        Operational tool that turns WaPo article URLs into page IDs for faster brand-safety blocking.
+                                      </p>
+                                    </div>
+                                  </header>
+
+                                  <div class="pt-panel-body">
+                                    <div class="pt-panel-text">
+                                      <p>
+                                        Brand-safety reports from IAS arrive as long lists of article URLs and hits, but our ad server
+                                        targets on internal page IDs. Manually mapping each URL to its pageID in source code doesn’t scale.
+                                      </p>
+                                      <ul class="pt-bullets">
+                                        <li>
+                                          <span class="pt-bullet-label">Problem:</span>
+                                          <span class="pt-bullet-text">
+                                            Excluding “unsafe” articles meant opening every URL, finding the pageID in the markup,
+                                            and copy/pasting it into a blocklist. Hundreds of URLs could turn into hours of repetitive work
+                                            and easy mistakes.
+                                          </span>
+                                        </li>
+                                        <li>
+                                          <span class="pt-bullet-label">Solution:</span>
+                                          <span class="pt-bullet-text">
+                                            Built a tool that ingests a spreadsheet of URLs, normalizes and dedupes them (including UTM
+                                            variants, games pages, and other non-ID paths), rolls up impression counts, lets users set a
+                                            minimum hits threshold, then calls a scraping worker to return pageIDs for only the high-impact
+                                            pages.
+                                          </span>
+                                        </li>
+                                        <li>
+                                          <span class="pt-bullet-label">Impact:</span>
+                                          <span class="pt-bullet-text">
+                                            Turns a multi-hour CMS task into a paste-and-download workflow used regularly by ad ops.
+                                            Typical IAS exports shrink from tens of thousands of URLs to a few dozen pageIDs that cover
+                                            the vast majority of unsafe impressions for a campaign.
+                                          </span>
+                                        </li>
+                                      </ul>
+                                      <div class="pt-chip-row">
+                                        <span class="pt-chip">JavaScript</span>
+                                        <span class="pt-chip">Automation</span>
+                                        <span class="pt-chip">Brand safety</span>
+                                        <span class="pt-chip">Ad server</span>
+                                      </div>
+                                    </div>
+
+                                    <div class="pt-panel-image">
+                                      <img
+                                        src="/images/project-mocks/pageid-scraper-preview.png"
+                                        alt="Extract page IDs from Washington Post article URLs."
+                                        class="pt-panel-screenshot"
+                                      />
+                                    </div>
+                                    <div class="pt-panel-footer">
+                                      <a class="pt-panel-link" href="pageid-scraper/" target="_blank" rel="noopener">
+                                        Open PageID Scraper <span>↗</span>
+                                      </a>
+                                    </div>
+                                  </div>
+                                </article>
+
+                                <!-- BlockList -->
+                                <article class="pt-panel" data-tool="blocklist">
+                                  <header class="pt-panel-header">
+                                    <div class="pt-panel-logo">
+                                      <img src="/images/logos/blocklist-logo.png" alt="BlockList logo" class="blocklist-logo" />
+                                    </div>
+                                    <div class="pt-panel-header-text">
+                                      <p class="pt-panel-kicker">BlockList · Brand safety</p>
+                                      <h3 class="pt-panel-title">Turn unsafe URL reports into usable keyword blocks</h3>
+                                      <p class="pt-panel-meta">
+                                        Operational tool for building brand-suitability exclusions from IAS URL exports.
+                                      </p>
+                                    </div>
+                                  </header>
+
+                                  <div class="pt-panel-body">
+                                    <div class="pt-panel-text">
+                                      <p>
+                                        Some brand-suitability reports arrive as article URLs, but the blocking workflow needs terms and key-values. The useful signal is often buried in headline-like URL slugs.
+                                      </p>
+                                      <ul class="pt-bullets">
+                                        <li>
+                                          <span class="pt-bullet-label">Problem:</span>
+                                          <span class="pt-bullet-text">
+                                            Ad ops had to review unsafe URLs, pull likely terms by hand, judge which words mattered, and build comma-separated exclusions manually.
+                                          </span>
+                                        </li>
+                                        <li>
+                                          <span class="pt-bullet-label">Solution:</span>
+                                          <span class="pt-bullet-text">
+                                            Built a tool that extracts hyphenated URL terms, dedupes them, shows frequency and impression impact, and lets users click terms into an export-ready blocklist.
+                                          </span>
+                                        </li>
+                                        <li>
+                                          <span class="pt-bullet-label">Impact:</span>
+                                          <span class="pt-bullet-text">
+                                            Converts a subjective spreadsheet review into a faster, more consistent workflow for building brand-suitability exclusions.
+                                          </span>
+                                        </li>
+                                      </ul>
+                                      <div class="pt-chip-row">
+                                        <span class="pt-chip">JavaScript</span>
+                                        <span class="pt-chip">Brand safety</span>
+                                        <span class="pt-chip">Keywording</span>
+                                        <span class="pt-chip">Ad server</span>
+                                      </div>
+                                    </div>
+
+                                    <div class="pt-panel-image">
+                                      <img
+                                        src="/images/project-mocks/blocklist-preview.png"
+                                        alt="Build keyword blocklists from URLs with impact analysis"
+                                        class="pt-panel-screenshot"
+                                      />
+                                    </div>
+                                    <div class="pt-panel-footer">
+                                      <a class="pt-panel-link" href="blocklist/" target="_blank" rel="noopener">
+                                        Open BlockList <span>↗</span>
+                                      </a>
+                                    </div>
+                                  </div>
+                                </article>
+
+                                <!-- Collate -->
+                                <article class="pt-panel" data-tool="collate">
+                                  <header class="pt-panel-header">
+                                    <div class="pt-panel-logo">
+                                      <img src="/images/logos/collate-logo.png" alt="Collate logo" class="collate-logo"/>
+                                    </div>
+                                    <div class="pt-panel-header-text">
+                                      <p class="pt-panel-kicker">Collate · Spreadsheet helper</p>
+                                      <h3 class="pt-panel-title">Convert huge keyword columns into clean targeting strings</h3>
+                                      <p class="pt-panel-meta">
+                                        Drag-and-drop utility for preparing large keyword exclusion lists without Excel cleanup.
+                                      </p>
+                                    </div>
+                                  </header>
+
+                                  <div class="pt-panel-body">
+                                    <div class="pt-panel-text">
+                                      <p>
+                                        Brand-safety keyword exports can arrive as tens of thousands of rows. Existing spreadsheet formulas work, but they can hit limits and still require repeated cleanup.
+                                      </p>
+                                      <ul class="pt-bullets">
+                                        <li>
+                                          <span class="pt-bullet-label">Problem:</span>
+                                          <span class="pt-bullet-text">
+                                            Turning 30K-60K rows into one clean comma-separated list meant repeated formulas, duplicate checks, formatting cleanup, and manual copy/paste.
+                                          </span>
+                                        </li>
+                                        <li>
+                                          <span class="pt-bullet-label">Solution:</span>
+                                          <span class="pt-bullet-text">
+                                            Built a drag-and-drop tool that reads spreadsheet files, detects keyword columns, removes duplicates, strips punctuation, and outputs a clean string or text file.
+                                          </span>
+                                        </li>
+                                        <li>
+                                          <span class="pt-bullet-label">Impact:</span>
+                                          <span class="pt-bullet-text">
+                                            Turns a multi-step spreadsheet task into a drop-and-copy flow that can process tens of thousands of terms in seconds.
+                                          </span>
+                                        </li>
+                                      </ul>
+                                      <div class="pt-chip-row">
+                                        <span class="pt-chip">JavaScript</span>
+                                        <span class="pt-chip">Spreadsheet</span>
+                                        <span class="pt-chip">Brand safety</span>
+                                        <span class="pt-chip">Micro tool</span>
+                                      </div>
+                                    </div>
+
+                                    <div class="pt-panel-image">
+                                      <img
+                                        src="/images/project-mocks/collate-preview.png"
+                                        alt="Convert a spreadsheet column into a cleaned comma-separated string"
+                                        class="pt-panel-screenshot"
+                                      />
+                                    </div>
+                                    <div class="pt-panel-footer">
+                                      <a class="pt-panel-link" href="collate/" target="_blank" rel="noopener">
+                                        Open Collate <span>↗</span>
+                                      </a>
+                                    </div>
+                                  </div>
+                                </article>
+                              </div>
+                            </div>
+                          </div>
+
+                        </div>
+                      </section>
+
 
           <section id="featured-builds-section" class="kumu-feature featured-builds">
             <div class="kumu-feature-inner">
@@ -418,414 +799,6 @@
             </div>
           </section>
 
-        <section id="featured-tools-section" class="product-tools">
-                        <div class="product-tools-inner">
-                          <header class="section-heading section-heading--narrow">
-                            <div class="section-kicker">Tools I’ve built to remove ad-ops friction</div>
-                            <h2>Featured Projects</h2>
-                            <p class="section-subtitle">
-                              Each tool started as a real workflow problem in ad ops and became a focused
-                              product: scoped MVP, shipped quickly, and iterated as I used it in my own work.
-                            </p>
-                          </header>
-
-                          <!-- OVERVIEW (grid) -->
-                          <div class="pt-overview" id="ft-overview">
-                            <div class="pt-grid">
-                              <div class="pt-card" data-tool="tagsafe">
-                                <div class="pt-card-logo">
-                                  <img src="/images/logos/tagsafe-logo.PNG" alt="TagSafe logo" class="tagsafe-logo"/>
-                                </div>
-                                <div class="pt-card-title-row">
-                                  <div class="pt-card-title">TagSafe</div>
-                                  <div class="pt-card-pill">Flagship</div>
-                                </div>
-                                <div class="pt-card-desc">
-                                  Internal QA POC for third-party tag validation and preview.
-                                </div>
-                                <div class="pt-card-footer">
-                                  <span class="pt-card-footer-label">Learn more</span>
-                                  <span class="pt-card-arrow">↗</span>
-                                </div>
-                              </div>
-
-
-
-                              <div class="pt-card" data-tool="vast2mp4">
-                                <div class="pt-card-logo">
-                                  <img src="/images/logos/vast2mp4-logo.png" alt="Vast2MP4 logo" class="vast2mp4-logo"/>
-                                </div>
-                                <div class="pt-card-title-row">
-                                  <div class="pt-card-title">Vast2MP4</div>
-                                  <div class="pt-card-pill">Utility</div>
-                                </div>
-                                <div class="pt-card-desc">
-                                  Extract MP4 files and trackers from VAST when tags aren’t usable.
-                                </div>
-                                <div class="pt-card-footer">
-                                  <span class="pt-card-footer-label">Learn more</span>
-                                  <span class="pt-card-arrow">↗</span>
-                                </div>
-                              </div>
-
-                              <div class="pt-card" data-tool="pageid">
-                                <div class="pt-card-logo">
-                                  <img src="/images/logos/pageID-scraper-logo.png" alt="PageID Scraper logo" class="pageid-scraper-logo"/>
-                                </div>
-                                <div class="pt-card-title-row">
-                                  <div class="pt-card-title">PageID Scraper</div>
-                                  <div class="pt-card-pill">CMS</div>
-                                </div>
-                                <div class="pt-card-desc">
-                                  Convert IAS URL exports into GAM pageIDs for faster blocking.
-                                </div>
-                                <div class="pt-card-footer">
-                                  <span class="pt-card-footer-label">Learn more</span>
-                                  <span class="pt-card-arrow">↗</span>
-                                </div>
-                              </div>
-
-
-
-                              <div class="pt-card" data-tool="workshop">
-                                <div class="pt-card-logo">
-                                  <img src="/images/logos/workshop_logo.png" alt="Workshop logo" class="workshop-logo"/>
-                                </div>
-                                <div class="pt-card-title-row">
-                                  <div class="pt-card-title">Workshop</div>
-                                  <div class="pt-card-pill">PLANNING</div>
-                                </div>
-                                <div class="pt-card-desc">
-                                  Local-first PRD + roadmap workspace for planning multi-project builds.
-                                </div>
-                                <div class="pt-card-footer">
-                                  <span class="pt-card-footer-label">Learn more</span>
-                                  <span class="pt-card-arrow">↗</span>
-                                </div>
-                              </div>
-                            </div>
-
-                  <div class="pt-overview-note">
-                    Click any tool to see how I scoped the problem, solution, and impact.
-                  </div>
-                  <div class="pt-featured-cta">
-                    <a class="pt-featured-btn" href="/projects/">View all tools</a>
-                  </div>
-                </div>
-
-                          <!-- DETAIL (tabs + panels) -->
-                          <div class="pt-detail is-hidden" id="ft-detail">
-                            <div class="pt-detail-top">
-                              <button class="pt-back" type="button" id="ft-back-button">Featured tools</button>
-                            </div>
-
-                            <div class="pt-tabs-row">
-                              <div class="pt-tabs" role="tablist" aria-label="Ad tools">
-                                <button class="pt-tab" data-tool="tagsafe" role="tab" aria-selected="false">
-                                  <span class="pt-tab-label">TagSafe</span>
-                                  <span class="pt-tab-pill">Flagship</span>
-                                </button>
-                                <button class="pt-tab" data-tool="vast2mp4" role="tab" aria-selected="false">
-                                  <span class="pt-tab-label">Vast2MP4</span>
-                                  <span class="pt-tab-pill">Utility</span>
-                                </button>
-                                <button class="pt-tab" data-tool="pageid" role="tab" aria-selected="false">
-                                  <span class="pt-tab-label">PageID Scraper</span>
-                                  <span class="pt-tab-pill">CMS</span>
-                                </button>
-                                <button class="pt-tab" data-tool="workshop" role="tab" aria-selected="false">
-                                  <span class="pt-tab-label">Workshop</span>
-                                  <span class="pt-tab-pill">PLANNING</span>
-                                </button>
-                              </div>
-                            </div>
-
-                            <div class="pt-shell">
-                              <div class="pt-panels">
-                                <!-- TagSafe -->
-                                <article class="pt-panel" data-tool="tagsafe">
-                                  <header class="pt-panel-header">
-                                    <div class="pt-panel-logo">
-                                      <img src="/images/logos/tagsafe-logo.PNG" alt="TagSafe logo" class="tagsafe-logo" />
-                                    </div>
-                                    <div class="pt-panel-header-text">
-                                      <p class="pt-panel-kicker">TagSafe · Tag validator prototype</p>
-                                      <h3 class="pt-panel-title">Compress third-party tag QA into one screen</h3>
-                                      <p class="pt-panel-meta">
-                                        Internal prototype for validating third-party display tags with bulk upload, previews, and spec checks.
-                                      </p>
-                                    </div>
-                                  </header>
-
-                                  <div class="pt-panel-body">
-                                    <div class="pt-panel-text">
-                                      <p>
-                                        Our QA teams rely on paid validators plus dev tools to review third-party tags. That works, but it’s
-                                        license-bound and slow when you just want to sanity-check a tagsheet in one place.
-                                      </p>
-                                      <ul class="pt-bullets">
-                                        <li>
-                                          <span class="pt-bullet-label">Problem:</span>
-                                          <span class="pt-bullet-text">
-                                            Core checks (HTTPS, dimensions, weight, click URL, landing page status) lived across multiple tools
-                                            and a vendor platform. There was no lightweight way to scan a full tagsheet quickly across vendors.
-                                          </span>
-                                        </li>
-                                        <li>
-                                          <span class="pt-bullet-label">Solution:</span>
-                                          <span class="pt-bullet-text">
-                                            Built a browser-based page where ad ops can paste a single tag or upload a tagsheet, auto-detect tags
-                                            from major vendors, render a live preview, and surface key metrics like load time, requests, size,
-                                            dimensions, vendor, placement ID, and landing-page response.
-                                          </span>
-                                        </li>
-                                        <li>
-                                          <span class="pt-bullet-label">Impact:</span>
-                                          <span class="pt-bullet-text">
-                                            Shipped a working proof-of-concept that recreates our most-used AdValidation checks in-house. While
-                                            session-only, TagSafe shows a clear path to reducing validator licensing costs with a focused internal tool.
-                                          </span>
-                                        </li>
-                                      </ul>
-                                      <div class="pt-chip-row">
-                                        <span class="pt-chip">HTML</span>
-                                        <span class="pt-chip">CSS</span>
-                                        <span class="pt-chip">JavaScript</span>
-                                        <span class="pt-chip">Ad QA</span>
-                                      </div>
-                                    </div>
-
-                                    <div class="pt-panel-image">
-                                      <img
-                                        src="/images/project-mocks/tagsafe-preview.png"
-                                        alt="Validate third-party tags and preview creatives instantly."
-                                        class="pt-panel-screenshot"
-                                      />
-                                    </div>
-                                    <div class="pt-panel-footer">
-                                      <a class="pt-panel-link" href="tagSafe/" target="_blank" rel="noopener">
-                                        Open TagSafe <span>↗</span>
-                                      </a>
-                                    </div>
-                                  </div>
-                                </article>
-
-
-                                <!-- Outline -->
-
-                                <!-- AdBuilder -->
-
-                                <!-- Vast2MP4 -->
-                                <article class="pt-panel" data-tool="vast2mp4">
-                                  <header class="pt-panel-header">
-                                    <div class="pt-panel-logo">
-                                      <img src="/images/logos/vast2mp4-logo.png" alt="Vast2MP4 logo" />
-                                    </div>
-                                    <div class="pt-panel-header-text">
-                                      <p class="pt-panel-kicker">Vast2MP4 · Video utility</p>
-                                      <h3 class="pt-panel-title">See what’s inside a VAST tag at a glance</h3>
-                                      <p class="pt-panel-meta">
-                                        Pulls MP4 files and trackers from VAST XML for export and validation.
-                                      </p>
-                                    </div>
-                                  </header>
-
-                                  <div class="pt-panel-body">
-                                    <div class="pt-panel-text">
-                                      <p>
-                                        Some custom video placements on our site can’t accept VAST tags—we need a standalone MP4 and 1×1 trackers.
-                                        When campaigns were sold months in advance and only a VAST tag was delivered, we had no way to recover the assets.
-                                      </p>
-                                      <ul class="pt-bullets">
-                                        <li>
-                                          <span class="pt-bullet-label">Problem:</span>
-                                          <span class="pt-bullet-text">
-                                            Agencies often send only a VAST tag, leaving no time to request new files.
-                                            Extracting media and trackers manually from raw XML or network tools is slow and brittle.
-                                          </span>
-                                        </li>
-                                        <li>
-                                          <span class="pt-bullet-label">Solution:</span>
-                                          <span class="pt-bullet-text">
-                                            Built a browser tool where anyone can paste a VAST tag, preview its metadata,
-                                            download the MP4 asset, and export impression/click trackers as 1×1 files.
-                                            Works as both an extractor and a lightweight validator.
-                                          </span>
-                                        </li>
-                                        <li>
-                                          <span class="pt-bullet-label">Impact:</span>
-                                          <span class="pt-bullet-text">
-                                            Used by ad ops and account teams to keep campaigns live without going back to clients.
-                                            Allowed us to run Meta and Amazon units on formats that normally can’t accept VAST.
-                                          </span>
-                                        </li>
-                                      </ul>
-                                      <div class="pt-chip-row">
-                                        <span class="pt-chip">JavaScript</span>
-                                        <span class="pt-chip">VAST</span>
-                                        <span class="pt-chip">Video QA</span>
-                                      </div>
-                                    </div>
-
-                                    <div class="pt-panel-image">
-                                      <img
-                                        src="/images/project-mocks/vast2mp4-preview.png"
-                                        alt="Extract MP4 files and trackers from VAST tags."
-                                        class="pt-panel-screenshot"
-                                      />
-                                    </div>
-                                    <div class="pt-panel-footer">
-                                      <a class="pt-panel-link" href="vast2mp4/" target="_blank" rel="noopener">
-                                        Open Vast2MP4 <span>↗</span>
-                                      </a>
-                                    </div>
-                                  </div>
-                                </article>
-
-
-                                <!-- PageID Scraper -->
-                                <article class="pt-panel" data-tool="pageid">
-                                  <header class="pt-panel-header">
-                                    <div class="pt-panel-logo">
-                                      <img src="/images/logos/pageID-scraper-logo.png" alt="PageID Scraper logo" class="pageid-scraper-logo" />
-                                    </div>
-                                    <div class="pt-panel-header-text">
-                                      <p class="pt-panel-kicker">PageID Scraper · CMS helper</p>
-                                      <h3 class="pt-panel-title">Bridge CMS URLs and ad server targeting</h3>
-                                      <p class="pt-panel-meta">
-                                        Operational tool that turns WaPo article URLs into page IDs for faster brand-safety blocking.
-                                      </p>
-                                    </div>
-                                  </header>
-
-                                  <div class="pt-panel-body">
-                                    <div class="pt-panel-text">
-                                      <p>
-                                        Brand-safety reports from IAS arrive as long lists of article URLs and hits, but our ad server
-                                        targets on internal page IDs. Manually mapping each URL to its pageID in source code doesn’t scale.
-                                      </p>
-                                      <ul class="pt-bullets">
-                                        <li>
-                                          <span class="pt-bullet-label">Problem:</span>
-                                          <span class="pt-bullet-text">
-                                            Excluding “unsafe” articles meant opening every URL, finding the pageID in the markup,
-                                            and copy/pasting it into a blocklist. Hundreds of URLs could turn into hours of repetitive work
-                                            and easy mistakes.
-                                          </span>
-                                        </li>
-                                        <li>
-                                          <span class="pt-bullet-label">Solution:</span>
-                                          <span class="pt-bullet-text">
-                                            Built a tool that ingests a spreadsheet of URLs, normalizes and dedupes them (including UTM
-                                            variants, games pages, and other non-ID paths), rolls up impression counts, lets users set a
-                                            minimum hits threshold, then calls a scraping worker to return pageIDs for only the high-impact
-                                            pages.
-                                          </span>
-                                        </li>
-                                        <li>
-                                          <span class="pt-bullet-label">Impact:</span>
-                                          <span class="pt-bullet-text">
-                                            Turns a multi-hour CMS task into a paste-and-download workflow used regularly by ad ops.
-                                            Typical IAS exports shrink from tens of thousands of URLs to a few dozen pageIDs that cover
-                                            the vast majority of unsafe impressions for a campaign.
-                                          </span>
-                                        </li>
-                                      </ul>
-                                      <div class="pt-chip-row">
-                                        <span class="pt-chip">JavaScript</span>
-                                        <span class="pt-chip">Automation</span>
-                                        <span class="pt-chip">Brand safety</span>
-                                        <span class="pt-chip">Ad server</span>
-                                      </div>
-                                    </div>
-
-                                    <div class="pt-panel-image">
-                                      <img
-                                        src="/images/project-mocks/pageid-scraper-preview.png"
-                                        alt="Extract page IDs from Washington Post article URLs."
-                                        class="pt-panel-screenshot"
-                                      />
-                                    </div>
-                                    <div class="pt-panel-footer">
-                                      <a class="pt-panel-link" href="pageid-scraper/" target="_blank" rel="noopener">
-                                        Open PageID Scraper <span>↗</span>
-                                      </a>
-                                    </div>
-                                  </div>
-                                </article>
-
-                                <!-- BlockList -->
-
-                                <!-- Collate -->
-
-                                <!-- Workshop -->
-                                <article class="pt-panel" data-tool="workshop">
-                                  <header class="pt-panel-header">
-                                    <div class="pt-panel-logo">
-                                      <img src="/images/logos/workshop_logo.png" alt="Workshop logo" class="workshop-logo"/>
-                                    </div>
-                                    <div class="pt-panel-header-text">
-                                      <p class="pt-panel-kicker">Workshop · Project planning tool</p>
-                                      <h3 class="pt-panel-title">Plan, track, and explain projects in one place</h3>
-                                      <p class="pt-panel-meta">
-                                        Local-first workspace for structuring side projects as PRDs, roadmaps, and phased execution—built to keep ideas coherent as they grow.
-                                      </p>
-                                    </div>
-                                  </header>
-
-                                  <div class="pt-panel-body">
-                                    <div class="pt-panel-text">
-                                      <p>
-                                        Helps keep scope, priority, and progress legible as projects evolve.
-                                      </p>
-                                      <ul class="pt-bullets">
-                                        <li>
-                                          <span class="pt-bullet-label">Problem:</span>
-                                          <span class="pt-bullet-text">
-                                            My side projects tended to sprawl across notes, boards, and docs. I needed a tool help me stay organized & on track as my tools grew in scope, while being able to present my project, all in one place.
-                                          </span>
-                                        </li>
-                                        <li>
-                                          <span class="pt-bullet-label">Solution:</span>
-                                          <span class="pt-bullet-text">
-                                            Built a browser-based planning tool that combines PRD authoring, feature roadmapping, and phase-level progress into one visual system. Workbench supports fluid drag-and-drop, inline editing, undo/redo, and Markdown export—making it easy to plan, iterate, and explain a project without leaving the page.
-                                          </span>
-                                        </li>
-                                        <li>
-                                          <span class="pt-bullet-label">Impact:</span>
-                                          <span class="pt-bullet-text">
-                                            Replaced scattered notes and task boards with a single source of truth for personal builds. Helped maintain clarity and momentum on long-running side projects, and made it easy to present a high-level product story to others without slides or external docs.
-                                          </span>
-                                        </li>
-                                      </ul>
-                                      <div class="pt-chip-row">
-                                        <span class="pt-chip">Product Planning</span>
-                                        <span class="pt-chip">UX Systems</span>
-                                        <span class="pt-chip">React</span>
-                                        <span class="pt-chip">Prototyping</span>
-                                      </div>
-                                    </div>
-
-                                    <div class="pt-panel-image">
-                                      <img
-                                        src="/images/project-mocks/workshop-preview.png"
-                                        alt="Workshop logo"
-                                        class="pt-panel-screenshot"
-                                      />
-                                    </div>
-                                    <div class="pt-panel-footer">
-                                      <a class="pt-panel-link" href="https://www.colinbing.com/workshop/" target="_blank" rel="noopener">
-                                        Open Workshop <span>↗</span>
-                                      </a>
-                                    </div>
-                                  </div>
-                                </article>
-                              </div>
-                            </div>
-                          </div>
-
-                        </div>
-                      </section>
 
 
             <section id="experience-section" class="experience-section">
@@ -860,12 +833,13 @@
                             Primary POC for newsletter ad ops (Zeta/LiveIntent) and cross-platform ad delivery QA across GAM, Apple News, and The Trade Desk.
                           </p>
                           <ul class="role-list">
-                            <li><p><strong>Execute:</strong> Lead execution of ~15–20 campaigns/week in <strong>Google Ad Manager (GAM)</strong>; manage targeting, flighting, pacing, and trafficking QA to maintain a <strong>&lt;2% error rate</strong>.</p></li>
+                            <li><p><strong>Execute:</strong> Lead intake, setup, QA, and troubleshooting for ~15–20 campaigns/week totaling ~$16M in annual spend; manage targeting, flighting, pacing, and delivery QA to maintain a <strong>&lt;2% error rate</strong>.</p></li>
                             <li><p><strong>Key-values:</strong> Own key-value governance (presets, packages, placement strategy) across direct-sold, programmatic, and newsletter inventory to keep targeting clean and scalable.</p></li>
                             <li><p><strong>Newsletter ops:</strong> Lead sponsorship and newsletter campaign operations in <strong>Zeta/LiveIntent</strong>, including audience/targeting setup, troubleshooting, and coordination with Sales/AMs on technical activations.</p></li>
+                            <li><p><strong>Product support:</strong> Partner with Product, Engineering, Brand Safety, Sales/AMs, and vendors to test new ad products, validate tag/tracking behavior, translate client suitability needs, and troubleshoot launch issues.</p></li>
                             <li><p><strong>QA & troubleshooting:</strong> Perform advanced QA on display/video and third-party tags/pixels; troubleshoot tracking, request behavior, and delivery issues across vendors and environments.</p></li>
-                            <li><p><strong>Tooling:</strong> Build lightweight workflow tools (tag validation, keyword parsing, QA helpers) to reduce repeat checks and speed trafficking/QA handoffs.</p></li>
-                            <li><p><strong>Test pages:</strong> Create custom ad units and test pages when needed; enforce specs and brand rules across formats and responsive breakpoints (plus light asset edits in Photoshop).</p></li>
+                            <li><p><strong>Tooling:</strong> Build workflow tools used by Ad Ops and Account Management for pageID scraping, keyword cleanup, brand-safety blocking, creative compliance, VAST extraction, and QA checks.</p></li>
+                            <li><p><strong>Test pages:</strong> Create custom ad units, test pages, pixels, and acceptance checks for complex launches; enforce specs and brand rules across formats and responsive breakpoints.</p></li>
                         </section>
 
                         <!-- Prior role -->
